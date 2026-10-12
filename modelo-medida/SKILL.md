@@ -21,10 +21,10 @@ O vídeo vira uma bancada de laboratório de cozinha. A pessoa começa em tela c
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - O palco é **3D (WebGL)**: os quadros e o render usam a GPU. O `modelo.json` do template já pede isso (`"gl": "angle"`) e os scripts do motor ligam sozinhos; não tire essa linha.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo e pergunte uma vez:
    - **nome e área** de quem fala (ex.: "Rafael Moura" / "Nutricionista"): vão na tarja do começo. Sem resposta, siga sem tarja;
    - se ele quer a **virada com troca de roupa** (passo opcional 4c) e se já tem o vídeo com a roupa trocada;
@@ -206,5 +206,5 @@ O `objeto` sozinho serve para qualquer coisa citada (um produto, um alimento, um
 - **O texto não cabe** (rótulo, unidade, referência): os rótulos reduzem e quebram em 2 linhas; encurte com as palavras da fala (até ~24 caracteres por rótulo).
 - **A virada ficou com o rosto deslocado ou a boca fora de sincronia**: o vídeo da virada não bate com `base.mp4`; refaça a geração ou tire `videoVirada` (a virada troca só o enquadramento).
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução para o recorte; avise o usuário.

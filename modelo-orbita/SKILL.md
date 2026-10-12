@@ -21,9 +21,9 @@ O vídeo vira uma aula de ciências de documentário, curta e vertical. A pessoa
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (transcrição e navegador de render, baixados uma vez só). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (transcrição e navegador de render, baixados uma vez só). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio. O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio. O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte **uma vez**, numa mensagem só (sem resposta, siga sem):
    - **se o vídeo abre com uma virada** ("E se eu fosse…", "imagina que…") e se ele tem **o mesmo vídeo com a roupa trocada** por uma IA de vídeo (passo 5b). Sem ele, a virada muda o enquadramento;
    - se tem **música própria sem batida** para pôr baixinho;
@@ -190,4 +190,4 @@ Outros nichos: física (som, luz, gravidade: a viagem com o tempo dito), "você 
 - **A pessoa aparece cortada na moldura**: confira as guias (passo 5); com o rosto muito alto ou muito perto da câmera, refaça o passo 4 com as medidas certas.
 - **O texto da informação desce para a moldura**: encurte o texto com as palavras da fala ou divida o momento em dois.
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.

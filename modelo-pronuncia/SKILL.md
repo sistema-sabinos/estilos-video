@@ -21,9 +21,9 @@ O vídeo vira uma aula de som: quando a pessoa diz a palavra, ela desce para uma
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte uma vez **nome e área** de quem fala (ex.: "Prof. Ana, Inglês"): o nome vai na etiqueta da moldura e na assinatura do fechamento; a área vira o rótulo da abertura. Sem resposta, siga sem nome.
 4. **Idioma e sotaque.** O padrão é inglês americano. Pergunte só se não der para saber pela fala: britânico (`"sotaque": "britânico"`), espanhol (`"idioma": "espanhol"`, `"sotaque": "latino"` ou `"da Espanha"`) ou outro. A fonética e o jeito de ler mudam com o sotaque: escreva-os para o sotaque escolhido.
 
@@ -194,6 +194,6 @@ A assinatura do Pronúncia é **"olha como se diz isso, devagar"**: uma palavra 
 - **Quadradinhos na fonética**: use os símbolos do alfabeto fonético internacional (ʌ ə ɚ ɪ ʊ θ ð ʃ ʒ ˈ); emoji e símbolos inventados não aparecem.
 - **Comandos travam sem mensagem**: o projeto está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou a palavra estrangeira**: use `correcoes` no plano (os tempos continuam certos).
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Texto pequeno demais**: o bloco reduz o texto para caber; passou do limite de `references/plano.md`. Encurte com as palavras da fala.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução para o recorte; o vídeo sai menos nítido (e a lupa mais ainda). Avise o usuário.

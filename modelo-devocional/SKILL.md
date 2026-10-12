@@ -21,9 +21,9 @@ O vídeo vira uma **página de livro de devoção**: pergaminho marfim em cima, 
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte uma vez **nome e área** de quem fala (ex.: "André Lacerda" / "Reflexão do dia"): vão na tarja do começo. Sem resposta, siga sem tarja. Não ponha título religioso (pastor, padre, igreja) que a pessoa não pediu. Se houver citação, pergunte a **fonte só se ela não foi dita** e não a escreva na tela sem que a pessoa diga (ver "Fidelidade").
 
 ## Fluxo
@@ -196,5 +196,5 @@ Sem citação e sem frase forte? Use a frase do gancho em modo reflexão. Toda e
 - **O versículo ficou pequeno**: ele é longo demais para uma página (mais de ~180 caracteres). Divida em dois `versiculo` seguidos (a página continua cheia e vira entre eles).
 - **O desenho não tem a ver com a palavra**: tire o desenho. Texto sozinho é o estilo.
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução para o recorte; avise o usuário.

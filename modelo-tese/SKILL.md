@@ -22,9 +22,9 @@ O vídeo vira um Reel de opinião noticioso, em tela dividida do começo ao fim:
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; e a busca de imagens). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; e a busca de imagens). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte **uma vez**, numa mensagem só:
    - **se ele tem imagens próprias** para entrar no vídeo (o produto, prints, vídeos que ele quer provar, fotos). Se tiver, peça para pôr na pasta `imagens/` do projeto (criada no passo 1), com nomes que digam o que são. Elas passam na frente de qualquer busca;
    - **se o vídeo termina pedindo para seguir ou com palavra-chave** ("comenta X que eu te mando…"): qual palavra e qual promessa. O Reel original termina pedindo para seguir, ligado à tese. Sem resposta, feche com um `cta` de seguir.
@@ -244,5 +244,5 @@ Estas são as regras do Reel original, reescritas para você aplicar a qualquer 
 - **Um corte comeu o começo ou o fim de uma palavra**: `node ferramentas/justar.mjs --respiro 0.22` ou afaste `de`/`ate` em `work/cortes.json` 0,05 s; depois `cortar --manter-plano`.
 - **A legenda emenda duas frases**: corrija com `correcoes` (frase terminando em ponto).
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução para o recorte; avise o usuário.

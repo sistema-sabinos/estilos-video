@@ -21,9 +21,9 @@ A tela vira um app de mensagens bem desenhado, do tipo que dá vontade de tirar 
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte uma vez, junto:
    - **nome e área** de quem fala (ex.: "Carla" / "Atendimento"): vão na pílula de assinatura do fechamento;
    - **com quem a pessoa conversa** no vídeo, se não for óbvio: o nome no cabeçalho do app (`contato`). Sem resposta, fica "Você" (quem assiste);
@@ -185,7 +185,7 @@ Outros usos: plantas ("ainda úmida?" → "espera mais um dia" com um joinha des
 - **A assinatura "não cabe" no assunto**: ela é o estilo. Procure na fala um erro e um acerto (`contraste`, ou uma `conversa` em que o erro esfria), uma dúvida e a resposta (`balao` do outro lado + sua resposta) ou um conselho e a reação (`conversa` com `reacao`). Veja os exemplos acima.
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Balão pequeno demais ou com muitas linhas**: o texto passou do limite do bloco (veja `references/plano.md`); encurte com as palavras da fala ou divida em duas mensagens.
 - **A conversa sobe e some antes de ler**: mensagens demais em pouco tempo; deixe no máximo uma mensagem nova a cada ~0,5 s, ou divida em duas telas.
 - **O primeiro item de uma lista some lá em cima**: com 5 itens longos a conversa rola; encurte os itens ou use menos.

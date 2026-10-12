@@ -21,9 +21,9 @@ O vídeo inteiro acontece dentro de uma planilha: a pessoa é uma célula mescla
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte uma vez **nome e área** de quem fala (vão na etiqueta da célula da pessoa, ex.: "Carla Dias · Nutricionista"). O **nome do arquivo** da planilha e os **títulos das colunas** você tira do assunto da fala. Sem resposta, siga sem nome.
 4. **Números e fatos.** Tudo que aparece em célula vira "dado" aos olhos de quem assiste. Só ponha na tela número, regra ou valor que a pessoa disse. Se um valor pode estar desatualizado (imposto, taxa, preço), avise o usuário antes de renderizar. Fala sem números não é problema: use ✓/✗, listas, passos e gráficos de tendência ("ilustrativo"). Nenhum texto de tela cita ferramenta de edição nem nome de programa de planilha.
 
@@ -171,5 +171,5 @@ A assinatura da Planilha é **"avaliar coisas uma a uma numa tabela que se preen
 - **A transcrição errou um nome, sigla ou número**: use `correcoes` no plano.
 - **Texto pequeno demais**: o bloco reduziu o corpo para caber; passou do limite de `references/plano.md`. Encurte com as palavras da fala.
 - **A cabeça aparece cortada numa célula**: `enquadramento` no plano (`references/plano.md`, seção 1).
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução; o vídeo sai menos nítido. Avise o usuário.

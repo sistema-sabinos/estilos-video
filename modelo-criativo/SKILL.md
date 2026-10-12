@@ -21,9 +21,9 @@ O vídeo vira um anúncio de performance: a pessoa em quadro cheio, como um víd
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB) e para buscar imagens. No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB) e para buscar imagens. No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo e pergunte uma vez, numa mensagem só:
    - **quantos ganchos** ele gravou e em que ordem (veja "Como gravar", abaixo);
    - **fotos do produto**: uma foto do produto sozinho (de preferência com fundo liso, para recortar) e fotos dele **nas situações que a fala cita** (o produto em uso, o resultado, a tela do app, o certificado). Vão numa pasta `imagens/` dentro do projeto;
@@ -35,7 +35,7 @@ O vídeo vira um anúncio de performance: a pessoa em quadro cheio, como um víd
 - **Grave 2 ou 3 ganchos diferentes, um depois do outro, e depois o corpo uma vez só.** Ex.: "Para de comprar garrafa que não segura o gelo." / "Deixei essa garrafa no carro fechado, no sol, o dia inteiro." / "Essa é a garrafa que vai comigo em todo treino." / e o corpo: os benefícios + a chamada ("clica em saiba mais…").
 - Cada gancho é **uma frase completa de 2 a 4 s** que funciona sozinha emendada no corpo. Ganchos de tipos diferentes testam melhor: um de **problema** ("Para de…"), um de **prova/história** ("Deixei… o dia inteiro"), um de **identidade/desejo** ("Essa é a que vai comigo…").
 - O corpo começa com uma frase que serve depois de qualquer gancho ("Ela mantém…", "Ele faz…"), cita **cada benefício com a situação** ("não vaza na mochila") e termina na chamada com a oferta ("frete grátis", "desconto", "garantia").
-- Pode ser um arquivo só ou vários; com vários, junte na ordem antes de começar (`ffmpeg -f concat`) ou peça para o usuário juntar.
+- Pode ser um arquivo só ou vários; com vários, junte você mesmo na ordem antes de começar (`ffmpeg -f concat`); só pergunte a ordem ao usuário se o nome dos arquivos não deixar claro.
 - **Por que 3 ganchos:** os primeiros 2 a 3 s decidem se a pessoa fica. O vídeo sai em um MP4 por gancho (mesmo corpo), e ele sobe os 3 no mesmo conjunto de anúncios para o Ads mostrar qual segura mais gente (taxa de retenção de 3 s, CTR, custo por resultado). Depois de uns dias, fica o vencedor e grava ganchos novos contra ele.
 
 ## Fluxo
@@ -208,5 +208,5 @@ Sem produto nenhum na fala (só opinião, só história)? O herói é **o que a 
 - **A faixa do benefício ficou pequena**: o texto passou de ~32 caracteres; encurte com as palavras da fala.
 - **O recorte do produto tem borda ou sombra do fundo**: refaça a remoção de fundo ou use a foto inteira no `heroi` (sem `transparente`).
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução para o recorte; avise o usuário.

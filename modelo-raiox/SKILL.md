@@ -19,9 +19,9 @@ O vídeo vira uma sala de laudos. A pessoa abre em quadro cheio, com uma chapa-c
 
 ## Antes de começar
 
-1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
+1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
 2. Confirme o caminho do vídeo. Se o usuário não disse o **nome e a área** de quem aparece (ex.: "Dra. Ana Lima" / "Fisioterapia"), pergunte uma vez: eles vão no rodapé da chapa da pessoa e na assinatura do fechamento. Sem resposta, siga sem nome (a chapa fica sem rodapé e o fechamento sem assinatura).
-3. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+3. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 
 ## Fluxo
 
@@ -164,7 +164,7 @@ A assinatura do Raio-X é **"onde está a tensão e o que corrige"**: a coluna d
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **`conferir.mjs` reprovou**: leia o trecho que ele aponta e escolha um bloco para ele (`references/adaptar.md`, passo A). Trecho longo num bloco só: divida em dois ou acrescente itens com `em`. Faltou a assinatura: use o `ajuste` com `itens`.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Título pequeno demais ou quebrado em muitas linhas**: passou do limite do componente; encurte conforme `references/plano.md` (o template diminui o corpo até o mínimo para caber).
 - **Rótulos da chapa se sobrepondo**: dois passos com rótulo no mesmo canto do desenho. Tire o `rotulo` de um deles (o título já diz a palavra) ou use alvos diferentes.
 - **A cabeça corta no alto da chapa da pessoa**: o enquadramento é fechado. Em `src/tema.ts`, diminua o `zoom` de `PESSOA_ESQUERDA` (1,55 → 1,35); o rosto fica menor, mas inteiro.

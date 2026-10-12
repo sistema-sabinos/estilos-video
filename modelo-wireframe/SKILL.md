@@ -20,10 +20,10 @@ Transforma uma gravação bruta (uma pessoa falando para a câmera) num vídeo v
 ## Antes de começar
 
 0. **Ambiente.** Este modelo roda **no computador** do usuário (Claude Code, o app do Claude com acesso ao terminal, ou o Codex). Se você não consegue rodar comandos nele (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**: não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
+1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
 2. Confirme o caminho do vídeo. Se o usuário não disse o **nome e a área** de quem aparece (ex.: "Carla" / "UX"), pergunte uma vez: vão no cabeçalho do comentário (no canvas e no fechamento). Sem resposta, siga sem nome (o comentário se chama "Comentário").
 3. **A página do celular é fictícia** (só aparece nos momentos `revisao`, `conserto` e `resultado`). Se a fala é sobre um negócio ou produto do usuário, pergunte (uma vez) o nome da marca, a promessa e a cor; sem resposta, invente uma página plausível para o assunto (uma padaria, um curso, uma clínica, um plano de treino), **sem marca real e sem logotipo**, e diga na entrega o que inventou. Tudo que a página "corrige" tem que ser o que a pessoa disse.
-4. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+4. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 
 ## Fluxo
 
@@ -161,7 +161,7 @@ A assinatura do Wireframe é **revisar algo, marcar o que está errado e mostrar
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A página voltou a ser a genérica ("Sua marca")**: o `cortar.mjs` foi rodado de novo sem `--manter-plano` e apagou `pagina`. Recoloque o bloco.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **`conferir.mjs` reprovou**: leia o trecho falado que ele aponta e escolha um bloco para ele (`references/adaptar.md`). Nunca use `--forcar`.
 - **Promessa quebrada em 4 linhas ou letra pequena no celular**: passou de ~36 caracteres; encurte (a promessa é uma frase só).
 - **Etiquetas uma em cima da outra**: dois erros do mesmo tipo no plano; cada tipo tem uma área só no celular, então use um tipo por erro (ver `references/plano.md`).

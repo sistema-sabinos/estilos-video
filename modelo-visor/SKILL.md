@@ -20,9 +20,9 @@ Transforma uma gravação bruta (uma pessoa falando para a câmera) num vídeo v
 ## Antes de começar
 
 0. **Ambiente.** Este modelo roda **no computador** do usuário (Claude Code, o app do Claude com acesso ao terminal, ou o Codex). Se você não consegue rodar comandos nele (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**: não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
+1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
 2. Confirme o caminho do vídeo. Se o usuário não disse o **nome e a área** de quem aparece (ex.: "Ana Lima" / "Fotografia de produto"), pergunte uma vez; isso vira o cartão de perfil do fechamento. Sem resposta, o cartão sai só com a chamada e o botão.
-3. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+3. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 
 ## Fluxo
 
@@ -166,7 +166,7 @@ A assinatura do Visor é **a câmera ajustando algo até ficar certo**: limpar o
 
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **`conferir.mjs` reprovou**: leia o trecho falado que ele aponta e escolha um bloco para ele (`references/adaptar.md`). Nunca use `--forcar`.
 - **Texto estourando ou muito pequeno**: os blocos medem e reduzem o texto sozinhos até um mínimo legível; se ainda ficar apertado, encurte conforme `references/plano.md`.
 - **O quadrado de foco não abraça o rosto** (rosto muito grande, pequeno ou de óculos): ajuste `quadro` (`tamanho`, `x`, `y`) no momento `foco`.

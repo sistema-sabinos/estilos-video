@@ -21,9 +21,9 @@ O vídeo vira um filme: a pessoa fala de dentro de uma janela de cinema entre du
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o render baixa as fontes do Google Fonts). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o render baixa as fontes do Google Fonts). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte uma vez **nome e área** de quem fala (ex.: "Marina" / "Finanças pessoais"): vão na assinatura dos créditos finais e no crédito da abertura. Sem resposta, siga sem nome (os créditos mostram o ícone da ação no lugar da assinatura).
 
 ## Fluxo
@@ -178,7 +178,7 @@ Use a **curva** (`intensidade`) em qualquer assunto: a explicação calma fica e
 - **A assinatura "não combina" com o assunto**: ela é o estilo. Procure na fala o "capítulo" que começa ("Agora…", "No começo…", "Em um ano…") para o `letreiro`, e a imagem que resume uma ideia para a `cartela`.
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Texto pequeno demais**: passou do limite do bloco (veja `references/plano.md`); encurte com as palavras da fala ou use menos itens.
 - **A frase-chave aparece tarde ou cortada**: as barras ainda estavam se mexendo quando ela começou. Mude a curva (`intensidade`) ~0,5 s antes da frase ou use um bloco de barra (`destaque`).
 - **O render sai mudo em algum trecho**: um componente desmontou o vídeo da pessoa (veja o "Cuidado" em `references/estilo.md`).

@@ -21,9 +21,9 @@ O vídeo vira um álbum de figurinhas caprichado sendo montado enquanto a pessoa
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte uma vez **nome e área** de quem fala (ex.: "Dra. Ana Lima" / "Nutrição"): vão na faixa da figurinha especial e na assinatura do fechamento. Sem resposta, siga sem nome (a figurinha fica sem faixa).
 
 ## Fluxo
@@ -174,7 +174,7 @@ Outros usos: ferramentas de um ofício (`maleta`, `calculadora`, `celular`), há
 - **"O álbum não cabe no assunto"**: ele é o estilo. Procure a lista na fala (quase todo vídeo tem: motivos, erros, passos, opções) e use desenhos neutros, `"texto"` ou o número do item.
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Rosto cortado ou pequeno demais na figurinha especial**: ajuste `figurinhaDaPessoa` (`zoom` entre 1 e 2; `rostoNaCaixa` entre 0,3 e 0,45). Sem ajuste, o modelo já aproxima menos quando a gravação é bem perto da câmera.
 - **Texto pequeno demais**: o texto passou do limite do bloco e encolheu para caber (veja `references/plano.md`); encurte com as palavras da fala ou use menos itens.
 - **Carimbo fora do tempo ou sobre o nome**: confira o `carimboEm` em `work/palavras.json`; texto de carimbo comprido quebra em duas linhas e fica sobre o desenho, então prefira 1 a 3 palavras.

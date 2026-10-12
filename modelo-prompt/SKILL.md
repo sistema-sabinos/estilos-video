@@ -19,10 +19,10 @@ Transforma uma gravação bruta (uma pessoa falando para a câmera) num vídeo v
 
 ## Antes de começar
 
-1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
+1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
 2. Confirme o caminho do vídeo. Se o usuário não disse o **nome e a área** de quem aparece (ex.: "Carla" / "IA na prática"), pergunte uma vez: o nome vai na etiqueta da janela e na assinatura do fechamento; a área vai ao lado do nome. Sem resposta, siga sem nome (a etiqueta e a assinatura somem).
 3. **O chat é fictício.** O assistente da tela se chama "Assistente" e tem um avatar neutro ("IA"); não ponha nome, logotipo nem cores de um produto real. A resposta em tabela é **ilustrativa** e sai com a etiqueta "exemplo": deixe-a plausível (nada de número absurdo, nada de dado pessoal real) e coerente com as peças. Nenhum texto de tela pode citar ferramenta de edição de vídeo.
-4. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+4. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 
 ## Fluxo
 
@@ -169,7 +169,7 @@ A assinatura do Prompt é **"as partes que se somam num resultado"**: a `montage
 - **`conferir.mjs` reprovou**: leia o trecho que ele aponta e escolha um bloco para ele (`references/adaptar.md`, passo A). Trecho longo num bloco só: divida em dois ou acrescente itens com `em`. Faltou a assinatura: use a `montagem` como metáfora.
 - **O texto da peça aparece antes ou depois da fala**: o `texto` não bate com as palavras faladas (ou a correção não foi feita). Confira em `work/palavras.json` e ajuste `texto` ou `correcoes`.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano (aceita várias palavras: `{ "Com o texto": "Contexto" }`).
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Cabeça cortada ou rosto baixo nas janelas** (pessoa muito alta ou muito baixa no quadro, óculos que precisam ficar inteiros): use `ajusteJanela` (`references/plano.md`).
 - **Célula da tabela termina em "…"**: o texto passou do limite da coluna; encurte conforme `references/plano.md`.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução; o vídeo sai menos nítido. Avise o usuário.

@@ -19,9 +19,9 @@ Transforma uma gravação bruta (uma pessoa falando para a câmera) num vídeo v
 
 ## Antes de começar
 
-1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
+1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
 2. Confirme o caminho do vídeo. Se o usuário não disse o **nome e a área** de quem aparece (ex.: "Carla" / "Doces de festa"), pergunte uma vez: vão na ficha, abaixo do nome da receita, e na assinatura do fechamento. Sem resposta, siga sem assinatura.
-3. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+3. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 
 ## Fluxo
 
@@ -164,7 +164,7 @@ A assinatura é **"o que entra num resultado, e o que acontece com ele"**: ingre
 - **Uma fala sumiu do vídeo**: o trecho dela foi marcado para sair em `work/cortes.json`. Marque `"manter": true` e rode o `cortar.mjs` de novo com `--manter-plano`.
 - **O console avisou "tempos do Whisper quebrados"**: confira nos quadros os itens daquele trecho; se algum entrar fora da palavra, acerte o `em` no plano (nesse trecho, os tempos de `work/palavras.json` são uma boa base, não uma verdade).
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Texto saindo da coluna, por baixo da janela ou pequeno demais**: passou do limite do componente (os textos são grandes de propósito, para o celular); encurte (fiel à fala) conforme `references/plano.md`. Mais de 4 ingredientes num momento deixam as linhas menores: divida em dois momentos de ingredientes.
 - **Pulo visível na troca de layout**: a fronteira do momento ficou longe de um corte. Mova o `de` do momento para o valor de `cortesEm` mais próximo.
 - **Rosto pequeno ou cortado na janela**: `"pessoa": { "zoom": 1.15 }` se o rosto ficou pequeno (gravação aberta), `0.85` se ficou grande demais (gravação fechada); `"ancoraY"` (padrão 0,42) sobe ou desce o rosto dentro da janela.

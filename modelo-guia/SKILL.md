@@ -28,9 +28,9 @@ O vídeo vira uma aula-guia: a pessoa sai do cenário e fica recortada, sem fund
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de **macOS** (o recorte da pessoa usa o Vision da Apple, pelas ferramentas do Xcode: `xcode-select --install`), Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; e a busca de imagens). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+   - Ele precisa de **macOS** (o recorte da pessoa usa o Vision da Apple, pelas ferramentas do Xcode: `xcode-select --install`), Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; e a busca de imagens). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
-2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
+2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte **uma vez**, numa mensagem só:
    - **a palavra-chave do CTA** ("comenta GUIA", "comenta AULA") e **o que ele promete mandar** (o guia, a planilha, o link). Sem resposta, use a palavra mais óbvia do assunto e avise na entrega;
    - **se ele tem prints próprios** (telas do app, do site, documentos) para entrar no vídeo. Se tiver, peça para pôr na pasta `imagens/` do projeto com nomes que digam o que são (`menu-projetos.png`). Prints do usuário passam na frente de qualquer captura de página pública.
@@ -239,7 +239,7 @@ Outros nichos: receita (placas = etapas, `topicos` = ingredientes), viagem (plac
 - **A pessoa cobre o ponto da seta ou o texto:** troque o `pessoa` do momento (`esq`, `dir`, `topo`).
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **Aviso de ampliação no cortar**: a gravação tem pouca resolução para o recorte; o vídeo sai menos nítido. Avise o usuário.
 - **O recorte da pessoa ficou com halo ou cortou cabelo/mão:** a tomada tem parede clara ou pouca luz; rode `node ferramentas/recortar.mjs` de novo só se mudar a tomada, senão avise o usuário. `cortar.mjs` e `recortar.mjs` precisam rodar nessa ordem.
 - **`pessoa.webm` não existe:** o render falha. Rode o passo 4b (ou `"recorte": false` no plano).

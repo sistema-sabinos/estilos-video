@@ -19,10 +19,10 @@ O vídeo vira um roteiro de viagem que se desenha enquanto a pessoa fala. Ela ab
 
 ## Antes de começar
 
-1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, peça ao usuário para rodar `npx skills add remotion-dev/skills`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
+1. **Carregue a skill do Remotion** (`remotion-best-practices`). Este modelo é um projeto Remotion e as regras dela valem aqui. Se não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. Três ressalvas, porque aqui o projeto já vem pronto: não precisa carregar `remotion-create` nem abrir o Studio (os quadros do `stills.mjs` são a prévia), e o pedido de edição já é o pedido para renderizar.
 2. Confirme o caminho do vídeo. Se o usuário não disse o **nome e a área** de quem aparece (ex.: "Carla" / "Viagens"), pergunte uma vez: o nome vai no cartão de embarque (passageiro), no rodapé do postal e no topo do passaporte. Sem resposta, siga sem nome.
 3. Se o vídeo fala de **lugares reais** (uma cidade, um roteiro), confirme a cidade ou região: o mapa é desenhado por você a partir da geografia real (seção "O mapa" de `references/plano.md`); não use mapa da internet nem imagem de satélite. Se o assunto não é um lugar, não precisa de mapa: o template desenha um mapa genérico.
-4. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode (`xcode-select --install`).
+4. Requisitos: Node 18+ e uns 3,5 GB livres na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; o projeto em si, ~1 GB). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 
 ## Fluxo
 
@@ -166,7 +166,7 @@ Outros usos: etapas de um funil de vendas, de um treino, de uma receita, de um p
 
 - **Comandos travam sem mensagem**: o projeto provavelmente está numa pasta sincronizada com a nuvem. Mova e rode `npm install` de novo.
 - **A transcrição errou um nome ou termo**: use `correcoes` no plano.
-- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode (`xcode-select --install`).
+- **Falha ao compilar o Whisper no Mac**: faltam as ferramentas do Xcode. Rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
 - **`conferir.mjs` reprovou**: leia o trecho falado que ele aponta e escolha um bloco para ele; não use `--forcar`.
 - **Pino escondido atrás do postal ou dos cartões**: o mapa enquadra cada parada com o pino à direita (postal à esquerda) ou à esquerda (postal à direita), conforme a direção da viagem. Se um pino de uma parada com dois lugares cair embaixo do postal, aproxime os dois lugares no mapa ou ajuste as coordenadas (o mapa é abstrato: pode encurtar distâncias).
 - **Rosto pequeno ou cortado no postal**: ajuste `postal.zoom` (1,6 a 2,6) e `postal.ancoraY` (0,3 a 0,5) no plano.
