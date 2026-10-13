@@ -1,5 +1,6 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Palavra } from "./plano";
+import { faladasDoTexto } from "./fala";
 import { COR } from "./tema";
 
 // Movimento do Dossiê: a câmera viaja suave e decidida; o papel assenta sem quicar; o carimbo bate seco.
@@ -37,7 +38,8 @@ export const normalizar = (w: string) =>
 // Quando cada palavra de um texto é dita: procura, em ordem, entre as palavras faladas no trecho.
 // Palavra não achada entra logo depois da anterior (texto reescrito continua no ritmo).
 export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, ate: number, inicio = de) => {
-  const faladas = palavras.filter((p) => p.em >= de - 0.35 && p.em < ate + 0.1);
+  // a fala desde o `de` ou desde o `inicio`, a que casar mais palavras do texto (ver fala.ts)
+  const faladas = faladasDoTexto(texto, palavras, de, ate, inicio, (a, b) => !!normalizar(a) && normalizar(a) === normalizar(b));
   const tempos: number[] = [];
   let cursor = 0;
   for (const w of texto.split(/\s+/).filter(Boolean)) {

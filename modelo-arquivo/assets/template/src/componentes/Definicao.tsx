@@ -1,4 +1,4 @@
-import { Datilo, preciso, prog } from "../anim";
+import { Datilo, naVez, preciso, prog } from "../anim";
 import { partesDaRegiao, type Regiao } from "../layout";
 import { encaixar } from "../medida";
 import type { Definicao as TDefinicao, Layout } from "../plano";
@@ -38,7 +38,7 @@ export const Definicao: React.FC<{ m: TDefinicao; t: number; fim: number; regiao
     <div style={{ fontFamily: sans, fontWeight: 800, fontSize: fitTermo.tamanho, lineHeight: 1.04, letterSpacing: "0.01em", color: cor.tinta }}>
       {fitTermo.linhas.map((l, i) => (
         <div key={i} style={{ whiteSpace: "nowrap" }}>
-          <Datilo texto={l} em={m.em + i * 0.25} t={t} semente={600 + i} />
+          <Datilo texto={l} {...naVez(fitTermo.linhas, i, m.em, 0.25, t, { cursor: t < m.significadoEm })} t={t} semente={600 + i} />
         </div>
       ))}
     </div>
@@ -66,7 +66,7 @@ export const Definicao: React.FC<{ m: TDefinicao; t: number; fim: number; regiao
         <div style={{ position: "absolute", left: MARGEM_ESQ, top: topoTexto, fontFamily: mono, fontWeight: 700, fontSize: fit.tamanho, lineHeight: `${LINHA}px`, color: cor.tinta }}>
           {fit.linhas.map((l, i) => (
             <div key={i} style={{ whiteSpace: "nowrap", height: LINHA }}>
-              <Datilo texto={l} em={m.significadoEm + i * 0.35} t={t} dur={Math.min(0.9, Math.max(0.25, l.length * 0.035))} semente={620 + i} />
+              <Datilo texto={l} {...naVez(fit.linhas, i, m.significadoEm, 0.35, t, { dur: (x) => Math.min(0.9, Math.max(0.25, x.length * 0.035)) })} t={t} semente={620 + i} />
             </div>
           ))}
         </div>

@@ -25,6 +25,7 @@ import { areasDoLayout, caixaDoLayout, estadosDaCaixa, layoutDe, VIAGEM } from "
 import { caixaNoTempo, type EstadoDaCaixa, VideoNaCaixa } from "./motor/caixa";
 import { montarFrases } from "./motor/frases";
 import type { Layout, Momento, Plano } from "./plano";
+import { legendaVolta } from "./prancha";
 import { cor, zona as zonaPadrao } from "./tema";
 
 // O último momento fica até o fim do vídeo quando é um fechamento ou quando termina colado no fim.
@@ -252,7 +253,8 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: pla
       {/* conteúdo em tela cheia fica por cima, na névoa */}
       {visiveis.filter((v) => v.layout === "cheio").map(desenhar)}
 
-      <Legendas frases={frases} />
+      {/* a prancha do anatomia sem legenda desce até a faixa da legenda: a legenda espera ela sair */}
+      <Legendas frases={frases} volta={legendaVolta(todos, t)} />
 
       {guias ? <Guias plano={plano} zona={zona} caixa={caixa} areas={areasAtuais} /> : null}
 

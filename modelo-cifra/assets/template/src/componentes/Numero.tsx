@@ -98,7 +98,7 @@ export const Numero: React.FC<{ m: TNumero; t: number; area: Area; palavras: Pal
 
   const pConta = prog(t, m.em, DURACAO_CONTA, suave);
   const chegou = t >= m.em + DURACAO_CONTA;
-  const agora = numeroPtBr(m.valor * pConta, casas);
+  const agora = numeroPtBr((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta, casas);
   const antes = t < m.em - 0.02;
   // antes de ser dito: o número a lápis, zerado, no tamanho final
   const mostrado = antes ? final.replace(/\d/g, "0") : agora;

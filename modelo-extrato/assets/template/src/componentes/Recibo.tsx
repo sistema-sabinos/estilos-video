@@ -277,7 +277,7 @@ const Total: React.FC<{ t: number; b: Extract<Conteudo, { k: "total" }>; tamanho
   let corpo = tamanho;
   if (b.valor !== undefined) {
     const valor =
-      passos > 0 ? (b.valor * Math.max(1, degrau(t, contaDe, contaAte, passos))) / passos : b.valor * suave(prog(t, contaDe, contaAte - contaDe, (x) => x));
+      passos > 0 ? (b.valor * Math.max(1, degrau(t, contaDe, contaAte, passos))) / passos : (b.inicio ?? 0) + (b.valor - (b.inicio ?? 0)) * suave(prog(t, contaDe, contaAte - contaDe, (x) => x));
     // antes de ser dito, o número espera a lápis em branco ("_.___,__"), no tamanho do valor final
     texto = contando ? formatar(valor, b.casas) : formatar(b.valor, b.casas).replace(/\d/g, "_");
   } else {

@@ -113,7 +113,7 @@ export const CartaoDestaque: React.FC<Props<Destaque>> = ({ m, t, fim, zona, pla
 export const CartaoNumero: React.FC<Props<Numero>> = ({ m, t, fim, zona }) => {
   const R = useRotulos();
   const casas = m.casas ?? (m.valor % 1 !== 0 ? 1 : 0);
-  const v = m.valor * prog(t, m.em, 1.0);
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * prog(t, m.em, 1.0);
   const textoFinal = `${m.prefixo ?? ""}${formatar(m.valor, casas)}${m.sufixo ?? ""}`;
   const { tamanho } = encaixar(textoFinal, INTERNA, 170, 80, 1, { peso: 800 });
   const lFinal = medir(textoFinal, tamanho, { peso: 800 });

@@ -132,7 +132,7 @@ export const Numero: React.FC<Comum & { m: TNumero }> = ({ t, plano, m, fim }) =
       <div style={{ position: "absolute", left: PAINEL.x, top: y0, width: PAINEL.w, height: H, opacity: e.opacity, transform: e.transform, visibility: e.visivel ? "visible" : "hidden" }}>
         <Cartao raio={28} />
         <div style={{ position: "absolute", left: 0, right: 0, top: 60, display: "flex", justifyContent: "center", transform: golpe ? `scale(${1 + 0.05 * golpe})` : undefined }}>
-          <Valor v={v} x={m.valor * pC} tamanho={tam} c={cor.acento} />
+          <Valor v={v} x={(m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pC} tamanho={tam} c={cor.acento} />
         </div>
         <div style={{ position: "absolute", left: (PAINEL.w - w) / 2, top: 60 + tam * 1.02, height: 8, width: w * prog(t, m.em + 0.6, 0.4, suave), borderRadius: 4, background: cor.salvia }} />
         {t >= rotuloEm ? (

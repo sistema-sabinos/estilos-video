@@ -79,7 +79,7 @@ export const Numero: React.FC<PropsPalco & { m: TNumero }> = ({ t, plano, m, fim
   const img = m.imagem ? imagemDoPlano(plano, m.imagem) : null;
   const conta = interpolate(t, [m.em, m.em + 0.45], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
   const casas = m.casas ?? 0;
-  const v = conta >= 1 ? m.valor : Math.floor(m.valor * conta * 10 ** casas) / 10 ** casas;
+  const v = conta >= 1 ? m.valor : Math.floor(((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta) * 10 ** casas) / 10 ** casas;
   const texto = `${m.prefixo ?? ""}${formatar(v, casas)}${m.sufixo ?? ""}`;
   const final = `${m.prefixo ?? ""}${formatar(m.valor, casas)}${m.sufixo ?? ""}`;
   const placa: Ret = img ? { x: palco.x + 28, y: palco.y + palco.h - 330, w: palco.w - 56, h: 300 } : { x: palco.x, y: palco.y + palco.h / 2 - 200, w: palco.w, h: 400 };

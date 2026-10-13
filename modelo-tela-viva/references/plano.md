@@ -16,7 +16,7 @@ Todos os tempos são em segundos, **na linha do tempo do vídeo já cortado**. T
 
 ## A legenda
 
-- Branca, minúscula, sem caixa, ~48 px semibold, sombra leve, centro a 82% da altura (y 1565, no peito).
+- Branca, minúscula (menos o texto de `correcoes`, que sai do jeito que você escreveu), sem caixa, ~48 px semibold, sombra leve, centro a 82% da altura (y 1565, no peito).
 - O modelo divide as linhas do motor em pedaços de **2 a 4 palavras** (até ~22 letras), sem terminar em artigo ou preposição. Cada pedaço fica até o começo do seguinte. Sem sublinhado, sem cor.
 - **Continua** durante tudo (a tela fica em cima e a legenda no peito), inclusive no rótulo. **Some** durante `frase`, `pergunta` e `cta` (a moldura mostra a própria fala).
 - `legenda: true` ou `false` no momento manda por cima do padrão.
@@ -36,7 +36,7 @@ O retângulo de cima (x 64 a 1016, y 120 a 772). Cada momento (menos a `abertura
 | Campo | Obrigatório | O que é |
 |---|---|---|
 | `captura` | sim | nome do arquivo em `public/tela/` sem a extensão (`chrome` = `public/tela/chrome.jpg`) |
-| `proporcao` | sim | altura ÷ largura da captura (o `capturar.mjs` imprime) |
+| `proporcao` | sim | altura ÷ largura da captura (o `capturar.mjs` imprime, já sem o `--cortar-topo`) |
 | `ini`, `fim` | sim | a câmera no primeiro e no último quadro: `x`,`y` = centro do que se vê, em frações da captura inteira; `zoom` 1 = cover (a captura cobre a moldura inteira, sem faixa preta), 2 = metade da largura. Devem ser **diferentes** (a tela nunca para): rolar (`y` muda) e/ou aproximar (`zoom` sobe) |
 | `cursor` | recomendado | pontos `{ x, y, em, clique? }` em frações da captura. O cursor chega ao ponto no `em` (a palavra que nomeia o item), vindo do anterior em até 0,7 s; `clique: true` desenha o toque. Depois do último ponto, deriva de leve |
 
@@ -115,9 +115,15 @@ Sem nada no plano, a câmera alterna o zoom do rosto em cada corte (`cortesEm`) 
 - Um item num corte (até 0,25 s de distância) escolhe o zoom daquele trecho. Fora de um corte, cria um reenquadramento ali: evite, o formato só reenquadra nos cortes da fala.
 - Zooms permitidos: 1 a 1,06. O topo da cabeça fica na mesma altura nos dois.
 
+## Topo da cabeça (`ateTopo`)
+
+O template põe o topo da cabeça na linha do modelo supondo o cabelo a 0,84 largura de rosto acima do centro do rosto, que é a média. Com cabelo bem mais baixo a cabeça fica abaixo da linha (uns 60 px no 0,70); com cabelo alto, acima. Para acertar, leia também o **topo do cabelo** na grade do passo 4 e, depois do `cortar.mjs`, grave no plano o número `ateTopo` = 0,66 × (rosto-y menos topo do cabelo) ÷ (queixo-y menos rosto-y).
+
+Exemplo: `--rosto-y 0.31`, `--queixo-y 0.42` e o topo do cabelo em 0,18 dão 0,66 × 0,13 ÷ 0,11 = 0,78, e o plano ganha `"ateTopo": 0.78`. A conta usa só as proporções do rosto, então vale em qualquer recorte (9:16 ou 3:4). Sem o campo vale 0,84; o template aceita de 0,6 a 1,2. O `cortar.mjs --manter-plano` mantém o campo; um corte sem `--manter-plano` começa o plano do zero, então grave de novo.
+
 ## Regras de tempo
 
 - A `tela` cobre o vídeo inteiro, uma cena depois da outra, sem sobreposição (`ate` de uma = `de` da seguinte). A `abertura` fica por cima do começo. Quando um bloco universal entra na moldura, termine a `tela` ali (`ate` = `de` do bloco) e comece outra `tela` quando o bloco acabar: vale o momento que começou por último, e em empate de `de` vale o que vem depois na lista.
 - Cada cena de 4 a 10 s; um ponto de cursor a cada ~3 s; nenhum momento parado mais de 4,5 s.
-- Cobertura 70% ou mais (a `tela` cobre 100%). Variedade: a `abertura` e a `tela` bastam em vídeos de até 20 s; de 20 a 40 s use 3 tipos (acrescente um bloco universal onde a fala pede); acima de 40 s, 4.
+- Cobertura 70% ou mais (a `tela` cobre 100%). Variedade: a `abertura` e a `tela` bastam em qualquer duração, como no Reel original (o `modelo.json` pede só 2 tipos); um bloco universal entra só quando a fala tem uma forma que a tela não resolve (passo 6 do SKILL.md).
 - A `tela` e a `abertura` aparecem pelo menos uma vez (a assinatura).

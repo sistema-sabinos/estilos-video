@@ -1,5 +1,6 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Palavra } from "./plano";
+import { faladasDoTexto } from "./fala";
 
 // Movimento de câmera: entra decidido e assenta, sem quique (como um motor de foco que para no ponto).
 export const assenta = Easing.bezier(0.2, 0.9, 0.22, 1);
@@ -62,7 +63,8 @@ const casa = (escrita: string, falada: string) => {
 // Quando cada palavra de um texto é dita: procura, em ordem, entre as palavras faladas no trecho.
 // Palavra não achada entra logo depois da anterior (texto reescrito continua no ritmo).
 export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, ate: number, inicio = de) => {
-  const faladas = palavras.filter((p) => p.em >= de - 0.35 && p.em < ate + 0.1);
+  // a fala desde o `de` ou desde o `inicio`, a que casar mais palavras do texto (ver fala.ts)
+  const faladas = faladasDoTexto(texto, palavras, de, ate, inicio, casa);
   const tempos: number[] = [];
   let cursor = 0;
   for (const w of texto.split(/\s+/).filter(Boolean)) {

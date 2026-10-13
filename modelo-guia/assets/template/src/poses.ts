@@ -1,5 +1,6 @@
 // Onde o recorte da pessoa fica, e quando ele troca de lugar.
 import { interpolate } from "remotion";
+import { geometria } from "./corpo";
 import { pontoDoRosto } from "./motor/caixa";
 import type { Momento, Plano, PoseNome, TrocaDePose } from "./plano";
 import { suave } from "./tema";
@@ -64,16 +65,4 @@ export const poseNoTempo = (trocas: Troca[], t: number): Pose => {
 };
 
 // Geometria do recorte (px) para o rosto cair em (fx, fy) com a escala s, seguindo o rosto no tempo.
-export const geometriaDaPessoa = (plano: Plano, pose: Pose, t: number) => {
-  const p = pontoDoRosto(plano.rosto, t, 0.35);
-  const W = plano.largura;
-  const H = plano.altura;
-  // o corpo precisa chegar à borda de baixo (exceto na miniatura do topo)
-  let s = pose.s;
-  if (!pose.frente) s = Math.max(s, (1 - pose.fy) / (1 - p.y) + (pose.rot ? 0.12 : 0.02));
-  const w = W * s;
-  const h = (plano.videoAltura ?? H) * s;
-  const ox = p.x * w;
-  const oy = p.y * h;
-  return { left: pose.fx * W - ox, top: pose.fy * H - oy, w, h, ox, oy, rot: pose.rot };
-};
+export const geometriaDaPessoa = (plano: Plano, pose: Pose, t: number) => geometria(plano, pose, pontoDoRosto(plano.rosto, t, 0.35));

@@ -49,7 +49,7 @@ Vem da decupagem de um Reel de fluxo de agentes com 446 comentários. Reproduza 
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB, que também captura os prints das páginas). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
+   - Ele precisa de Node 22+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB, que também captura os prints das páginas). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
 2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte **uma vez**, numa mensagem só:
@@ -100,7 +100,8 @@ Ele transforma cada pausa de 0,38 s ou mais entre trechos mantidos num corte com
 Abra `work/medir-1.jpg`, `-2` e `-3` (começo, meio e fim da gravação, com uma grade de 0,05 em 0,05 por cima) e leia, em frações (0 = esquerda/topo, 1 = direita/base):
 
 - o **centro do rosto** (entre os olhos e a ponta do nariz) → `--rosto-x` e `--rosto-y`;
-- a **ponta do queixo** → `--queixo-y`.
+- a **ponta do queixo** → `--queixo-y`;
+- o **topo do cabelo** (a linha mais alta do cabelo): não vai no comando; depois do corte ele vira o `ateTopo` do plano (`references/plano.md`).
 
 Use a posição mais comum; se a pessoa se mexe muito, fique no meio do movimento. Então:
 
@@ -149,7 +150,7 @@ Depois:
 - `node ferramentas/timing.mjs`: cada rótulo de etapa e cada item na palavra que o nomeia (±0,15 s); corrija o `de`/`em` até sair **Tempo OK**;
 - `node scripts/legendas.mjs`: lista as linhas de legenda.
 
-Nomes e termos que a transcrição errou vão em `correcoes` (ex.: `{ "com o texto": "contexto" }`). Só corrija o que você tem certeza.
+Nomes e termos que a transcrição errou vão em `correcoes` (ex.: `{ "com o texto": "contexto" }`). Só corrija o que você tem certeza. A legenda é minúscula, mas o texto da correção sai do jeito que você escreveu, maiúsculas incluídas (`{ "i a": "IA" }` mostra `IA`); para sair minúsculo, escreva em minúscula.
 
 ### 8. Conferir os quadros
 

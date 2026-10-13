@@ -139,6 +139,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // `unidade` (= sufixo grande ao lado), `emFim` (quando a contagem termina) e `icone`.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em?: number;
   rotulo?: string;

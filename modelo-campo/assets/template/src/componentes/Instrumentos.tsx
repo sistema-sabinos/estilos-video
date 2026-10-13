@@ -6,6 +6,7 @@
 import { Easing } from "remotion";
 import { formatar, pouso, prog, saindo, soco, suave, temposDoTexto } from "../anim";
 import { imagemDoPlano, temImagem } from "../motor/imagem";
+import { pousoDoMedidor } from "./pousoDoMedidor";
 import type { Cotacao as TCotacao, Medidor as TMedidor, Plano, Previsao as TPrevisao } from "../plano";
 import { cor, mono, PAINEL, RAIO, sombra } from "../tema";
 import { caber, caberMono, caberTitulo, Cartao, Etiqueta, FotoCampo, Icone, IconeClima, Mira, type NomeIcone, Texto } from "./Pecas";
@@ -235,8 +236,7 @@ export const Medidor: React.FC<Comum & { m: TMedidor }> = ({ t, plano, m, fim })
   const y = temFoto ? PAINEL.y + ALT_FOTO + 28 : PAINEL.y + 40;
   const h = temFoto ? PAINEL.base - y : PAINEL.base - y - 40;
   const W = PAINEL.w;
-  const entra = temFoto ? Math.max(m.de, (m.mudaEm ?? m.fracaoEm) - 0.3) : m.em;
-  const cartaoEm = Math.min(entra, m.em + 0.5);
+  const cartaoEm = pousoDoMedidor(m, temFoto);
   const e = pouso(t, cartaoEm, { de: 1.04, sobe: 20 });
   // a escala: até 1 (ou até a fração, se ela passa de 1: "o dobro")
   const escala = Math.max(1, m.fracao);

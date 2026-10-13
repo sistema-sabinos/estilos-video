@@ -78,7 +78,7 @@ export const BlocoNumero: React.FC<Props<Numero>> = ({ m, ret, t, palavras, said
           {m.ilustrativo ? <Ilustrativo p={prog(t, m.em, 0.3)} /> : null}
         </div>
         <div style={{ position: "relative", fontFamily: sans, fontWeight: 700, fontSize: tamNumero, lineHeight: 1, color: p > 0 ? cor.acento : cor.esboco, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
-          {p > 0 ? formato(m.valor * p) : final.replace(/\d/g, "0")}
+          {p > 0 || m.inicio !== undefined ? formato((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p) : final.replace(/\d/g, "0")}
           <svg width={larguraNumero} height={14} style={{ position: "absolute", left: 0, bottom: -18, overflow: "visible" }}>
             <Traco d={`M0 4H${larguraNumero.toFixed(0)}`} p={regua} cor={cor.acento} largura={4} />
           </svg>

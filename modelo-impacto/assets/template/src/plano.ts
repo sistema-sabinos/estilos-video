@@ -42,6 +42,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[]; fi
 // Campos antigos do Impacto (continuam valendo): `valor` em texto ("20", "4x"), `unidade`, `grifoEm`.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number | string;
   em?: number;
   rotulo?: string;

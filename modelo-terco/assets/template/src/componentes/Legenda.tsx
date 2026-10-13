@@ -7,15 +7,14 @@ import { encaixar, larguraTexto } from "../medida";
 import type { Momento, Plano } from "../plano";
 import { COR, FONTE, SOMBRA_TEXTO, medidas, prog } from "../tema";
 
-// Momentos que mostram a própria fala no palco: a legenda some neles (salvo `legenda: true`).
-const MOSTRAM_A_FALA = new Set(["abertura", "capitulo", "frase", "pergunta", "cta"]);
-export const legendaNoMomento = (m: Momento) => m.legenda ?? !MOSTRAM_A_FALA.has(m.tipo);
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 const guardadas = new WeakMap<object, Frase[]>();
 const frasesDo = (plano: Plano) => {
   let f = guardadas.get(plano);
   if (!f) {
-    f = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) });
+    f = montarFrases(planoDaLegenda(plano));
     guardadas.set(plano, f);
   }
   return f;

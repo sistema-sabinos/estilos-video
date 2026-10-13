@@ -341,7 +341,7 @@ const Numero: React.FC<{ plano: Plano; m: TNumero; t: number; h: number }> = ({ 
   const casas = m.casas ?? 0;
   const fmt = (v: number) => `${m.prefixo ?? ""}${formatar(casas === 0 ? Math.round(v) : v, casas)}${m.sufixo ?? ""}`;
   const temDesde = m.desde !== undefined;
-  const desde = m.desde ?? 0;
+  const desde = m.desde ?? m.inicio ?? 0;
   const p = prog(t, m.em, CONTA, suave);
   const atual = fmt(desde + (m.valor - desde) * p);
   const titulo = m.titulo ? <Sobretitulo texto={m.titulo} x={PAD} y={PAD - 4} largura={UTIL} tamanho={26} t={t} em={m.de} /> : null;

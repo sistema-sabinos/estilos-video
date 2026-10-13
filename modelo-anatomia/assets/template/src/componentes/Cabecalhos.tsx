@@ -2,12 +2,14 @@
 // cabeçalho do mito ("Botox ≠ [PREENCHE] → Botox relaxa o músculo").
 import { Rise } from "../anim";
 import { encaixar, larguraTexto } from "../medida";
+import { posicaoDaPergunta } from "../pergunta";
 import type { Mito as TMito, Virada as TVirada } from "../plano";
 import { EASE_IN, EASE_INOUT, EASE_OUT, FONT, K, prog } from "../tema";
 import { Seringa } from "./Pecas";
 
-/** "E se eu fosse" (pequeno) + NOME (grande, letra a letra), acima da cabeça; some na troca */
-export const Pergunta: React.FC<{ m: TVirada; t: number; troca: number; y?: number }> = ({ m, t, troca, y = 330 }) => {
+/** "E se eu fosse" (pequeno) + NOME (grande, letra a letra), acima da cabeça; some na troca.
+ *  `topoCabeca`: o topo da cabeça mais alto enquanto a pergunta está na tela (pergunta.ts) */
+export const Pergunta: React.FC<{ m: TVirada; t: number; troca: number; topoCabeca?: number }> = ({ m, t, troca, topoCabeca = Infinity }) => {
   const em = m.em ?? m.de;
   if (t < em - 0.2 || t > troca + 0.35) return null;
   const a = prog(t, em - 0.1, em + 0.28);
@@ -15,12 +17,13 @@ export const Pergunta: React.FC<{ m: TVirada; t: number; troca: number; y?: numb
   const letras = Array.from(m.nome);
   const lead = encaixar(m.texto, { largura: 900, max: 46, min: 34, linhas: 1, fonte: { peso: 600 } });
   const nome = encaixar(m.nome, { largura: 940, max: 124, min: 64, linhas: 1, fonte: { peso: 800 } });
+  const pos = posicaoDaPergunta(topoCabeca, lead.tamanho, nome.tamanho);
   return (
-    <div style={{ position: "absolute", left: 0, width: 1080, top: y, transform: `translateY(-50%) scale(${1 + ex * 0.08})`, opacity: 1 - ex, textAlign: "center", filter: ex > 0 ? `blur(${ex * 10}px)` : undefined, fontFamily: FONT }}>
+    <div style={{ position: "absolute", left: 0, width: 1080, top: pos.y, transform: `translateY(-50%) scale(${1 + ex * 0.08})`, opacity: 1 - ex, textAlign: "center", filter: ex > 0 ? `blur(${ex * 10}px)` : undefined, fontFamily: FONT }}>
       <div style={{ overflow: "hidden", height: lead.tamanho * 1.4 }}>
-        <div style={{ transform: `translateY(${(1 - a) * 100}%)`, fontWeight: 600, fontSize: lead.tamanho, letterSpacing: "0.01em", color: "rgba(255,248,242,0.86)", textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}>{m.texto}</div>
+        <div style={{ transform: `translateY(${(1 - a) * 100}%)`, fontWeight: 600, fontSize: lead.tamanho, letterSpacing: "0.01em", color: "#FFF8F2", WebkitTextStroke: "7px #000", paintOrder: "stroke fill", textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}>{m.texto}</div>
       </div>
-      <div style={{ marginTop: 6, fontWeight: 800, fontSize: nome.tamanho, letterSpacing: "-0.02em", lineHeight: 1, color: K.accHi, textShadow: `0 6px 40px ${K.accHi}55`, whiteSpace: "nowrap" }}>
+      <div style={{ marginTop: 6, fontWeight: 800, fontSize: pos.nome, letterSpacing: "-0.02em", lineHeight: 1, color: K.accHi, textShadow: `0 6px 40px ${K.accHi}55`, whiteSpace: "nowrap" }}>
         {letras.map((ch, i) => {
           const q = prog(t, m.nomeEm - 0.06 + i * 0.022, m.nomeEm + 0.24 + i * 0.022, EASE_OUT);
           return (

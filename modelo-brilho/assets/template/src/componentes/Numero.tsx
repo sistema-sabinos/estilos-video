@@ -10,6 +10,7 @@ import { Icone } from "./Icones";
 
 export type NumeroDoBloco = {
   valor: number;
+  inicio?: number;
   unidade?: string;
   prefixo?: string;
   casas?: number;
@@ -50,7 +51,7 @@ export const BlocoNumero: React.FC<{
   const pN = n ? prog(t, n.em - 0.1, 0.45) : 0;
   const conta = n ? prog(t, n.em, Math.max(0.3, (n.emFim ?? n.em + 0.55) - n.em), (x) => 1 - (1 - x) ** 2) : 0;
   const casas = n ? (n.casas ?? (Number.isInteger(n.valor) ? 0 : 1)) : 0;
-  const mostrado = n ? formatar(n.valor * conta, casas) : "";
+  const mostrado = n ? formatar((n.inicio ?? 0) + (n.valor - (n.inicio ?? 0)) * conta, casas) : "";
   // encaixe: prefixo + número + unidade cabem na largura (tudo encolhe junto)
   let k = 1;
   if (n) {

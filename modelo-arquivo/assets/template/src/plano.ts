@@ -138,6 +138,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // Número de registro que conta sobre uma régua de documentário (o ponteiro vermelho fica parado)
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

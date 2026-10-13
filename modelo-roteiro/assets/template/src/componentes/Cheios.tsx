@@ -70,7 +70,7 @@ export const Bagagem: React.FC<Base & { m: Numero }> = ({ m, t, topo, saidaFim, 
   const x0 = xNum;
   const x1 = LARGURA_CHEIO - 56;
   const seg = 10;
-  const quando = textoDoNumero(m, m.valor * p);
+  const quando = textoDoNumero(m, (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p);
   return (
     <Moldura topo={topo} j={j} giro={-0.7} fundo={false}>
       <svg width={LARGURA_CHEIO} height={ALTURA_CHEIO} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", filter: "drop-shadow(0 14px 22px rgba(60,44,20,0.24))" }}>

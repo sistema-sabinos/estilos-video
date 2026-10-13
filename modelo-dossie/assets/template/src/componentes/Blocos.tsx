@@ -321,7 +321,7 @@ export const pecaNumero = (m: Numero, plano: Plano): Peca => {
     pino: { x: W / 2, y: 70 },
     desenhar: (t) => {
       const conta = viaja(limitar((t - m.em) / 1.0));
-      const v = m.valor * conta;
+      const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
       return (
         <>
           <div style={{ position: "absolute", inset: 0, filter: "drop-shadow(0 4px 5px rgba(0,0,0,0.45)) drop-shadow(0 18px 26px rgba(0,0,0,0.45))" }}>

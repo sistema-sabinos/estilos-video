@@ -343,7 +343,7 @@ const layoutNumero = (m: Numero, ctx: Ctx): LayoutPeito => {
     sons: [{ em: encaixe - 0.02, arquivo: "sfx/encaixe-2.wav", volume: 0.42 }],
     desenhar: (t) => {
       const q = prog(t, m.em, 0.9, chega);
-      const atual = textoDoNumero(m, Math.round(m.valor * q * 10 ** (m.casas ?? 0)) / 10 ** (m.casas ?? 0));
+      const atual = textoDoNumero(m, Math.round(((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * q) * 10 ** (m.casas ?? 0)) / 10 ** (m.casas ?? 0));
       return (
         <>
           {comCabecalho ? <CabecalhoIA direita={m.ilustrativo ? <Etiqueta texto="ilustrativo" t={t} em={m.de + 0.2} /> : null} /> : null}

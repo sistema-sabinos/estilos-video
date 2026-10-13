@@ -1,6 +1,6 @@
 # O plano de edição (`src/plano.json`)
 
-O template renderiza o vídeo a partir deste arquivo. O `cortar.mjs` preenche a parte mecânica (`video`, `fps`, `duracao`, `videoAltura`, `rosto`, `zona`, `cortesEm`, `palavras`) e o `imagens.mjs` preenche `imagens`. Você preenche `marca`, `momentos`, `semLegenda` e `correcoes`.
+O template renderiza o vídeo a partir deste arquivo. O `cortar.mjs` preenche a parte mecânica (`video`, `fps`, `duracao`, `videoAltura`, `rosto`, `zona`, `cortesEm`, `palavras`) e o `imagens.mjs` preenche `imagens`. Você preenche `momentos`, `semLegenda` e `correcoes`. `marca` fica `{ "nome": "", "area": "" }`: este modelo não mostra o nome de quem fala (o campo existe por contrato).
 
 Todos os tempos são em segundos, na linha do tempo do vídeo **já cortado**, tirados de `work/palavras.json`. Todo campo `em` ou `…Em` é o `em` de uma palavra dita.
 
@@ -29,7 +29,7 @@ Momentos seguidos: o `ate` de um = o `de` do próximo (de preferência numa paus
 - `rotulos` (opcional): nomes dos lados (padrão ANTES e DEPOIS; ex.: `["Janeiro", "Junho"]`), até ~12 caracteres.
 - `marcadores` (2 a 5): `texto` (até ~45 caracteres, 2 linhas, com as palavras da fala), `em`, `foco` (área que a câmera aproxima, frações da foto), `zoom` (1,3 a 3; padrão 2), `ponto` (onde fica o pino; padrão o foco), `detalhe` / `detalheEm` (até ~40 caracteres, verde, uma linha). Dê 1,5 s ou mais a cada marcador.
 - `alca` (opcional): onde a alça fica em instantes específicos (0 = só o antes, 1 = só o depois, 0,5 = meio a meio). Sem isso, ela varre sozinha durante cada dica; use para a revelação final.
-- `janelaEm`: a partir daqui a foto toma a tela inteira e a pessoa vai para a janela (a revelação). Use nas últimas 1 a 2 s do momento. A janela cobre o chão da foto: não ponha pinos embaixo no centro.
+- `janelaEm`: a partir daqui a foto toma a tela inteira e a pessoa vai para a janela (a revelação). Use nas últimas 1 a 2 s do momento. Os pinos somem aqui e não voltam, nem quando a alça varre o resultado, então nenhum cai na janela.
 - Duração: 6 a 12 s. Dê `legenda: true` se quiser a legenda durante o momento (por padrão ela some, o cartão da dica já mostra o texto).
 
 ## Blocos de quadro cheio
@@ -53,5 +53,5 @@ Texto num cartão claro, Outfit 800, palavra por palavra na fala a partir do `em
 - Pelo menos um momento a cada 8 s; cobertura mínima de 70% do vídeo.
 
 ## Legenda, correções e sons
-- A legenda (cartão claro, até 4 palavras, a palavra falada em verde) fica abaixo do queixo e some durante momentos sem `legenda: true`. `semLegenda: [{ de, ate }]` apaga em trechos extras.
+- A legenda (cartão claro, até 4 palavras, a palavra falada em verde) fica abaixo do queixo no quadro cheio, logo abaixo da emenda no painel e logo acima da janela na revelação, e some durante momentos sem `legenda: true`. `semLegenda: [{ de, ate }]` apaga em trechos extras.
 - `correcoes`: `{ "Olho": "Olha" }` corrige a transcrição. `sfx: false` desliga os sons.

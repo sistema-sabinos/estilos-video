@@ -1,4 +1,4 @@
-import { Datilo, mistura, preciso, prog } from "../anim";
+import { Datilo, mistura, naVez, preciso, prog } from "../anim";
 import { partesDaRegiao, type Regiao } from "../layout";
 import { encaixar, formatarNumero, larguraTexto } from "../medida";
 import type { Grafico as TGrafico, Layout } from "../plano";
@@ -106,7 +106,7 @@ export const Grafico: React.FC<{ m: TGrafico; t: number; fim: number; regiao: Re
                       <div style={{ fontFamily: mono, fontWeight: 700, fontSize: rot.tamanho, lineHeight: 1.15, color: cor.grafite, marginTop: 6 }}>
                         {rot.linhas.map((l, k) => (
                           <div key={k} style={{ whiteSpace: "nowrap" }}>
-                            <Datilo texto={l} em={d.em + 0.2} t={t} semente={510 + i * 3 + k} />
+                            <Datilo texto={l} {...naVez(rot.linhas, k, d.em + 0.2, 0, t)} t={t} semente={510 + i * 3 + k} />
                           </div>
                         ))}
                       </div>
@@ -181,7 +181,7 @@ export const Grafico: React.FC<{ m: TGrafico; t: number; fim: number; regiao: Re
                     <div style={{ position: "absolute", left: x + 6, width: fatia - 12, top: plot.y + plot.h + 16, textAlign: "center", fontFamily: mono, fontWeight: 700, fontSize: rot.tamanho, lineHeight: 1.12, color: cor.tinta }}>
                       {rot.linhas.map((l, j) => (
                         <div key={j} style={{ whiteSpace: "nowrap" }}>
-                          <Datilo texto={l} em={d.em} t={t} semente={540 + k * 3 + j} />
+                          <Datilo texto={l} {...naVez(rot.linhas, j, d.em, 0, t)} t={t} semente={540 + k * 3 + j} />
                         </div>
                       ))}
                     </div>
@@ -266,7 +266,7 @@ export const Grafico: React.FC<{ m: TGrafico; t: number; fim: number; regiao: Re
                   <div style={{ position: "absolute", left: esquerda, width: 260, top: plot.y + plot.h + 16, textAlign: "center", fontFamily: mono, fontWeight: 700, fontSize: rot.tamanho, lineHeight: 1.12, color: cor.tinta }}>
                     {rot.linhas.map((l, j) => (
                       <div key={j} style={{ whiteSpace: "nowrap" }}>
-                        <Datilo texto={l} em={d.em} t={t} semente={570 + k * 3 + j} />
+                        <Datilo texto={l} {...naVez(rot.linhas, j, d.em, 0, t)} t={t} semente={570 + k * 3 + j} />
                       </div>
                     ))}
                   </div>

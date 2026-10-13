@@ -182,7 +182,7 @@ export const Topicos: React.FC<P<TTopicos>> = ({ t, m, R, fim }) => {
 export const Numero: React.FC<P<TNumero>> = ({ t, m, R, fim }) => {
   const topo = topoDa(R, t) + 30;
   const fimConta = Math.max(m.em + 0.6, Math.min(m.em + 1.0, (m.rotuloEm ?? m.em + 1) + 0.2));
-  const v = m.valor * prog(t, m.em - 0.05, fimConta, EASE_INOUT);
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * prog(t, m.em - 0.05, fimConta, EASE_INOUT);
   const casas = m.casas ?? 0;
   const txt = numeroBR(t >= fimConta ? m.valor : casas ? v : Math.round(v), casas);
   const pin = prog(t, m.em - 0.1, m.em + 0.25);

@@ -8,13 +8,11 @@ import { type Fonte, larguraTexto, quebrarLinhas } from "../medida";
 import type { Palavra } from "../plano";
 import { cor } from "../tema";
 import { familiaCss } from "./Texto";
+import { palavrasDoMomento } from "./faladas";
 
 const FONTE: Fonte = { familia: "italico", peso: 400 };
 export const CORPO_ABONACAO = 40;
 const ENTRELINHA = 1.28;
-
-export const palavrasDoMomento = (palavras: Palavra[], de: number, ate: number) =>
-  palavras.filter((p) => p.em >= de - 0.05 && p.em < ate - 0.02 && p.w.trim());
 
 export const Abonacao: React.FC<{ regiao: Regiao; palavras: Palavra[]; de: number; ate: number; t: number }> = ({
   regiao,

@@ -16,7 +16,7 @@ O Etapas é o "editor de explicador com gravação de tela": nenhum efeito chama
 
 - **Margem segura (regra do estilo):** nada importante a menos de 64 px das laterais nem de 120 px do topo; nada importante abaixo de y 1700 (interface do app). Texto sempre cabe no fundo dele (medido, fonte reduzida, linha quebrada).
 - **Modo B:** tela x 64, y 120, 952 × 610 (termina em y 730, ~38% da altura); pílula 724 × 84 centrada em y 734 (a junção); a pessoa de y 500 para baixo (uma cópia muda do vídeo preenche a margem em volta da tela: nunca tarja preta); topo da cabeça em y ~940 em qualquer zoom, com folga abaixo da pílula; ombros e peito visíveis; legenda logo abaixo do queixo (y ~1550).
-- **Modo A:** cabeçalho em y 124 a ~530 (logo, ícones, pílula de 1 ou 2 linhas); topo da cabeça em y 680; legenda abaixo do queixo.
+- **Modo A:** cabeçalho em y 124 a ~530 (logo, ícones, pílula de 1 ou 2 linhas); topo da cabeça em y 680; legenda abaixo do queixo. Com o rosto alto no vídeo (o topo do vídeo não desce sozinho até a cabeça cair em 680), a pessoa desce o que falta, a mesma descida no vídeo inteiro (`descidaA` no tema.ts), e o alto do quadro, atrás do cabeçalho, vira o reflexo esticado do fundo logo acima do cabelo. Com o rosto na altura comum nada muda.
 - **Modo C:** topo da cabeça em y 360; legenda abaixo do queixo (~y 1150).
 - **Prints:** preenchem a tela (cover); `rolar`, `zoom` e `foco` escolhem o pedaço. Sem faixa preta.
 
@@ -29,5 +29,5 @@ O Etapas é o "editor de explicador com gravação de tela": nenhum efeito chama
 ## Conferindo um quadro
 
 1. Modo B: a pílula inteira na junção, a cabeça inteira com folga abaixo dela, ombros e peito visíveis, a legenda abaixo do queixo, o print legível e sem banner.
-2. Modo A: o cabeçalho completo, nada cobrindo o rosto.
+2. Modo A: o cabeçalho completo, nada cobrindo o rosto; se a pessoa desceu, o reflexo no alto não mostra cabelo nem objeto cortado.
 3. A cor da pessoa igual à do original. Nenhum nome de ferramenta de edição em tela nenhuma.

@@ -12,7 +12,7 @@ Ela é comum a todos os modelos com imagem (Viral, Iceberg, Ranking, Kit, Versus
 | `src/imagem.tsx` | `src/motor/imagem.tsx` | `<Foto>`, `<Recorte>`, `<SemImagem>` e as funções de enquadramento |
 | `src/FolhaImagens.tsx` | `src/motor/FolhaImagens.tsx` | a folha de conferência e o conversor de WebP/AVIF/SVG; tem a própria raiz e só o `imagens.mjs` usa |
 
-Sem dependência nova: `fetch` do Node 18+, o ffmpeg que vem com o Remotion e o navegador do Remotion.
+Sem dependência nova: `fetch` do Node 22+, o ffmpeg que vem com o Remotion e o navegador do Remotion.
 
 ## O passo no fluxo da skill
 
@@ -66,7 +66,7 @@ node scripts/imagens.mjs --limpar                          apaga as candidatas d
   --lado 2400   lado maior das imagens normalizadas (padrão 1600)
 ```
 
-Rodar de novo é barato: buscas e downloads ficam no cache. O script só refaz o pedido que mudou (`busca`, `tipo` ou `arquivo`), o que ainda não tem candidatas e o que ficou sem imagem por falta de internet. Se o aluno puser um arquivo em `imagens/` depois, ele passa na frente na rodada seguinte.
+Rodar de novo é barato: buscas e downloads ficam no cache. O script só refaz o pedido que mudou (`busca`, `tipo` ou `arquivo`), o que ainda não tem candidatas e o que ficou sem imagem por falta de internet. Se o aluno puser um arquivo em `imagens/` depois, ou trocar a foto por outra com o mesmo nome, ela passa na frente na rodada seguinte e entra já escolhida, com o foco no centro (marque de novo com `--foco`). Mover a pasta do projeto ou baixar de novo do GitHub não refaz nada: vale o conteúdo do arquivo.
 
 ### A folha (`work/imagens.jpg`)
 

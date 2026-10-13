@@ -145,7 +145,7 @@ export const Lista: React.FC<Comum & { m: TTopicos | TPassos }> = ({ t, plano, m
 export const Numero: React.FC<Comum & { m: TNumero }> = ({ t, m, fim }) => {
   const casas = m.casas ?? 0;
   const conta = suave(clamp((t - m.em) / 0.9, 0, 1));
-  const valor = m.valor * conta;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
   const texto = `${m.prefixo ? m.prefixo + (m.prefixo.endsWith("$") ? " " : "") : ""}${formatar(valor, casas)}${m.sufixo ?? ""}`;
   const final = `${m.prefixo ? m.prefixo + (m.prefixo.endsWith("$") ? " " : "") : ""}${formatar(m.valor, casas)}${m.sufixo ?? ""}`;
   const d = 420;

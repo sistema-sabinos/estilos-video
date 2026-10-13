@@ -1,5 +1,6 @@
 // Legenda do Transformação: um cartão claro com a frase em telas curtas (até 4 palavras);
-// a palavra que está sendo dita fica verde. Fica abaixo do queixo, dentro da área da pessoa.
+// a palavra que está sendo dita fica verde. Fica sempre na área da pessoa: no quadro cheio, abaixo do
+// queixo; no painel, logo abaixo da emenda (Y_LEGENDA_PAINEL, em layout.ts); na revelação, logo acima da janela.
 import { useMemo } from "react";
 import { prog, rapido } from "../anim";
 import { larguraTexto } from "../medida";

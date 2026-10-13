@@ -104,7 +104,7 @@ export const paginaNumero = (m: TNumero, plano: Plano): Pagina => {
           ) : null}
           {t >= m.em ? (
             <div style={{ position: "absolute", left: 0, top: y0, transform: golpe ? `scale(${1 + 0.04 * golpe})` : undefined, transformOrigin: "0% 50%" }}>
-              <span style={{ fontFamily: fonte, fontWeight: 800, fontSize: f.tamanho, color: cor.tinta, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.03em", lineHeight: 1.08, whiteSpace: "nowrap" }}>{texto(m.valor * pC)}</span>
+              <span style={{ fontFamily: fonte, fontWeight: 800, fontSize: f.tamanho, color: cor.tinta, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.03em", lineHeight: 1.08, whiteSpace: "nowrap" }}>{texto((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pC)}</span>
             </div>
           ) : null}
           <div style={{ position: "absolute", left: 0, top: y0 + altN + 12, width: PW, height: 10, borderRadius: 5, background: cor.esqueleto }}>

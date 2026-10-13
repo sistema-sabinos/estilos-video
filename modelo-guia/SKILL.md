@@ -28,7 +28,7 @@ O vídeo vira uma aula-guia: a pessoa sai do cenário e fica recortada, sem fund
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de **macOS** (o recorte da pessoa usa o Vision da Apple, pelas ferramentas do Xcode: `xcode-select --install`), Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; e a busca de imagens). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
+   - Ele precisa de **macOS** (o recorte da pessoa usa o Vision da Apple, pelas ferramentas do Xcode: `xcode-select --install`), Node 22+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB; e a busca de imagens). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
 2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte **uma vez**, numa mensagem só:
@@ -88,7 +88,7 @@ Use a posição mais comum; se a pessoa se mexe muito, fique no meio do moviment
 node scripts/cortar.mjs --rosto-x 0.5 --rosto-y 0.31 --queixo-y 0.42
 ```
 
-O script corta, enquadra e calcula `rosto` e os pontos de corte (`cortesEm`) no plano. **O recorte já vem decidido pelo modelo**: o `modelo.json` fixa 9:16 (quadro cheio) para gravação vertical e horizontal; numa gravação horizontal o quadro é um recorte em volta do rosto, então ela precisa de boa resolução (1080p no mínimo; 4K fica nítido). A pessoa aparece em ~55% da largura do quadro, então 1080p vertical é suficiente. Não precisa passar `--recorte`. Refazendo o corte depois de já ter planejado, use `--manter-plano`: momentos, marca, imagens e correções continuam.
+O script corta, enquadra e calcula `rosto` e os pontos de corte (`cortesEm`) no plano. **O recorte já vem decidido pelo modelo**: o `modelo.json` fixa 9:16 (quadro cheio) para gravação vertical e horizontal; numa gravação horizontal o quadro é um recorte em volta do rosto, então ela precisa de boa resolução (1080p no mínimo; 4K fica nítido). A pessoa aparece com o corpo em ~65 a 80% da largura do quadro (`src/poses.ts`), então 1080p vertical é suficiente. Não precisa passar `--recorte`. Refazendo o corte depois de já ter planejado, use `--manter-plano`: momentos, marca, imagens e correções continuam.
 
 No fim, o `cortar.mjs` segue o rosto pelo vídeo: a câmera acompanha quando a pessoa se mexe e, se o centro lido na grade errou, ele refaz o corte com o rosto no centro. Se nas guias o rosto sair do lugar em algum trecho, rode `node scripts/rastrear.mjs --conferir <segundos>` e siga o que ele indicar.
 
@@ -98,7 +98,7 @@ No fim, o `cortar.mjs` segue o rosto pelo vídeo: a câmera acompanha quando a p
 node ferramentas/recortar.mjs
 ```
 
-Gera `public/pessoa.webm`: a pessoa sem fundo, com transparência, a partir do vídeo já cortado (`public/base.mp4`). Compila um programa pequeno em Swift na primeira vez (~30 s) e processa ~1 s de vídeo por ~2 s. **Rode de novo sempre que refizer o corte** (`cortar.mjs`), senão o recorte sai da voz. Sem macOS, ponha `"recorte": false` no `plano.json`: a pessoa aparece em retângulo, sem recorte (perde o visual do modelo; avise o usuário).
+Gera `public/pessoa.webm`: a pessoa sem fundo, com transparência, a partir do vídeo já cortado (`public/base.mp4`). Compila um programa pequeno em Swift na primeira vez (~30 s) e processa ~1 s de vídeo por ~2 s. **Rode de novo sempre que refizer o corte** (`cortar.mjs`), senão o recorte sai da voz. Ele também mede onde o corpo termina no recorte (a mesa tirada, o enquadramento no peito) e grava em `pessoaBase` no plano: o template aumenta a pessoa o quanto precisa para o corpo chegar à borda de baixo e avisa quando o corpo termina tão cedo que ela vai ficar bem maior. Sem macOS, ponha `"recorte": false` no `plano.json`: a pessoa aparece em retângulo, sem recorte (perde o visual do modelo; avise o usuário).
 
 
 ### 5. Conferir o enquadramento
@@ -207,7 +207,7 @@ Ele confere o plano de novo, renderiza e normaliza o áudio a −14 LUFS. Entreg
 | pergunta | `pergunta` | estrela e a pergunta grande; `opcoes` em pílulas com contorno |
 | fechamento | `cta` | pílula rosa-vermelha larga (940 px, dentro das margens) por cima do último print, que fica parado no cartão dele; "Comenta PALAVRA", palavra por palavra |
 
-Campo `pessoa` em qualquer momento: `"dir"`, `"esq"`, `"centro"`, `"topo"` (encolhida no alto, a tela a cobre pela cintura; use com `print`) ou `"borda"` (grande, inclinada, colada na borda direita; use com conteúdo alinhado à esquerda); ou uma lista `[{ "em": 12.4, "pose": "dir" }, …]` para ela pular de lugar durante a mesma tela. Sem o campo, o template alterna sozinho.
+Campo `pessoa` em qualquer momento: `"dir"`, `"esq"`, `"centro"`, `"canto"` (menor, embaixo à direita: a do mapa inteiro, que o template põe sozinho num `mapa` sem `foco`; ali não use `dir`, `esq` nem `centro`, que cobrem as placas), `"topo"` (encolhida no alto, a tela a cobre pela cintura; use com `print`) ou `"borda"` (grande, inclinada, colada na borda direita; use com conteúdo alinhado à esquerda); ou uma lista `[{ "em": 12.4, "pose": "dir" }, …]` para ela pular de lugar durante a mesma tela. Sem o campo, o template alterna sozinho.
 
 ## A assinatura em qualquer assunto
 

@@ -8,7 +8,9 @@ import { cor, MARGEM, sans, W } from "../tema";
 export const Legendas: React.FC<{ frases: Frase[]; t: number; y: number; visivel: number }> = ({ frases, t, y, visivel }) => {
   const atual = frases.find((f) => t >= f.de - 0.05 && t <= f.ate);
   if (!atual || visivel <= 0.01) return null;
-  const texto = atual.palavras.map((p) => p.w).join(" ");
+  // correção com espaço no valor chega como uma palavra só; o texto se reparte por espaço, a lista também
+  const palavras = atual.palavras.flatMap((p) => p.w.split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));
+  const texto = palavras.map((p) => p.w).join(" ");
   const largura = W - 2 * MARGEM - 40;
   const { linhas, tam } = diagramar(texto, { largura, maximo: 56, minimo: 46, linhas: 2, peso: 700 });
   const entra = prog(t, atual.de - 0.06, 0.16);
@@ -39,7 +41,7 @@ export const Legendas: React.FC<{ frases: Frase[]; t: number; y: number; visivel
         return (
           <div key={`${l}-${li}`} style={{ display: "flex", whiteSpace: "nowrap" }}>
             {ws.map((w, j) => {
-              const p = atual.palavras[inicio + j];
+              const p = palavras[inicio + j];
               const dita = t >= p.em - 0.04;
               const agora = dita && t < p.ate + 0.04;
               return (

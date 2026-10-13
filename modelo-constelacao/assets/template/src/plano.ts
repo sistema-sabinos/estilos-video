@@ -52,6 +52,8 @@ export type Passos = Base & NaCarta & { tipo: "passos"; titulo?: string; itens: 
 export type Numero = Base &
   NaCarta & {
     tipo: "numero";
+    // de onde a contagem parte (padrão 0)
+    inicio?: number;
     valor: number;
     em: number;
     rotulo: string;

@@ -72,12 +72,17 @@ const camposUniversais = (m) => {
         ? "\"opcoes\" precisa de 2 a 4 itens, cada um com \"texto\" e \"em\""
         : null;
     case "cta":
-      if (!txt(m.texto)) return "falta \"texto\"";
+      // no Demo o cta fica no layout "eu" e não desenha nada (a chamada é só voz); só o split desenha o texto
+      if (m.layout === "split" && !txt(m.texto)) return "com layout \"split\" o cta desenha a chamada e precisa de \"texto\"";
       return m.icone && !["salvar", "seguir", "comentar", "link"].includes(m.icone) ? "\"icone\" tem que ser salvar, seguir, comentar ou link" : null;
     case "topicos":
     case "passos":
       return itens(m.itens, 2, 5);
     case "numero":
+      if (m.inicio !== undefined && !num(m.inicio)) return `"inicio" tem que ser número`;
+      // prefixo/sufixo com algarismo fica parado enquanto o número conta: "6 a " + 8 vira "6 a 0", "6 a 3"
+      if (m.inicio === undefined && m.desde === undefined && [m.prefixo, m.sufixo].some((x) => typeof x === "string" && /[0-9]/.test(x)))
+        return `prefixo ou sufixo com algarismo fica parado enquanto o número conta do 0 ("6 a " + 8 vira "6 a 0", "6 a 3"): numa faixa, ponha "inicio" (o primeiro número, ou o próprio "valor" para o número entrar pronto); para contar do 0 mesmo ("12x R$"), ponha "inicio": 0`;
       return num(m.valor) && num(m.em) && txt(m.rotulo) ? null : "precisa de \"valor\" (número), \"em\" e \"rotulo\"";
     case "comparacao":
       return Array.isArray(m.lados) && m.lados.length === 2 && m.lados.every((l) => txt(l.rotulo) && txt(l.texto) && num(l.em))
@@ -151,7 +156,8 @@ export const conferirPlano = (plano, modelo = {}, tiposValidos = null) => {
   const minimo = Math.max(2, Math.ceil(dur / lim.segundosPorMomento));
   if (momentos.length < minimo) erros.push(`${momentos.length} momentos para ${s(dur)} de vídeo; o mínimo é ${minimo} (um a cada ${lim.segundosPorMomento} s).`);
   const tipos = new Set(momentos.map((m) => m.tipo));
-  const variedade = dur > 40 ? 4 : dur > 20 ? 3 : 2;
+  // mínimo de tipos diferentes: um número em modelo.json → "conferir" → "variedade"; sem ele, 2 até 20 s, 3 até 40 s e 4 acima
+  const variedade = num(lim.variedade) ? lim.variedade : dur > 40 ? 4 : dur > 20 ? 3 : 2;
   if (tipos.size < variedade) erros.push(`Só ${tipos.size} tipo(s) de bloco (${[...tipos].join(", ")}); use pelo menos ${variedade} diferentes para o vídeo não ficar repetitivo.`);
   for (let i = 2; i < momentos.length; i++) {
     if (momentos[i].tipo === momentos[i - 1].tipo && momentos[i].tipo === momentos[i - 2].tipo) {

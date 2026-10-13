@@ -1,7 +1,10 @@
 import { foco, prog, temposDasPalavras, travelling, useTempo, usePalavras } from "../anim";
+import { chamadaNaBarra } from "../chamada";
+import { centroDaNarracao, type Estado } from "../layout";
 import { encaixar, indicesDoTrecho } from "../medida";
 import type { Creditos as CreditosT, Cta, Plano } from "../plano";
 import { cor, serif, sombra } from "../tema";
+import { NaBarra } from "./Barras";
 import { RotuloDeCredito } from "./Cartela";
 import { LinhasEmFoco } from "./Foco";
 
@@ -31,7 +34,7 @@ const ICONES: Icones[] = ["seguir", "salvar", "comentar", "link"];
 // Créditos finais (o `cta` deste modelo): a assinatura na barra de cima (como crédito de filme) e
 // a chamada na barra de baixo, palavra por palavra, com o ícone da ação se desenhando embaixo.
 // `destaque` = trecho em itálico âmbar.
-export const Creditos: React.FC<{ m: CreditosT | Cta; marca: Plano["marca"]; topoJanela: number; centro: number }> = ({ m, marca, topoJanela, centro }) => {
+export const Creditos: React.FC<{ m: CreditosT | Cta; marca: Plano["marca"]; topoJanela: number; estado: Estado; assentado: Estado }> = ({ m, marca, topoJanela, estado, assentado }) => {
   const t = useTempo();
   const palavras = usePalavras();
   const textos = m.texto.split(/\s+/).filter(Boolean);
@@ -42,6 +45,13 @@ export const Creditos: React.FC<{ m: CreditosT | Cta; marca: Plano["marca"]; top
   const enc = encaixar(textos, { largura: 900, max: 72, min: 50, linhas: 2, fonteDe: (i) => (destacadas.has(i) ? "italico500" : "serif") });
   const tamanho = enc.tamanho;
   const linhas = enc.linhas.map((l) => l.map((i) => ({ w: textos[i], em: tempos[i] })));
+  // se a chamada cabe na barra de baixo assentada, fica parada onde ela assenta e a barra de agora
+  // a recorta como uma cortina; se não cabe (nível 0, ou nível 1 com duas linhas), segue como antes
+  // (veja ../chamada.ts)
+  const centroAssentado = centroDaNarracao(assentado);
+  const naBarra = chamadaNaBarra(assentado.base, centroAssentado, enc.linhas.length, tamanho);
+  const centro = naBarra ? centroAssentado : centroDaNarracao(estado);
+  const naBaixo = (filho: React.ReactNode) => (naBarra ? <NaBarra lado="baixo" estado={estado}>{filho}</NaBarra> : filho);
   const nome = prog(t, m.de + 0.35, 1.2, travelling);
   // a régua e o ícone entram cedo, para estarem inteiros antes do fim do vídeo
   const ultima = Math.min(tempos[tempos.length - 1] ?? inicio, inicio + 0.8);
@@ -94,35 +104,37 @@ export const Creditos: React.FC<{ m: CreditosT | Cta; marca: Plano["marca"]; top
           <div style={{ fontFamily: serif, fontWeight: 600, fontSize: tamanhoNome, lineHeight: 1, color: cor.marfim, whiteSpace: "nowrap", ...foco(nome, 10, 12) }}>{marca.nome}</div>
         </div>
       ) : null}
-      <div
-        style={{
-          position: "absolute",
-          left: 60,
-          right: 60,
-          top: centro,
-          translate: "0 -50%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 26,
-        }}
-      >
-        <LinhasEmFoco
-          linhas={linhas}
-          entrada={m.de + 0.12}
-          estilo={{ fontFamily: serif, fontWeight: 600, fontSize: tamanho, lineHeight: 1.14, color: cor.marfim, textShadow: sombra }}
-          estiloPalavra={(_, i) => (destacadas.has(i) ? { fontStyle: "italic", fontWeight: 500, color: cor.ambarClaro } : undefined)}
-        />
-        {iconeEmCima ? (
-          <div style={{ height: 2, width: 220 * regua, background: cor.ambar, opacity: 0.7 }} />
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-            <div style={{ height: 2, width: 120 * regua, background: cor.ambar, opacity: 0.7 }} />
-            <Icone tipo={icone} p={prog(t, ultima + 0.2, 0.8, travelling)} />
-            <div style={{ height: 2, width: 120 * regua, background: cor.ambar, opacity: 0.7 }} />
-          </div>
-        )}
-      </div>
+      {naBaixo(
+        <div
+          style={{
+            position: "absolute",
+            left: 60,
+            right: 60,
+            top: centro,
+            translate: "0 -50%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 26,
+          }}
+        >
+          <LinhasEmFoco
+            linhas={linhas}
+            entrada={m.de + 0.12}
+            estilo={{ fontFamily: serif, fontWeight: 600, fontSize: tamanho, lineHeight: 1.14, color: cor.marfim, textShadow: sombra }}
+            estiloPalavra={(_, i) => (destacadas.has(i) ? { fontStyle: "italic", fontWeight: 500, color: cor.ambarClaro } : undefined)}
+          />
+          {iconeEmCima ? (
+            <div style={{ height: 2, width: 220 * regua, background: cor.ambar, opacity: 0.7 }} />
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+              <div style={{ height: 2, width: 120 * regua, background: cor.ambar, opacity: 0.7 }} />
+              <Icone tipo={icone} p={prog(t, ultima + 0.2, 0.8, travelling)} />
+              <div style={{ height: 2, width: 120 * regua, background: cor.ambar, opacity: 0.7 }} />
+            </div>
+          )}
+        </div>,
+      )}
     </>
   );
 };

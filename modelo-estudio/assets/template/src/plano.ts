@@ -41,6 +41,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // Número que conta (pt-BR) na coluna ao lado da pessoa; embaixo, o medidor de nível sobe junto.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

@@ -54,11 +54,11 @@ export const temposDaLinha = (texto: string, em: number, palavras: Palavra[], li
 };
 
 // Contagem de 0 até o valor escrito, mantendo o formato ("20" → 05, 06… 20; "1.500" → 0.750…).
-export const contar = (valor: string, p: number) => {
+export const contar = (valor: string, p: number, de = 0) => {
   const digitos = valor.replace(/\D/g, "");
   if (!digitos) return valor;
   const alvo = Number(digitos);
-  const agora = String(Math.round(alvo * p)).padStart(digitos.length, "0");
+  const agora = String(Math.round(alvo * (de + (1 - de) * p))).padStart(digitos.length, "0");
   let i = 0;
   return valor.replace(/\d/g, () => agora[i++] ?? "0");
 };

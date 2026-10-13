@@ -6,6 +6,7 @@
 // Sem foto, o produto vira uma ilustração (vetor) ou um cartão com o nome grande (modo ilustrativo).
 import { Easing, Img, staticFile } from "remotion";
 import { prog, saida, saindo, salto, temposDoTexto } from "../anim";
+import { GIRO_EM_PE, medidasDoCombo } from "../combo";
 import { encaixar, larguraTexto } from "../medida";
 import { imagemDoPlano, temImagem } from "../motor/imagem";
 import type { Combo as TCombo, Plano, Produto, Vitrine as TVitrine } from "../plano";
@@ -209,28 +210,10 @@ const EtiquetaNaBeira: React.FC<{ t: number; em: number; cx: number; w: number; 
 
 // ——— o combo ———
 // A etiqueta kraft do combo (com o texto que se monta na fala) e, embaixo, o carimbo do valor.
-const medidasDoCombo = (m: TCombo) => {
-  const w = 540;
-  const fT = encaixar(m.texto, { largura: w - 70, max: 72, min: 36, linhas: 2, fonte: { peso: 800 } });
-  const altT = fT.linhas.length * fT.tamanho * 1.1;
-  let carimbo: { linhas: string[]; tamanhos: number[]; w: number; h: number } | null = null;
-  if (m.valor) {
-    let s = 92;
-    const linhas = [m.valor];
-    let med = medirCarimbo(linhas, [s]);
-    while (s > 40 && med.w > w - 40) {
-      s -= 4;
-      med = medirCarimbo(linhas, [s]);
-    }
-    carimbo = { linhas, tamanhos: [s], ...med };
-  }
-  const h = 40 + altT + (carimbo ? carimbo.h + 18 : 30);
-  return { w, h, fT, altT, carimbo };
-};
-
+// A conta (medidasDoCombo) mora em combo.ts: o carimbo entra medido já girado.
 const EtiquetaDoCombo: React.FC<{ t: number; plano: Plano; m: TCombo; cx: number; cy: number; fim: number }> = ({ t, plano, m, cx, cy, fim }) => {
   if (t < m.em - 0.02) return null;
-  const { w, h, fT, altT, carimbo } = medidasDoCombo(m);
+  const { w, h, fT, carimbo, topoCarimbo } = medidasDoCombo(m);
   const p = prog(t, m.em, 0.4, salto);
   const balanco = t >= m.em + 0.4 ? Math.sin((t - m.em) * 2.2) * 1.2 : 0;
   return (
@@ -254,8 +237,8 @@ const EtiquetaDoCombo: React.FC<{ t: number; plano: Plano; m: TCombo; cx: number
         <Texto t={t} linhas={fT.linhas} tamanho={fT.tamanho} tempos={temposDoTexto(m.texto, m.em, plano.palavras, m.valorEm ?? fim)} />
       </div>
       {carimbo && m.valorEm !== undefined ? (
-        <div style={{ position: "absolute", left: (w - carimbo.w) / 2, top: 44 + altT + 10 }}>
-          <Carimbo t={t} bate={m.valorEm} linhas={carimbo.linhas} tamanhos={carimbo.tamanhos} giro={-6} />
+        <div style={{ position: "absolute", left: (w - carimbo.w) / 2, top: topoCarimbo }}>
+          <Carimbo t={t} bate={m.valorEm} linhas={carimbo.linhas} tamanhos={carimbo.tamanhos} giro={GIRO_EM_PE} />
         </div>
       ) : null}
     </div>

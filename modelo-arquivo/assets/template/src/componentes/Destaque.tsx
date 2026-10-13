@@ -1,4 +1,4 @@
-import { Datilo, duracaoDatilo, preciso, prog, saindo } from "../anim";
+import { Datilo, duracaoDatilo, naVez, preciso, prog, saindo } from "../anim";
 import { encaixar, larguraTexto } from "../medida";
 import type { Destaque as TDestaque } from "../plano";
 import { cor, mono, sans } from "../tema";
@@ -67,7 +67,7 @@ export const Destaque: React.FC<{
           <div style={{ fontFamily: sans, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.04, letterSpacing: "0.06em", color: cor.tinta }}>
             {fit.linhas.map((l, i) => (
               <div key={i} style={{ whiteSpace: "nowrap" }}>
-                <Datilo texto={l} em={m.em + i * 0.25} t={t} semente={160 + i} />
+                <Datilo texto={l} {...naVez(fit.linhas, i, m.em, 0.25, t)} t={t} semente={160 + i} />
               </div>
             ))}
             <div style={{ height: 7, marginTop: 10, width: larguraLinhas * sublinha, background: cor.vermelho }} />
@@ -77,7 +77,7 @@ export const Destaque: React.FC<{
           <div style={{ fontFamily: mono, fontWeight: 700, fontSize: detalhe.tamanho, lineHeight: 1.15, color: cor.grafite }}>
             {detalhe.linhas.map((l, i) => (
               <div key={i} style={{ whiteSpace: "nowrap" }}>
-                <Datilo texto={l} em={detalheEm + i * 0.3} t={t} semente={170 + i} />
+                <Datilo texto={l} {...naVez(detalhe.linhas, i, detalheEm, 0.3, t)} t={t} semente={170 + i} />
               </div>
             ))}
           </div>

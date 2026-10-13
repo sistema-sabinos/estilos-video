@@ -1,4 +1,4 @@
-import { Datilo, DatiloFalado, preciso, prog, saindo, temposDoTexto } from "../anim";
+import { Datilo, DatiloFalado, naVez, preciso, prog, saindo, temposDoTexto } from "../anim";
 import { encaixar } from "../medida";
 import { medirCabeca } from "./Cabeca";
 import { Deslizar } from "./Papel";
@@ -101,9 +101,9 @@ export const Pessoas: React.FC<{ m: TPessoas; t: number; fim: number; regiao: Re
             {p.detalhe ? (
               // os dados vêm em linhas (ofício / origem), cada uma datilografada em seguida
               <div style={{ display: "flex", flexDirection: "column", gap: 4, borderBottom: `2px solid ${cor.linha}`, paddingBottom: 8 }}>
-                {p.detalhe.split(/\s+·\s+/).map((linha, k) => (
+                {p.detalhe.split(/\s+·\s+/).map((linha, k, ls) => (
                   <div key={k} style={{ fontFamily: mono, fontWeight: 700, fontSize: caber(linha, largura - 56, 46, 0.66, 44), lineHeight: 1.1, color: cor.tinta, textTransform: "uppercase", letterSpacing: "0.03em" }}>
-                    <Datilo texto={linha} em={detalheEm + k * 0.35} t={t} semente={80 + i * 5 + k} />
+                    <Datilo texto={linha} {...naVez(ls, k, detalheEm, 0.35, t)} t={t} semente={80 + i * 5 + k} />
                   </div>
                 ))}
               </div>
@@ -211,19 +211,20 @@ export const PessoasLarga: React.FC<{ m: TPessoas; t: number; fim: number; regia
                 <div style={{ fontFamily: sans, fontWeight: 800, fontSize: fitNome.tamanho, lineHeight: 1.04, color: cor.tinta }}>
                   {fitNome.linhas.map((l, k) => (
                     <div key={k} style={{ whiteSpace: "nowrap" }}>
-                      <Datilo texto={l} em={nomeEm + k * 0.25} t={t} semente={70 + i * 4 + k} />
+                      <Datilo texto={l} {...naVez(fitNome.linhas, k, nomeEm, 0.25, t)} t={t} semente={70 + i * 4 + k} />
                     </div>
                   ))}
                 </div>
                 {p.detalhe ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: 4, borderTop: `2px solid ${cor.linha}`, paddingTop: 10, marginTop: 4 }}>
-                    {p.detalhe.split(/\s+·\s+/).map((linha, k) => {
+                    {p.detalhe.split(/\s+·\s+/).map((linha, k, ls) => {
+                      const vez = naVez(ls, k, detalheEm, 0.35, t);
                       const fit = encaixar(linha.toUpperCase(), { largura: interno, max: 40, min: 30, linhas: 2, fonte: { mono: true, espacamento: 0.03 } });
                       return (
                         <div key={k} style={{ fontFamily: mono, fontWeight: 700, fontSize: fit.tamanho, lineHeight: 1.12, color: cor.tinta, letterSpacing: "0.03em" }}>
                           {fit.linhas.map((l, j) => (
                             <div key={j} style={{ whiteSpace: "nowrap" }}>
-                              <Datilo texto={l} em={detalheEm + k * 0.35 + j * 0.2} t={t} semente={80 + i * 5 + k * 2 + j} />
+                              <Datilo texto={l} {...naVez(fit.linhas, j, vez.em, 0, t, { dur: () => vez.dur, cursor: vez.cursor })} t={t} semente={80 + i * 5 + k * 2 + j} />
                             </div>
                           ))}
                         </div>

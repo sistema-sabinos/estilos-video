@@ -208,7 +208,7 @@ export const NumeroNaForma: React.FC<{ m: TNumero; orbe: Orbe; t: number; fim: n
   const final = textoDoNumero(m, m.valor);
   const largura = 470;
   const enc = encaixar(final, { largura, max: 190, min: 64, linhas: 1, fonte: FONTE_SERIF(500) });
-  const atual = textoDoNumero(m, m.valor * p);
+  const atual = textoDoNumero(m, (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p);
   return (
     <div
       style={{

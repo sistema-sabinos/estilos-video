@@ -18,7 +18,7 @@ A Tela Viva é o formato de demonstração mais simples que existe: uma gravaç�
 
 ## Layout (quadro 1080×1920, medido no Reel original)
 
-1. **Moldura da tela**: x 64 a 1016, y 120 a 772 (margem segura de 64 px nas laterais e 120 px no topo), flutuando sobre o vídeo, com cantos de 20 px e sombra suave: **zero preto** (em volta aparece o cenário da pessoa). A captura **preenche** a moldura (cover com foco e aproximação).
+1. **Moldura da tela**: x 64 a 1016, y 120 a 772 (margem segura de 64 px nas laterais e 120 px no topo), flutuando sobre o vídeo, com cantos de 20 px e sombra suave (`0 12px 64px rgba(0,0,0,.2), 0 2px 8px rgba(0,0,0,.14)`): **zero preto** (em volta aparece o cenário da pessoa, e a pessoa nítida assume 16 px abaixo da moldura, sem faixa borrada entre a tela e a cabeça). A captura **preenche** a moldura (cover com foco e aproximação).
 2. **Rótulo**: y 650 a 754, ~58% da largura (cresce até 80% se o texto é longo), **sobre a base da tela**.
 3. **Pessoa**: y 770 a 1920, largura total. O topo da cabeça fica 85 px abaixo do início da moldura da pessoa em qualquer zoom (olhos por volta de y 1130). Dois zooms: 1,00 e 1,06, trocando só nos cortes.
 4. **Legenda**: centro em y 1565 (82%), 1 linha de 2 a 4 palavras.

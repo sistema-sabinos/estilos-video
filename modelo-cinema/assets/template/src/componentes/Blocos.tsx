@@ -138,7 +138,7 @@ export const Numero: React.FC<Props<NumeroT>> = ({ m, estado, assentado, primeir
         <Faixa topo={f.baixo.topo} base={f.baixo.base} gap={10} estilo={saida}>
           <div style={{ display: "flex", alignItems: "flex-end", gap: T * 0.12, textShadow: sombra, opacity: prog(t, Math.min(em, pronto) - 0.2, 0.45) }}>
             {m.prefixo ? <div style={pequeno}>{m.prefixo}</div> : null}
-            <Digitos texto={texto} em={em} pousaEm={pousa} apareceEm={Math.min(em, pronto)} tamanho={T} voltas />
+            <Digitos texto={texto} de={m.inicio === undefined ? undefined : formatarNumero(m.inicio, m.casas ?? 0)} em={em} pousaEm={pousa} apareceEm={Math.min(em, pronto)} tamanho={T} voltas={m.inicio === undefined} />
             {m.sufixo ? <div style={{ ...pequeno, color: cor.marfimSuave }}>{m.sufixo}</div> : null}
           </div>
           {/* a régua corre junto com a contagem e pousa com o número */}

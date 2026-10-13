@@ -210,7 +210,7 @@ export const FichaNumero: React.FC<Props<Numero>> = ({ m, plano, t, w, h, medir,
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
   const final = numeroBR(m.valor, casas);
   const pConta = prog(t, m.em, 1.1, (x) => 1 - (1 - x) * (1 - x) * (1 - x));
-  const mostrado = pConta > 0 && pConta < 1 ? numeroBR(m.valor * pConta, casas) : final;
+  const mostrado = pConta > 0 && pConta < 1 ? numeroBR((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta, casas) : final;
   const tinta = prog(t, m.em, 0.25);
   const pre = m.prefixo?.trim();
   const suf = m.sufixo?.trim();

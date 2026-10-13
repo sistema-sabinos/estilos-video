@@ -30,7 +30,7 @@ export const TituloVirada: React.FC<{ m: Virada; plano: Plano }> = ({ m, plano }
     <div style={{ position: "absolute", left: 0, width: 1080, top: y, transform: `translateY(-50%) scale(${1 + ex * 0.08})`, opacity: 1 - ex, textAlign: "center", filter: ex > 0 ? `blur(${ex * 10}px)` : undefined }}>
       {m.texto ? (
         <div style={{ overflow: "hidden", height: 64 }}>
-          <div style={{ transform: `translateY(${(1 - a) * 100}%)`, fontFamily: SORA, fontWeight: 600, fontSize: 46, letterSpacing: "0.01em", color: "rgba(255,248,242,0.82)" }}>{m.texto}</div>
+          <div style={{ transform: `translateY(${(1 - a) * 100}%)`, fontFamily: SORA, fontWeight: 600, fontSize: 46, letterSpacing: "0.01em", color: "#FFF8F2", WebkitTextStroke: "7px #000", paintOrder: "stroke fill" }}>{m.texto}</div>
         </div>
       ) : null}
       <div style={{ marginTop: 6, fontFamily: SORA, fontWeight: 800, fontSize: px, letterSpacing: "-0.02em", lineHeight: 1, color: cor, textShadow: `0 6px 40px ${cor}55`, whiteSpace: "nowrap" }}>
@@ -64,7 +64,7 @@ export const AberturaCheia: React.FC<{ m: Abertura; plano: Plano; palavras: Pala
   return (
     <div style={{ position: "absolute", left: 64, width: 952, top: y, transform: "translateY(-50%)", textAlign: "center", opacity: 1 - ex, filter: ex > 0 ? `blur(${ex * 8}px)` : undefined }}>
       {m.rotulo ? (
-        <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 44, color: "rgba(255,248,242,0.86)", marginBottom: 12, opacity: prog(t, m.de - 0.05, m.de + 0.3) }}>{m.rotulo}</div>
+        <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 44, color: "#FFF8F2", WebkitTextStroke: "7px #000", paintOrder: "stroke fill", marginBottom: 12, opacity: prog(t, m.de - 0.05, m.de + 0.3) }}>{m.rotulo}</div>
       ) : null}
       {q.linhas.map((linha, li) => (
         <div key={li} style={{ fontFamily: SORA, fontWeight: 800, fontSize: q.px, lineHeight: 1.04, letterSpacing: "-0.025em", whiteSpace: "nowrap", textShadow: "0 4px 26px rgba(0,0,0,0.45)" }}>

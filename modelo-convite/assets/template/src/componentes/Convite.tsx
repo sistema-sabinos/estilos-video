@@ -1,4 +1,5 @@
 import { Escrita, limitar, mistura, pena, prog, temposDoTexto, Traco } from "../anim";
+import { ajustarAssinatura } from "../assinatura";
 import { E, largura } from "../medida";
 import type { Convite as ConviteM, Palavra, Plano } from "../plano";
 import { caligrafia, cor, gravado, type Rect, TAM, textoItalico } from "../tema";
@@ -46,23 +47,29 @@ export const areaDoTexto = (c: Rect, a: Rect, selo: number): Area => ({
   base: c.y + c.h - 30,
 });
 
-export const Assinatura: React.FC<{ plano: Plano; p: number; tamanho?: number }> = ({ plano, p, tamanho = TAM.assinatura }) => {
+// Assinatura no pé do convite grande (frase e fechamento): numa linha só, que é a altura que o pé
+// reserva. `util`: a largura da área menos 10 px de cada lado (o fio interno da moldura fica uns
+// 5 px por fora da área). Encolhe até 32 px; se faltar, aperta o espaçamento (ver assinatura.ts).
+export const Assinatura: React.FC<{ plano: Plano; p: number; util: number; tamanho?: number }> = ({ plano, p, util, tamanho = TAM.assinatura }) => {
   const partes = [plano.marca.nome, plano.marca.area].filter(Boolean);
   if (partes.length === 0) return null;
+  // medido como aparece na tela (o nowrap já juntava os espaços duplos do separador)
+  const txt = partes.join(" · ").toUpperCase();
+  const { corpo, espacamento } = ajustarAssinatura((esp) => largura(txt, 100, { ...E.gravado, espacamento: esp }) / 100, util, tamanho);
   return (
     <div
       style={{
         fontFamily: gravado,
         fontWeight: 600,
-        fontSize: tamanho,
-        letterSpacing: "0.2em",
+        fontSize: corpo,
+        letterSpacing: `${espacamento}em`,
         color: cor.tintaSuave,
         opacity: p,
         translate: `0 ${(1 - p) * 10}px`,
         whiteSpace: "nowrap",
       }}
     >
-      {partes.join("  ·  ").toUpperCase()}
+      {txt}
     </div>
   );
 };

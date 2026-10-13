@@ -5,7 +5,7 @@ Leia antes de alterar qualquer componente, cor ou fonte do template. O valor des
 ## 1. Dinâmica do motion
 - **Câmera**: desliza até a área da dica em ~0,75 s (foco em frações da foto, zoom 1,3 a 3); entre dicas, aproximação lenta contínua (3,5%).
 - **Alça**: em cada dica volta ao antes (0,45 s) e varre até o depois durante a fala; a alça some quando encosta na borda.
-- **Pinos**: o disco numerado aparece quando a cortina passa pelo ponto (marca o depois), com salto leve.
+- **Pinos**: o disco numerado aparece quando a cortina passa pelo ponto (marca o depois), com salto leve; na revelação some em 0,3 s e não volta.
 - **Cartão da dica**: entra uma vez (primeira dica); depois só o conteúdo troca (o antigo sai antes de o novo aparecer). Texto palavra por palavra na fala; detalhe em verde depois.
 - **Troca de lugar**: o painel desce junto com a emenda em 0,45 s; nenhum quadro com buraco.
 - **Revelação**: a foto cresce até a tela inteira (0,6 s), a pessoa vai para a janela, e a alça varre o resultado.
@@ -13,7 +13,7 @@ Leia antes de alterar qualquer componente, cor ou fonte do template. O valor des
 ## 2. Organização e hierarquia
 - Quadro cheio (texto no cartão, na altura do peito) → painel (conteúdo y 150 a 1100, pessoa embaixo a partir de y 1160) → janela. Nunca coluna estreita.
 - Uma ideia por tela; a foto é a protagonista, o texto é de apoio.
-- Legenda abaixo do queixo, dentro da área da pessoa; some quando um cartão já mostra o texto.
+- Legenda sempre na área da pessoa: no quadro cheio, abaixo do queixo; no painel, logo abaixo da emenda (pílula de y 1167 a 1265; com o rosto muito perto da câmera ela encosta no alto da cabeça, nunca nos olhos); na revelação, logo acima da janela. Some quando um cartão já mostra o texto.
 - Nada importante acima de y 150 (interface do app), abaixo de y 1540 ou na coluna direita abaixo de y 1080.
 
 ## 3. Tipografia

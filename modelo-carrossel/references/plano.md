@@ -170,7 +170,7 @@ Sem números ditos (a forma mostra a ideia, nenhum número aparece):
 ```
 
 - `texto`: até ~50 caracteres (3 linhas), fiel ao que foi dito (pode enxugar, não pode mudar o sentido). O cartão cresce linha a linha.
-- `destaque` (opcional): trecho exato em coral. `risco` (opcional): trecho exato atravessado pelo risco coral, palavra por palavra, logo depois de cada uma aparecer; use quando a fala nega aquilo. `riscoEm` (opcional): não antes deste instante. Não use `risco` e `destaque` no mesmo trecho. (Nomes antigos que continuam valendo: `risca`, `enfase`.)
+- `destaque` (opcional): trecho exato em coral. `risco` (opcional): trecho exato atravessado pelo risco coral, palavra por palavra, logo depois de cada uma aparecer; use quando a fala nega aquilo. A última palavra riscada precisa ser dita pelo menos 0,5 s antes do `ate` (com uns 0,8 s o risco corre no ritmo inteiro; entre os dois o template encurta o risco para ele acabar antes de o cartão sair). Palavra dita colada no fim não dá tempo de ser riscada: deixe ela fora do `risco`. `riscoEm` (opcional): não antes deste instante. Não use `risco` e `destaque` no mesmo trecho. (Nomes antigos que continuam valendo: `risca`, `enfase`.)
 - `em` (opcional): quando o texto começa a ser dito.
 
 ### `pergunta`, página da pessoa: pergunta para quem assiste
@@ -302,7 +302,7 @@ Cortes em 3,21 · 7,71 · 10,85 · 13,72 · 15,52 · 18,21. Sete páginas, cada 
       "sai": { "texto": "Refrigerante", "desenho": "refrigerante", "em": 11.24 }, "riscaEm": 12.11,
       "entra": { "texto": "Água com gás", "desenho": "agua", "em": 12.32,
                  "extra": { "texto": "e limão", "desenho": "limao", "em": 13.21 } } },
-    { "tipo": "frase", "de": 13.72, "ate": 15.52, "texto": "Não precisa cortar tudo de uma vez", "risca": "tudo de uma vez" },
+    { "tipo": "frase", "de": 13.72, "ate": 15.52, "texto": "Não precisa cortar tudo de uma vez", "risca": "tudo" },
     { "tipo": "calendario", "de": 15.52, "ate": 18.21, "titulo": "1 troca por semana", "destaque": "1 troca",
       "linhas": [ { "em": 16.1, "rotulo": "Semana 1", "desenho": "fruta" }, { "em": 16.36, "rotulo": "Semana 2", "desenho": "iogurte" },
                   { "em": 16.62, "rotulo": "Semana 3", "desenho": "agua" }, { "em": 16.88, "rotulo": "Semana 4", "desenho": "mais" } ],

@@ -265,6 +265,8 @@ export type Passos = Base & Cabecalho & { tipo: "passos"; titulo?: string; itens
 // Número medido: uma proveta graduada que enche enquanto a leitura conta até `valor`
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   // o que é medido, à mão no cabeçalho ("Bitcoin rompeu")

@@ -15,25 +15,8 @@ export const ALTURA_MAX = MESA.base - MESA.topo;
 export const ROLA = 0.5;
 const VAO = 44;
 
-export const ordenar = (plano: Plano) => [...plano.momentos].sort((a, b) => a.de - b.de);
-
-// Um momento nunca invade o seguinte (termina quando o próximo começa).
-export const semSobreposicao = (plano: Plano): Plano => {
-  const ordem = ordenar(plano);
-  return {
-    ...plano,
-    momentos: ordem.map((m, i) => {
-      const proximo = ordem[i + 1];
-      return proximo && m.ate > proximo.de ? { ...m, ate: proximo.de } : m;
-    }),
-  };
-};
-
-// a foto de apoio mostra a legenda por padrão (a imagem acompanha a fala, não substitui o texto)
-export const comLegendaPadrao = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (m.tipo === "foto" && m.legenda === undefined ? { ...m, legenda: true } : m)),
-});
+import { comLegendaPadrao, ordenar, semSobreposicao } from "./legenda-padrao";
+export { comLegendaPadrao, ordenar, semSobreposicao };
 
 // ——— a moldura da pessoa ———
 

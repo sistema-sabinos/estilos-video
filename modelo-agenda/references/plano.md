@@ -220,7 +220,7 @@ Campos comuns: `tipo`, `de`, `ate` e `legenda?: true` (mantém a legenda durante
 - `blocos[]`: **1 a 4** por momento. Cada um: `categoria`, `titulo` (palavras faladas, até ~24 caracteres), `em` (a palavra que o nomeia: o bloco cai e o título acende na fala).
   - `categoria`: `foco` (tomate cheio, texto branco: o principal), `pausa` (verde-folha claro: leve, positivo, descanso), `longa` (verde-manjericão), `outro` (ardósia: neutro, compromisso).
   - `minutos` (opcional): a duração **dita**. Com ela, a altura é a duração, a régua mostra os horários e o bloco mostra "25 min · 09:00". Sem ela, o bloco é qualitativo: altura padrão, sem horário nem duração, e a régua mostra o número dele na sequência.
-  - `inicio` (opcional): horário dito ("18:00"); a régua o mostra. Com `minutos`, os seguintes continuam dele.
+  - `inicio` (opcional): horário dito ("18:00"); a régua o mostra. Com `minutos`, os seguintes continuam dele. Numa agenda sem nenhum `minutos`, ele só rotula a régua: os blocos caem iguais, na ordem dita.
   - `quando` (opcional): o que a régua mostra na altura do bloco sem horário ("Antes", "Depois", "1º"; até ~7 caracteres).
 - `agenda` (opcional): o nome da agenda no cabeçalho a partir deste momento (o antigo rola para cima).
 - `pessoa`: `"topo"` (padrão do primeiro) ou `"lado"`; momentos `blocos` seguidos alternam sozinhos. Um bloco grande sozinho com a pessoa em cima vira o **bloco grande** (horário, título enorme, anel dentro).
@@ -236,6 +236,7 @@ Campos comuns: `tipo`, `de`, `ate` e `legenda?: true` (mantém a legenda durante
 ```
 
 - Só depois de um momento `blocos`: o padrão (os blocos desde o último `ciclos`) se copia para baixo, um ciclo por item (**2 a 6**), em cascata, cada um na sua palavra. O primeiro item é o ciclo que já está lá.
+- A agenda inteira aparece nessa cena. Acima de umas 4 h (padrão × itens, mais o `final`) ela encolhe para caber e os blocos ficam mais finos: os curtos viram faixa só de cor, sem texto nem número do ciclo. Se nem assim couber (bloco de poucos minutos num padrão longo, como 4 focos de 25 min com pausas de 5 em 6 ciclos), o começo da agenda fica escondido embaixo do cabeçalho. Para os blocos manterem o texto, deixe padrão × itens em até umas 4 h.
 - A pessoa vai para o canto e o anel vira contador: "2 de 4" → "4 ciclos". `rotulo` ("ciclos", "dias", "vezes", até ~10 caracteres) acende em `rotuloEm`.
 - `contagem: false`: quando a fala não diz quantas vezes ("durante anos", "todo dia"), o contador não mostra número: os arcos acendem e o `rotulo` fica no centro.
 - `final` (opcional): um bloco no fim do ciclo, com duração que pode esticar ("pausa longa de 15 a 30 minutos"): `categoria`, `titulo`, `em`, `minutos`, `minutosEm`, `maxMinutos`, `maxEm`; depois que a faixa fecha, o anel conta esse bloco (`cronometroEm`, `null` desliga).

@@ -152,6 +152,8 @@ export type Passos = BaseBloco & { tipo: "passos"; titulo?: string; itens: Item[
 // aparece dentro dos algarismos); prefixo e sufixo menores; marcas que acendem enquanto conta.
 export type Numero = {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   de: number;
   ate: number;
   legenda?: boolean;

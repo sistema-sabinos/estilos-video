@@ -19,7 +19,7 @@ export const duracaoDaConta = (valor: number) => Math.min(1.5, Math.max(0.8, 0.8
 export const valorNoTempo = (m: Numero, t: number) => {
   const casas = m.casas ?? casasDe(m.valor);
   const p = prog(t, m.em, duracaoDaConta(m.valor), conta);
-  const v = m.valor * p;
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const porcento = (m.sufixo ?? "").trim().startsWith("%");
   return { texto: formatar(casas ? v : Math.round(v), casas), fracao: porcento ? Math.min(1, Math.max(0, v / 100)) : p, p };
 };

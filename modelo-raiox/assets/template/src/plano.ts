@@ -48,6 +48,8 @@ export type Abertura = Base & {
 // Número que conta até `valor` a partir de `em`, ao lado de um mostrador cujo anel se completa.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

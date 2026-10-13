@@ -1,6 +1,8 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Palavra } from "./plano";
+import { faladasDoTexto } from "./fala";
 import { cor } from "./tema";
+import { duracaoDatilo } from "./datilo-linhas";
 
 // Movimento de arquivo: papel que desliza decidido e assenta; carimbo que bate seco.
 export const entra = Easing.bezier(0.16, 1, 0.3, 1);
@@ -46,7 +48,8 @@ export const normalizar = (w: string) =>
 // Quando cada palavra de um texto é dita: procura, em ordem, entre as palavras faladas no trecho.
 // Palavra não achada entra logo depois da anterior (texto reescrito continua no ritmo).
 export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, ate: number, inicio = de) => {
-  const faladas = palavras.filter((p) => p.em >= de - 0.35 && p.em < ate + 0.1);
+  // a fala desde o `de` ou desde o `inicio`, a que casar mais palavras do texto (ver fala.ts)
+  const faladas = faladasDoTexto(texto, palavras, de, ate, inicio, (a, b) => !!normalizar(a) && normalizar(a) === normalizar(b));
   const tempos: number[] = [];
   let cursor = 0;
   for (const w of texto.split(/\s+/).filter(Boolean)) {
@@ -61,8 +64,8 @@ export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, at
   return tempos;
 };
 
-// Duração da datilografia de um texto: rápida (máquina elétrica), nunca lenta demais.
-export const duracaoDatilo = (texto: string) => Math.min(1.1, Math.max(0.22, texto.length * 0.042));
+// Duração da datilografia e a vez de cada linha de um texto: contas puras em datilo-linhas.ts.
+export { duracaoDatilo, naVez } from "./datilo-linhas";
 
 // Máquina de escrever: cada letra bate no seu instante, com a leve irregularidade da tinta
 // (opacidade e linha de base variam um tiquinho). O texto inteiro ocupa o lugar desde o começo,

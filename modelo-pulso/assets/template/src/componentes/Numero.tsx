@@ -39,7 +39,7 @@ export const Numero: React.FC<{ m: NumeroT; t: number; palavras: Palavra[]; topo
   // a contagem: dispara no `em` e trava no valor (≈1,1 s)
   const conta = prog(t, m.em, 1.1, trava);
   const dito = t >= m.em - 0.02;
-  const atual = m.valor * conta;
+  const atual = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
   const texto = dito ? formatar(conta >= 1 ? m.valor : atual, casas) : formatar(0, casas);
   const corNumero = dito ? cor.tinta : cor.esboco;
 

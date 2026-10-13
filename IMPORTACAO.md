@@ -1,10 +1,11 @@
 # Importação do catálogo de estilos
 
-Data: 2026-10-11. Estilos: 79. Arquivos tirados: 300.
+Data: 2026-10-13. Estilos: 79. Arquivos tirados: 300.
 
 | troca | vezes |
 |---|---|
 | "do pack" | 94 |
+| Node 22+ | 107 |
 | UA do vendedor | 79 |
 | cache com nome do vendedor | 265 |
 | exemplo vira previa | 322 |
@@ -12,8 +13,10 @@ Data: 2026-10-11. Estilos: 79. Arquivos tirados: 300.
 | marca do vendedor | 8 |
 | nome de exemplo | 156 |
 | perfil de exemplo | 3 |
+| remendo de template | 1716 |
 | revisao com nome | 9 |
 | secao do vendedor | 28 |
+| terminal so da IA | 237 |
 | travessao | 3169 |
 | video de referencia | 1 |
 

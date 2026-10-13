@@ -123,7 +123,7 @@ export const BNumero: React.FC<PropsCheia<Numero>> = ({ m, t, palavras, entra, s
   const agrupar = !(Number.isInteger(m.valor) && m.valor >= 1900 && m.valor <= 2100 && !m.prefixo && !m.sufixo);
   const conta = prog(t, m.em, 1.15, Easing.out(Easing.cubic));
   const final = fmtNum(m.valor, casas, agrupar);
-  const mostra = fmtNum(m.valor * conta, casas, agrupar);
+  const mostra = fmtNum((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta, casas, agrupar);
   const sufixoLetras = /[a-zA-Z]/.test(m.sufixo ?? "");
   const sepW = (s: number) => [...final].filter((c) => c === "." || c === ",").length * s * 0.3;
   const larguraTotal = (s: number) =>

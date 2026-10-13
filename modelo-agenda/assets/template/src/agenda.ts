@@ -4,7 +4,9 @@ import { Easing } from "remotion";
 import { type Ret, escreverHora, lerHora, misturaRet, mistura, prog, troca } from "./anim";
 import type { Caixa, EstadoDaCaixa } from "./motor/caixa";
 import type { Momento, Plano, TipoDeMomento } from "./plano";
+import { comecoDoBloco, temDuracao } from "./posicao";
 import { type Categoria, CATEGORIAS, CONTEUDO, FOLHA, H, LIMITE_PEITO, RAIA, W } from "./tema";
+import { ALTURA_MINIMA, noPiso } from "./escala";
 
 export type Lugar = "cheia" | "topo" | "lado" | "canto" | "alto";
 export type CaixaPessoa = Required<Caixa>;
@@ -159,7 +161,6 @@ export const LINHA_FRASE: Ret = { x: FOLHA.x + 24, y: CONTEUDO.topo + ALTO_H + 2
 // onde a frase começa (abaixo da linha e da etiqueta do horário)
 export const TOPO_DA_FRASE = LINHA_FRASE.y + LINHA_FRASE.h + 14 + 58 + 34;
 
-const ALTURA_MINIMA = 22;
 // lugar da etiqueta do que fica de fora, embaixo do último bloco
 export const ESPACO_SEM = 92 + 30;
 
@@ -220,6 +221,8 @@ export const montarAgenda = (planoOriginal: Plano): Agenda => {
   // 1. blocos de tempo, na ordem em que entram na agenda
   const primeiroInicio = ordem.flatMap((m) => (m.tipo === "blocos" ? m.blocos : [])).map((b) => lerHora(b.inicio)).find((v) => v !== null);
   const inicio = lerHora(plano.agenda?.inicio) ?? primeiroInicio ?? 9 * 60;
+  // agenda toda sem duração: o horário de um bloco só rotula a régua (posicao.ts)
+  const comDuracao = temDuracao(ordem.flatMap((m) => (m.tipo === "blocos" ? m.blocos : [])));
   const blocos: BlocoNaAgenda[] = [];
   let cursor = 0;
   let conhecida = true;
@@ -230,7 +233,7 @@ export const montarAgenda = (planoOriginal: Plano): Agenda => {
     if (m.tipo === "blocos") {
       m.blocos.forEach((b, j) => {
         const hora = lerHora(b.inicio);
-        const comeca = hora !== null ? Math.max(0, hora - inicio) : cursor;
+        const comeca = comecoDoBloco(hora, inicio, cursor, comDuracao);
         const qualitativo = !(typeof b.minutos === "number" && b.minutos > 0);
         if (hora !== null) conhecida = true;
         const horaConhecida = conhecida && !qualitativo;
@@ -388,10 +391,9 @@ const cenaPara = (m: Momento, i: number, lugar: Lugar, blocos: BlocoNaAgenda[], 
       escala = Math.min(30, (baseY - topo) / fim);
     }
   }
-  if (escala < 5) {
-    escala = 5;
-    topo = Math.min(topo, baseY - fim * escala);
-  }
+  // não coube: a escala para no piso (na cena de ciclos ele desce até o bloco mais curto, para a
+  // agenda inteira aparecer) e a agenda se ancora embaixo
+  ({ escala, topo } = noPiso({ escala, topo, baseY, fim, minutos: m.tipo === "ciclos" ? visiveis.map((b) => b.minutos) : undefined }));
   const raiaAoLado = lugar === "lado" || lugar === "canto";
   // anel: dentro do bloco (pessoa em cima) ou na raia da pessoa, embaixo dela
   let anel: Cena["anel"];

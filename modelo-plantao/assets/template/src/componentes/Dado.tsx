@@ -15,7 +15,7 @@ export const Dado: React.FC<{ m: D | N; palavras: Palavra[]; t: number; area: Ar
   const universal = m.tipo === "numero";
   const valorFinal = universal ? escreverNumero(m.valor, m) : m.valor;
   const pConta = prog(t, m.em - 0.04, 0.9);
-  const valorAgora = universal ? escreverNumero(m.valor, m, m.valor * pConta) : contando(m.valor, pConta);
+  const valorAgora = universal ? escreverNumero(m.valor, m, (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta) : contando(m.valor, pConta);
   const rotuloEm = universal ? (m.rotuloEm ?? Math.max(entra + 0.2, m.de)) : entra + 0.2;
   const temposRotulo = temposDoTexto(m.rotulo, palavras, m.de, m.ate, rotuloEm);
   const rot = caber(m.rotulo, { largura: largura - (m.ilustrativo ? 260 : 0), maximo: 44, minimo: 32, linhas: 2, corte: { peso: 800, alta: true, espacamento: 0.06 } });

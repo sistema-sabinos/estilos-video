@@ -25,10 +25,10 @@ Se o aluno é da área da saúde (médico, dentista, nutricionista, fisioterapeu
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB) e para buscar as imagens. No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
+   - Ele precisa de Node 22+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB) e para buscar as imagens. No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
 2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
-3. Confirme o caminho do vídeo. Pergunte **se ele tem o par de fotos antes e depois** (o mesmo lugar, mesmo ângulo): elas vão numa pasta `imagens/` dentro do projeto, com os nomes `antes` e `depois` (ex.: `antes.jpg`, `depois.jpg`). **Sem as fotos do aluno o modelo não funciona bem**: banco grátis não tem um par do mesmo ambiente. Se ele não tiver, peça para fotografar do mesmo ponto (celular apoiado) ou gerar o par com a ferramenta de imagem dele, com a mesma câmera nas duas. Nome e área são opcionais.
+3. Confirme o caminho do vídeo. Pergunte **se ele tem o par de fotos antes e depois** (o mesmo lugar, mesmo ângulo): elas vão numa pasta `imagens/` dentro do projeto, com os nomes `antes` e `depois` (ex.: `antes.jpg`, `depois.jpg`). **Sem as fotos do aluno o modelo não funciona bem**: banco grátis não tem um par do mesmo ambiente. Se ele não tiver, peça para fotografar do mesmo ponto (celular apoiado) ou gerar o par com a ferramenta de imagem dele, com a mesma câmera nas duas. Este modelo não tem tarja de nome: não pergunte nome nem área.
 
 ## Fluxo
 
@@ -123,7 +123,7 @@ Abra os quadros reduzidos a ~540 px de largura e confira de verdade:
 - cada marcador numerado cai na coisa que a dica diz, e o `foco` mostra a área inteira (nada cortado, sem logo ou texto pequeno)?
 - a alça varre do antes para o depois enquanto a dica é dita, e o cartão da dica está inteiro, sem passar das bordas?
 - a pessoa aparece numa moldura larga embaixo (ou na janela da revelação), com o rosto inteiro?
-- o texto cabe, o título da abertura aparece quando a palavra é dita, a legenda fica abaixo do queixo e some quando um cartão já mostra o mesmo texto?
+- o texto cabe, o título da abertura aparece quando a palavra é dita, a legenda fica abaixo do queixo no quadro cheio e logo abaixo da emenda no painel (com a pessoa perto da câmera ela encosta no alto da cabeça, nunca nos olhos), e some quando um cartão já mostra o mesmo texto?
 - nas trocas, nenhum quadro com buraco e nenhum texto sobre outro (`node scripts/stills.mjs 4.7 4.75 4.8 4.85 4.9`)?
 
 Corrija o plano e repita até estar limpo (no máximo duas rodadas).

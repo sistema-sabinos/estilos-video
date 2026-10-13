@@ -25,19 +25,20 @@ const AGENTES = { mobile: ["--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_0
 const agente = AGENTES[opcoes.agente] ?? [];
 mkdirSync("public/img", { recursive: true });
 
-const achaChrome = () => {
-  const raiz = "node_modules/.remotion/chrome-headless-shell";
-  if (!existsSync(raiz)) return null;
-  const pilha = [raiz];
+// o Chrome headless que o Remotion baixou: o do projeto primeiro, depois o de uma pasta acima
+// (como o Node acha os pacotes); no Windows o arquivo termina em .exe
+const achaChrome = (dir = process.cwd()) => {
+  const raiz = path.join(dir, "node_modules/.remotion/chrome-headless-shell");
+  const pilha = existsSync(raiz) ? [raiz] : [];
   while (pilha.length) {
     const d = pilha.pop();
     for (const f of readdirSync(d)) {
       const p = path.join(d, f);
       if (statSync(p).isDirectory()) pilha.push(p);
-      else if (f === "chrome-headless-shell") return path.resolve(p);
+      else if (f === "chrome-headless-shell" || f === "chrome-headless-shell.exe") return path.resolve(p);
     }
   }
-  return null;
+  return path.dirname(dir) === dir ? null : achaChrome(path.dirname(dir));
 };
 
 const medir = (arq) => {

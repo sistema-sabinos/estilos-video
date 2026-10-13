@@ -58,7 +58,6 @@ export const Legenda: React.FC<{ frases: Frase[]; y: number; quebras?: number[] 
         fontWeight: 800,
         fontSize: 66,
         lineHeight: 1.12,
-        letterSpacing: "-0.015em",
         color: P.branco,
         WebkitTextStroke: "10px #000",
         paintOrder: "stroke fill",
@@ -70,7 +69,7 @@ export const Legenda: React.FC<{ frases: Frase[]; y: number; quebras?: number[] 
         const ativa = t >= w.em - 0.04 && t < w.ate + 0.02;
         const pronta = p >= 1 && !ativa;
         return (
-          <span key={k} style={{ display: "inline-block", clipPath: pronta ? undefined : "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.2em" }}>
+          <span key={k} style={{ display: "inline-block", clipPath: pronta ? undefined : "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.36em" }}>
             <span style={{ display: "inline-block", transform: pronta ? undefined : `translateY(${(1 - p) * 110}%) scale(${ativa ? 1.04 : 1})`, opacity: 0.15 + 0.85 * p }}>{w.w}</span>
           </span>
         );

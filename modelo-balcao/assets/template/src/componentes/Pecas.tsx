@@ -3,7 +3,8 @@
 import { Fragment, type CSSProperties } from "react";
 import { Easing } from "remotion";
 import { prog, salto } from "../anim";
-import { encaixar, larguraTexto, trechoNoTexto, type Peso } from "../medida";
+import { medirCarimbo } from "../combo";
+import { encaixar, trechoNoTexto, type Peso } from "../medida";
 import { cor, fonte, TOLDO } from "../tema";
 
 export const estiloFonte = (peso: Peso, tamanho: number, c: string = cor.tinta): CSSProperties => ({
@@ -128,11 +129,8 @@ export const Adesivo: React.FC<{ t: number; colado: number; d: number; giro?: nu
 };
 
 // ——— o carimbo: retângulo de borda dupla em tinta tomate, com falhas de tinta; bate uma vez ———
-export const medirCarimbo = (linhas: string[], tamanhos: number[]) => {
-  const larg = Math.max(...linhas.map((l, i) => larguraTexto(l, tamanhos[i], { peso: 800, caixaAlta: true, espacamento: 0.04 })));
-  const alt = tamanhos.reduce((s, x) => s + x * 1.05, 0) + (linhas.length - 1) * 8;
-  return { w: Math.round(larg + 92), h: Math.round(alt + 64) };
-};
+// a medida do carimbo mora em combo.ts (sem remotion), onde a bancada testa a etiqueta do combo
+export { medirCarimbo };
 
 export const Carimbo: React.FC<{
   t: number;

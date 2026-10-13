@@ -418,7 +418,7 @@ export const BlocoNumero: React.FC<Comum & { m: Numero }> = ({ m, fichaY, t, pal
   // a contagem: começa na palavra do número e termina em até 1,4 s
   const dur = Math.max(0.5, Math.min(1.4, m.ate - m.em - 0.4));
   const pc = prog(t, m.em, dur);
-  const atual = numeroBR(m.valor * pc, casas);
+  const atual = numeroBR((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pc, casas);
   const ativo = t >= m.em - 0.05;
   const rotEm = m.rotuloEm ?? m.em + 0.2;
   const tRot = temposDe(rot.linhas.join(" "), palavras, rotEm, m.ate);

@@ -19,12 +19,7 @@ import { BLOCOS, type Som } from "./blocos/registro";
 import { ViradaTitulo } from "./blocos/Virada";
 import { Raio } from "./blocos/Raio";
 
-// a assinatura não repete a fala na tela: a legenda continua nela (salvo `legenda: false`)
-const COM_LEGENDA = new Set(["orbita", "ceu", "virada", "raio"]);
-const comLegenda = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (COM_LEGENDA.has(m.tipo) && m.legenda === undefined ? { ...m, legenda: true } : m)),
-});
+import { planoDaLegenda as comLegenda } from "./legenda-padrao";
 
 const sonsDo = (plano: Plano): Som[] => {
   if (plano.sfx === false) return [];

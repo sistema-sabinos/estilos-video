@@ -140,6 +140,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // Número que rola como um contador mecânico até `valor` a partir de `em` (formato pt-BR).
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

@@ -162,7 +162,7 @@ const medirNumero = (m: Numero, largura: number, maximo: number) => {
 export const tipoDoNumero = (m: Numero) => {
   const suf = sufixoDe(m);
   if (suf === "%") return "porcento" as const;
-  if (Number.isInteger(m.valor) && m.valor >= 1 && m.valor <= 12 && !prefixoDe(m) && !(m.casas ?? 0)) return "contagem" as const;
+  if (Number.isInteger(m.valor) && m.valor >= 1 && m.valor <= 12 && !prefixoDe(m) && !(m.casas ?? 0) && m.inicio === undefined) return "contagem" as const;
   return "regua" as const;
 };
 export const duracaoDoNumero = (m: Numero) => (tipoDoNumero(m) === "contagem" ? Math.min(0.35, 1.8 / m.valor) * m.valor : 1.3);
@@ -189,7 +189,7 @@ export const NumeroDesenho: React.FC<{ m: Numero; r: Ret; centro: boolean; t: nu
   const n = tipo === "contagem" ? m.valor : 0;
   const ritmo = n ? Math.min(0.35, 1.8 / n) : 0;
   const cheios = n ? Math.max(0, Math.min(n, Math.floor((t - m.em) / ritmo + 1))) : 0;
-  const valorAgora = tipo === "contagem" ? (t >= m.em ? cheios : 0) : m.valor * u;
+  const valorAgora = tipo === "contagem" ? (t >= m.em ? cheios : 0) : (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * u;
   const texto = formatarNumero(tipo === "contagem" ? valorAgora : valorAgora, m.casas ?? 0);
   const comecou = t >= m.em - 0.05;
   // alturas

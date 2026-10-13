@@ -1,4 +1,4 @@
-import { Datilo } from "../anim";
+import { Datilo, naVez } from "../anim";
 import { encaixar } from "../medida";
 import { cor, sans } from "../tema";
 
@@ -22,7 +22,7 @@ export const Cabeca: React.FC<{
     <div style={{ position: "absolute", left: x + 4, top: y, fontFamily: sans, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.04, letterSpacing: "0.01em", color: cor.tinta }}>
       {fit.linhas.map((l, i) => (
         <div key={i} style={{ whiteSpace: "nowrap" }}>
-          <Datilo texto={l} em={em + i * 0.3} t={t} semente={semente + i} />
+          <Datilo texto={l} {...naVez(fit.linhas, i, em, 0.3, t)} t={t} semente={semente + i} />
         </div>
       ))}
     </div>

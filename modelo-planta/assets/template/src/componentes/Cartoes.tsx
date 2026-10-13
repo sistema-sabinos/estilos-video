@@ -309,7 +309,7 @@ export const CartaoNumero: React.FC<{ m: NumeroBloco; t: number; fim: number; ar
   const casas = m.casas ?? (Math.abs(m.valor - Math.round(m.valor)) > 1e-9 ? 1 : 0);
   const final = numeroBR(m.valor, casas);
   const c = prog(t, m.em, 1.2, preciso);
-  const atual = numeroBR(m.valor * c, casas);
+  const atual = numeroBR((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * c, casas);
   // o número ocupa a largura: prefixo e sufixo menores, em terracota
   const fator = 0.42;
   const largura = (tam: number) =>

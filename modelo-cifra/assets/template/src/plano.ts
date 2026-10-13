@@ -76,6 +76,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // enquanto conta e as cordas que soam quando ele chega.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   // o que o número mede ("Bitcoin", "dias para devolver")

@@ -36,6 +36,8 @@ export type Gancho = Base & { tipo: "gancho"; texto: string; destaque?: string; 
 // uma grade de 100 pontos que se enche).
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

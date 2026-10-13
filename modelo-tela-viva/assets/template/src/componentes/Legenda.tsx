@@ -3,13 +3,13 @@
 // cada ~0,5 a 1 s com a fala. Sem sublinhado, sem cor de destaque, sem animação de entrada.
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { montarFrases } from "../motor/frases";
+import { legendaMinuscula } from "./minusculas";
 import { encaixar } from "../medida";
 import type { Momento, Palavra, Plano } from "../plano";
 import { COR, FONTE, LEGENDA_Y, SOMBRA_TEXTO } from "../tema";
 
-// Momentos que mostram a própria fala na moldura: a legenda some neles (salvo `legenda: true`).
-const MOSTRAM_A_FALA = new Set(["frase", "pergunta", "cta"]);
-export const legendaNoMomento = (m: Momento) => m.legenda ?? !MOSTRAM_A_FALA.has(m.tipo);
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 type Pedaco = { de: number; ate: number; texto: string };
 
@@ -20,14 +20,14 @@ const fecha = (w: string) => /[.?!…,;:]$/.test(w);
 // quebra cada frase do motor em pedaços de até 3 palavras (até ~22 letras), sem terminar em
 // artigo ou preposição
 const pedacosDe = (plano: Plano): Pedaco[] => {
-  const frases = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) });
+  const frases = montarFrases(legendaMinuscula(planoDaLegenda(plano)));
   const saida: Pedaco[] = [];
   for (const f of frases) {
     const ws: Palavra[] = f.palavras.flatMap((p) => limpar(p.w).split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));
     let grupo: Palavra[] = [];
     const fechar = () => {
       if (!grupo.length) return;
-      saida.push({ de: grupo[0].em, ate: f.ate, texto: grupo.map((p) => p.w).join(" ").toLowerCase() });
+      saida.push({ de: grupo[0].em, ate: f.ate, texto: grupo.map((p) => p.w).join(" ") });
       grupo = [];
     };
     ws.forEach((p, i) => {

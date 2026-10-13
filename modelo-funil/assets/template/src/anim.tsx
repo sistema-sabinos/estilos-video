@@ -1,5 +1,6 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Palavra } from "./plano";
+import { faladasDoTexto } from "./fala";
 
 // Movimento do Funil: entra decidido e assenta, sem quique nem elástico.
 export const entra = Easing.bezier(0.16, 1, 0.3, 1);
@@ -80,7 +81,8 @@ const casa = (escrita: string, falada: string) => {
 // Palavra não achada entra logo depois da anterior (texto enxugado continua no ritmo).
 // Nada entra antes de `inicio`.
 export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, ate: number, inicio = de) => {
-  const faladas = palavras.filter((p) => p.em >= de - 0.35 && p.em < ate + 0.1);
+  // a fala desde o `de` ou desde o `inicio`, a que casar mais palavras do texto (ver fala.ts)
+  const faladas = faladasDoTexto(texto, palavras, de, ate, inicio, casa);
   const tempos: number[] = [];
   let cursor = 0;
   for (const w of texto.split(/\s+/).filter(Boolean)) {

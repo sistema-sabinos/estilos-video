@@ -30,7 +30,7 @@ export const Numero: React.FC<{ m: NumeroT; t: number; fim: number; areas: Areas
   const inicioConta = Math.max(m.em, m.de + 0.1);
   const conta = prog(t, inicioConta, 1.1, Easing.bezier(0.2, 0.7, 0.3, 1));
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
-  const valorAgora = m.valor * conta;
+  const valorAgora = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
   const texto = numeroBR(conta >= 1 ? m.valor : valorAgora, casas);
   const textoFinal = numeroBR(m.valor, casas);
   const porcento = (m.sufixo ?? "").includes("%") && m.valor > 0 && m.valor <= 100;

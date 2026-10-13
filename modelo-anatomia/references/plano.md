@@ -30,7 +30,7 @@ Todos os tempos são em segundos, na linha do tempo do vídeo **já cortado**. P
 - `marca`: `nome` (Sora 700, ≥ 34 px) e `area` vão num crachá clínico branco, embaixo à esquerda, de 0,4 s a 5 s. Sem `nome`, sem crachá.
 - `sfx`: `false` desliga os sons.
 - `trilha` (opcional): um arquivo do usuário em `public/` (sem batida: piano, pads, cordas). Entra a ~12% com fade. Sem `trilha`, só os sons tonais.
-- `legendaNoDividido`: `"topo"` (padrão, como no exemplo: na costura, logo abaixo da borda de cima da moldura, acima da cabeça) ou `"queixo"`.
+- `legendaNoDividido`: `"topo"` (padrão, como no exemplo: na costura, logo abaixo da borda de cima da moldura, acima da cabeça) ou `"queixo"`. No `"topo"`, quando a tela divide vindo do quadro cheio ou do consultório, a moldura leva 0,66 s descendo até o card e a cabeça passa pela costura: a legenda some nesse trecho (cerca de 0,4 s) e volta quando a cabeça passou. Vindo da linha do tempo em tela cheia ela não some.
 - `rosto`, `zona`, `videoAltura`, `cortesEm`: calculados pelo `cortar.mjs`. Não mexa à mão (a `zona` não é usada neste modelo). Os `cortesEm` alternam o zoom do quadro cheio (1,00 / 1,12).
 
 ## 2. A gramática
@@ -43,7 +43,7 @@ Todos os tempos são em segundos, na linha do tempo do vídeo **já cortado**. P
 | **tela** | `linhaDoTempo` com `telaCheia: true` | a curva na tela inteira; a moldura desce e some (a voz continua) |
 
 - A tela divide no `de` do primeiro bloco de prancha (0,66 s) e volta no `ate` do último. **Pranchas a menos de 1,6 s uma da outra não desfazem a divisão**: encadeie os blocos de uma explicação.
-- Um bloco de prancha por vez. A `anatomia` e o `corte` podem se encostar: se o `corte` começa até 0,6 s antes ou depois do fim da `anatomia`, a câmera **mergulha** na região (`corte.regiao`) e a lente do corte abre ali.
+- Um bloco de prancha por vez. A `anatomia` e o `corte` podem se encostar: se o `corte` começa até 0,6 s antes ou depois do fim da `anatomia`, a câmera **mergulha** na região (`corte.regiao`) e a lente do corte abre ali, no centro da região. A `regiao` é um `id` do catálogo do rosto, citado ou não na `anatomia` (sem ela, a estrutura dita por último); se não for a última estrutura, a câmera vai até a região antes do corte e o rótulo da última sai junto.
 - O `mito` e a `virada` não são blocos de prancha: ficam por cima do layout atual.
 - A legenda continua por padrão em `virada`, `mito`, `anatomia`, `corte` e `linhaDoTempo` (eles não escrevem a fala) e some nos 11 blocos universais. `"legenda": true/false` troca.
 
@@ -130,7 +130,7 @@ Um corpo em traço fino (cápsula 2.5D) dividido em **2 a 6 regiões** empilhada
   "trocaEm": 1.13, "video": "virada.mp4", "videoDe": 1.1 }
 ```
 
-- `texto` (pequeno, até ~30 caracteres) entra em `em`; `nome` (grande, até ~14 caracteres, em caixa alta) entra letra a letra em `nomeEm`, acima da cabeça (y ~330).
+- `texto` (pequeno, até ~30 caracteres) entra em `em`; `nome` (grande, até ~14 caracteres, em caixa alta) entra letra a letra em `nomeEm`, acima da cabeça: o centro do bloco fica em y ~330 e sobe quando o rosto está alto, sem passar de y 130; se ainda não couber, o nome encolhe até 64 px. Com o rosto muito alto (centro acima de ~30% da altura do quadro) o nome ainda pode encostar no cabelo: confira no passo 8.
 - `trocaEm` (padrão `ate` − 0,6): a linha de luz desce em 0,6 s e a pergunta some. Ponha na palavra seguinte à profissão (a primeira da explicação) ou no corte.
 - `video` (opcional): a gravação com a roupa trocada (SKILL.md, passo 5b), mudo; `videoDe` = segundo do vídeo de trabalho em que ele começa (≤ `trocaEm`). Sem `video`, a linha de luz leva a pessoa para a moldura do consultório.
 - Um `virada` por vídeo, no começo.
@@ -162,7 +162,7 @@ Um corpo em traço fino (cápsula 2.5D) dividido em **2 a 6 regiões** empilhada
 
 - Um bloco 3D de tecido abre numa lente (do centro da prancha, ou mergulhando da `anatomia` anterior) e se alarga. **2 a 5 camadas**, de cima para baixo, com `material` (lista do esquema), `rotulo` (até ~10 caracteres), `estado` → `novoEstado` (em azul, no `novoEstadoEm`) e `em` (quando o rótulo entra).
 - `vinco`: a superfície tem uma ruga que alisa no `alisaEm`. `relaxaEm`: o músculo relaxa (fibras finas).
-- `sinal`: o nervo no fundo, com pulsos de luz que contraem o músculo (padrão: um ao abrir, outros a cada 1,6 s); `bloqueioEm` = a partir de quando os pulsos param na junção (padrão: o `efeitoEm` do agente).
+- `sinal`: o nervo no fundo, com pulsos de luz que contraem o músculo (padrão: o primeiro na palavra do sinal, no `em`, e os outros a cada 1,6 s até o fim do corte; antes da palavra o músculo fica contraído e parado, e se a palavra veio antes de o corte abrir o primeiro sai logo que a lente abre); `bloqueioEm` = a partir de quando os pulsos param na junção (padrão: o `efeitoEm` do agente). Se o agente é dito antes do nervo, como no exemplo, os pulsos já nascem barrados e o músculo não chega a dar o tranco: é o esperado.
 - `agente`: a agulha entra, as moléculas se prendem na junção e viram barreira no `efeitoEm`.
 - `etiqueta`: o canto de cima (padrão "corte ampliado"; no modo ilustrativo, "ilustrativo").
 - Dente: `esmalte`, `dentina`, `polpa` (+ `gengiva`, `osso`). Coluna: `osso`, `disco`, `osso` + `sinal`. Pele e gordura (nutrição): `pele`, `gordura`, `musculo`. Outros assuntos: camadas `neutro` (alternam o tom e a hachura).

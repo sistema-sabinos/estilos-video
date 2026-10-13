@@ -69,7 +69,7 @@ const NumeroQueConta: React.FC<{ m: NumeroUniversal; largura: number; altura: nu
   // conta quando vale a pena (números grandes ou com vírgula); um "7" só sobe
   const conta = Math.abs(m.valor) >= 10 || casas > 0;
   const digitos = Math.floor(Math.abs(m.valor)).toString().length;
-  const partida = conta ? (digitos >= 3 ? Math.sign(m.valor) * 10 ** (digitos - 1) : 0) : m.valor;
+  const partida = m.inicio ?? (conta ? (digitos >= 3 ? Math.sign(m.valor) * 10 ** (digitos - 1) : 0) : m.valor);
   const pConta = prog(t, m.em, 1.3, apuracao);
   const atual = conta ? partida + (m.valor - partida) * pConta : m.valor;
   const texto = pConta >= 1 ? final : formatar(atual, casas);

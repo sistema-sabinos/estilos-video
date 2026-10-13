@@ -7,9 +7,8 @@ import { montarFrases } from "../motor/frases";
 import type { Momento, Palavra, Plano } from "../plano";
 import { COR, FONTE_LEGENDA, LEGENDA_Y, prog } from "../tema";
 
-// Momentos que mostram a própria fala na moldura: a legenda some neles (salvo `legenda: true`).
-const MOSTRAM_A_FALA = new Set(["frase", "pergunta"]);
-export const legendaNoMomento = (m: Momento) => m.legenda ?? !MOSTRAM_A_FALA.has(m.tipo);
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 type Pedaco = { de: number; ate: number; texto: string };
 
@@ -20,7 +19,7 @@ const fecha = (w: string) => /[.?!…,;:]$/.test(w);
 // quebra cada frase do motor em pedaços de até 3 palavras (até ~22 letras), sem terminar em
 // artigo ou preposição
 const pedacosDe = (plano: Plano): Pedaco[] => {
-  const frases = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) });
+  const frases = montarFrases(planoDaLegenda(plano));
   const saida: Pedaco[] = [];
   for (const f of frases) {
     const ws: Palavra[] = f.palavras.flatMap((p) => limpar(p.w).split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));

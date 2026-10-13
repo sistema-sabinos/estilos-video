@@ -6,13 +6,15 @@
 import { Easing, Img, interpolate, staticFile } from "remotion";
 import { formatar, prog, salto, soco, temposDoTexto } from "../anim";
 import { Foto, imagemDoPlano, temImagem, type ImagemNoMomento } from "../motor/imagem";
-import type { Etiqueta as TEtiqueta, Gancho as TGancho, Heroi as THeroi, NomeIcone, Plano, Prova as TProva, Selo as TSelo } from "../plano";
+import type { Etiqueta as TEtiqueta, Gancho as TGancho, Heroi as THeroi, Momento, NomeIcone, Plano, Prova as TProva, Selo as TSelo } from "../plano";
+import { cantoDoSelo, geometriaHeroi, geometriaPlaca, medirPlaca, SELO_D, Z_CARD, type LugarDoSelo, type ModoHeroi } from "../selo";
 import { cor, fonte, RAIO, type Tons } from "../tema";
 import { BlocoIcone, caber, Cartao, Etiqueta, Icone, Marca, Reflexo, Texto } from "./Vidro";
 
 export type Ret = { x: number; y: number; w: number; h: number };
 export type FotoAnterior = { imagem: ImagemNoMomento; de: number; ate: number };
-export type PropsPalco = { t: number; plano: Plano; fim: number; palco: Ret; tons: Tons; imediato: boolean };
+// `selo`: um selo de oferta cai na vez deste cartão (o heroi e o cta já nascem com o lugar dele)
+export type PropsPalco = { t: number; plano: Plano; fim: number; palco: Ret; tons: Tons; imediato: boolean; selo?: boolean };
 
 const desce = Easing.bezier(0.65, 0, 0.35, 1);
 const mix = (a: number, b: number, p: number) => a + (b - a) * p;
@@ -111,11 +113,8 @@ export const FotoNoCartao: React.FC<{
 };
 
 // ——— a placa da manchete (gancho, abertura, frase) ———
-export const medirPlaca = (texto: string, largura: number, max = 84) => {
-  const { tamanho, linhas } = caber(texto, largura - 2 * 52, max, 50, 3);
-  const altura = Math.round(linhas.length * tamanho * 1.12 + 2 * 44);
-  return { tamanho, linhas, altura };
-};
+// a medida da placa (medirPlaca) mora no selo.ts: o cta sem produto desvia do selo com ela
+export { medirPlaca };
 
 export const Placa: React.FC<{
   t: number;
@@ -133,14 +132,16 @@ export const Placa: React.FC<{
   max?: number;
   // quando a placa entra (padrão: logo antes da 1ª palavra)
   entra?: number;
-}> = ({ t, plano, texto, em, ate, destaque, risco, riscoEm, ret, tons, imediato, modo = "acende", max, entra }) => {
-  const m = medirPlaca(texto, ret.w, max);
+  // respiro da direita (o cta sem produto abre lugar para o selo na ponta da placa)
+  direita?: number;
+}> = ({ t, plano, texto, em, ate, destaque, risco, riscoEm, ret, tons, imediato, modo = "acende", max, entra, direita = 52 }) => {
+  const m = medirPlaca(texto, ret.w, max, direita);
   const tempos = temposDoTexto(m.linhas.join(" "), em, plano.palavras, ate);
   const p = entrada(t, entra ?? em - 0.12, imediato, 0.36);
   const y = ret.y + (ret.h - m.altura) / 2;
   return (
     <Cartao x={ret.x} y={y} w={ret.w} h={m.altura} tipo="escuro" giro={[(1 - p) * 12, 0]} escala={0.92 + 0.08 * p} opacidade={Math.min(1, p * 2.5)}>
-      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 52px" }}>
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: `0 ${direita}px 0 52px` }}>
         <Texto t={t} linhas={m.linhas} tamanho={m.tamanho} tempos={tempos} modo={modo} destaque={destaque} corDestaque={tons.destaque} risco={risco} riscoEm={riscoEm} />
       </div>
     </Cartao>
@@ -252,31 +253,19 @@ export const CartaoHeroi: React.FC<{
   destaque?: string;
   etiquetas?: TEtiqueta[];
   de: number;
-}> = ({ t, plano, imagem, icone, em, fim, ret, tons, imediato, titulo, tituloEm, destaque, etiquetas, de }) => {
-  const img = imagem ? imagemDoPlano(plano, imagem) : null;
-  const transparente = !!img?.transparente && temImagem(img);
-  const foto = !transparente && temImagem(img);
-  // sem imagem nenhuma: modo ilustrativo (o ícone num bloco de vidro 3D)
-  const ilustrativo = !transparente && !foto;
-  const folga = transparente ? Math.min(130, ret.h * 0.2) : ilustrativo ? Math.min(70, ret.h * 0.1) : 0;
-  const card: Ret = { x: ret.x, y: ret.y + folga, w: ret.w, h: ret.h - folga - 6 };
+  selo?: boolean;
+}> = ({ t, plano, imagem, icone, em, fim, ret, tons, imediato, titulo, tituloEm, destaque, etiquetas, de, selo }) => {
+  // a conta do cartão (produto, título e o lugar do selo) mora no selo.ts (testável sem render)
+  const { img, transparente, foto, ilustrativo, folga, card, prodH, prodW, bloco, cx, tx, larguraTitulo, titulo: mTitulo, areaTopo, areaBase } = contaHeroi(plano, imagem, ret, titulo, etiquetas, selo);
   const p = entrada(t, em, imediato, 0.5);
   const vida = Math.max(0, t - em);
   // aproximação lenta (o produto vem mais rápido que o cartão: parece estar na frente)
-  const zCard = 1 + Math.min(0.045, vida * 0.012);
+  const zCard = 1 + Math.min(Z_CARD, vida * 0.012);
   const zProd = 1 + Math.min(0.1, vida * 0.026);
   const giro: [number, number] = [3 + (1 - p) * 12, -7 + Math.sin(vida * 0.9) * 2.5 + (1 - p) * 10];
-  // produto à esquerda (com título) ou no meio (sem título)
   const temTitulo = !!titulo;
-  const prodH = card.h + folga - 34;
-  const bloco = Math.min(card.h * 0.74, 330);
-  const prodW = ilustrativo ? bloco : foto ? card.w * 0.46 - 36 : img?.largura && img?.altura ? (prodH * img.largura) / img.altura : prodH * 0.4;
-  const cx = foto ? card.x + 18 + prodW / 2 : temTitulo ? card.x + Math.max(prodW / 2 + 60, card.w * 0.25) : card.x + card.w / 2;
   const base = card.y + card.h - 34;
   const pP = imediato ? 1 : prog(t, em + 0.08, 0.5, salto);
-  const tx = temTitulo ? cx + prodW / 2 + 40 : 0;
-  const larguraTitulo = card.x + card.w - 44 - tx;
-  const mTitulo = temTitulo ? caber(titulo as string, larguraTitulo, 70, 40, 3) : null;
   const temposTitulo = mTitulo ? temposDoTexto(mTitulo.linhas.join(" "), tituloEm ?? em, plano.palavras, fim) : undefined;
   return (
     <div style={{ position: "absolute", inset: 0, transform: `scale(${zCard})`, transformOrigin: `${card.x + card.w / 2}px ${card.y + card.h}px` }}>
@@ -289,8 +278,9 @@ export const CartaoHeroi: React.FC<{
           </div>
         ) : null}
         {mTitulo ? (
-          // com etiquetas (que ficam embaixo à direita), o título sobe para a parte livre do cartão
-          <div style={{ position: "absolute", left: tx - card.x, top: 0, width: larguraTitulo, height: card.h - (etiquetas?.length ? etiquetas.length * 76 + 20 : 0), display: "flex", alignItems: "center" }}>
+          // com etiquetas (que ficam embaixo à direita), o título sobe para a parte livre do cartão;
+          // com selo no canto, a faixa do título começa abaixo dele (areaTopo)
+          <div style={{ position: "absolute", left: tx - card.x, top: areaTopo, width: larguraTitulo, height: areaBase - areaTopo, display: "flex", alignItems: "center" }}>
             <Texto t={t} linhas={mTitulo.linhas} tamanho={mTitulo.tamanho} cor={cor.tinta} corDestaque={tons.destaque} alinhar="left" tempos={temposTitulo} modo="acende" destaque={destaque} />
           </div>
         ) : null}
@@ -326,7 +316,7 @@ export const CartaoHeroi: React.FC<{
   );
 };
 
-export const Heroi: React.FC<PropsPalco & { m: THeroi }> = ({ t, plano, m, fim, palco, tons, imediato }) => (
+export const Heroi: React.FC<PropsPalco & { m: THeroi }> = ({ t, plano, m, fim, palco, tons, imediato, selo }) => (
   <CartaoHeroi
     t={t}
     plano={plano}
@@ -342,6 +332,7 @@ export const Heroi: React.FC<PropsPalco & { m: THeroi }> = ({ t, plano, m, fim, 
     destaque={m.destaque}
     etiquetas={m.etiquetas}
     de={m.de}
+    selo={selo}
   />
 );
 
@@ -451,14 +442,36 @@ const SeloNumero: React.FC<{ t: number; n: NonNullable<TProva["numero"]>; x: num
 };
 
 // ——— SELO ———
-export const Selo: React.FC<{ t: number; m: TSelo; x: number; y: number; tons: Tons }> = ({ t, m, x, y, tons }) => {
+// O cartão herói (heroi e cta com produto): a conta vem do selo.ts, com o modo tirado da imagem.
+const contaHeroi = (plano: Plano, imagem: ImagemNoMomento | undefined, ret: Ret, titulo?: string, etiquetas?: TEtiqueta[], selo?: boolean) => {
+  const img = imagem ? imagemDoPlano(plano, imagem) : null;
+  const transparente = !!img?.transparente && temImagem(img);
+  const foto = !transparente && temImagem(img);
+  // sem imagem nenhuma: modo ilustrativo (o ícone num bloco de vidro 3D)
+  const ilustrativo = !transparente && !foto;
+  const modo: ModoHeroi = transparente ? "transparente" : foto ? "foto" : "ilustrativo";
+  const proporcao = img?.largura && img?.altura ? img.largura / img.altura : undefined;
+  return { img, transparente, foto, ilustrativo, ...geometriaHeroi(ret, { modo, proporcao, titulo, etiquetas: etiquetas?.length ?? 0, selo }) };
+};
+
+// Onde o selo carimba sobre o cartão da vez: no heroi e no cta com título ele desvia do título;
+// nos outros cartões, fica no canto de cima à direita do palco.
+export const lugarDoSelo = (plano: Plano, m: Momento | undefined, palco: Ret): LugarDoSelo => {
+  if (m?.tipo === "heroi" && m.titulo) return contaHeroi(plano, m.imagem, palco, m.titulo, m.etiquetas, true).selo;
+  if (m?.tipo === "cta" && m.titulo) return m.imagem ? contaHeroi(plano, m.imagem, palco, m.titulo, undefined, true).selo : geometriaPlaca(palco, m.titulo, true).selo;
+  return cantoDoSelo(palco, SELO_D);
+};
+
+// `diametro`: o tamanho na tela (o desenho é sempre o de 276 px, encolhido junto)
+export const Selo: React.FC<{ t: number; m: TSelo; x: number; y: number; diametro?: number; tons: Tons }> = ({ t, m, x, y, diametro = SELO_D, tons }) => {
   if (t < m.em - 0.02) return null;
-  const d = 276;
+  const d = SELO_D;
+  const k = diametro / d;
   const p = prog(t, m.em - 0.02, 0.34, salto);
   const vida = t - m.em;
   const { tamanho, linhas } = caber(m.texto.toLocaleUpperCase("pt-BR"), d * 0.68, 50, 26, 2);
   return (
-    <div style={{ position: "absolute", left: x - d / 2, top: y - d / 2, width: d, height: d, transform: `rotate(${-9 + (1 - p) * -25}deg) scale(${1.5 - 0.5 * p})`, opacity: Math.min(1, p * 2.5) }}>
+    <div style={{ position: "absolute", left: x - d / 2, top: y - d / 2, width: d, height: d, transform: `rotate(${-9 + (1 - p) * -25}deg) scale(${(1.5 - 0.5 * p) * k})`, opacity: Math.min(1, p * 2.5) }}>
       <div style={{ position: "absolute", inset: 0, borderRadius: d / 2, background: tons.destaque, border: "6px solid rgba(255,255,255,0.96)", boxShadow: "0 18px 40px rgba(0,0,0,0.35)" }} />
       {/* o anel tracejado gira devagar: o selo nunca fica parado */}
       <svg width={d} height={d} style={{ position: "absolute", inset: 0, transform: `rotate(${vida * 22}deg)` }}>

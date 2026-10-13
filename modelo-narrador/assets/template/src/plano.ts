@@ -72,6 +72,8 @@ export type Passos = Base & Prancha & { tipo: "passos"; titulo?: string; itens: 
 export type Numero = Base &
   Prancha & {
     tipo: "numero";
+    // de onde a contagem parte (padrão 0)
+    inicio?: number;
     valor: number;
     em: number;
     rotulo: string;

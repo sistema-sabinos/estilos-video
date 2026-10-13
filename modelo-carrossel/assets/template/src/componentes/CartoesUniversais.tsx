@@ -76,7 +76,7 @@ export const Numero: React.FC<{ m: TNumero; palavras: Palavra[]; t: number; zona
   const temposDet = m.detalhe ? temposDoTexto(m.detalhe, palavras, m.em, m.ate, m.em + 0.6) : [];
   // o número conta de 0 até o valor a partir de `em`, freando no fim
   const pConta = interpolate(t, [m.em - 0.05, m.em + 0.95], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
-  const atual = m.valor * pConta;
+  const atual = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta;
   const texto = numeroBR(pConta >= 1 ? m.valor : atual, casas);
   // o contador já está no cartão (em zero) e começa a contar na palavra
   const entrada = noInicio ? abre : Math.max(m.de, Math.min(temposRot[0] ?? m.em, m.em) - 0.3);

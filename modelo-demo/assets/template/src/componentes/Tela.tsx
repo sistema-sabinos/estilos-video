@@ -3,7 +3,8 @@
 // no palco de 1080 px (o Palco encolhe para a moldura). Corte seco na entrada e na saída.
 import { Img, staticFile } from "remotion";
 import type { Tela as TTela, Vista } from "../plano";
-import { LARGURA, PALCO_H, prog } from "../tema";
+import { LARGURA, PALCO_H } from "../tema";
+import { cursorNoTempo } from "../cursor";
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const suave = (p: number) => p * p * (3 - 2 * p);
@@ -45,27 +46,7 @@ export const Tela: React.FC<{ m: TTela; t: number; alt?: number }> = ({ m, t, al
   const pts = [...(m.cursor ?? [])].sort((a, b) => a.em - b.em);
   let cursor: React.ReactNode = null;
   if (pts.length) {
-    const prim = pts[0];
-    const longe = { x: clamp(prim.x + 0.16, 0, 1), y: clamp(prim.y + 0.12, 0, 1), em: m.de };
-    const seq = [longe, ...pts];
-    let i = 0;
-    while (i < seq.length - 1 && t >= seq[i + 1].em - 0.0001) i++;
-    const a = seq[i];
-    const b = seq[Math.min(i + 1, seq.length - 1)];
-    let x = a.x;
-    let y = a.y;
-    if (b !== a) {
-      const viagem = Math.min(0.7, b.em - a.em);
-      const k = suave(prog(t, b.em - viagem, viagem, (u) => u));
-      x = a.x + (b.x - a.x) * k;
-      y = a.y + (b.y - a.y) * k;
-    } else {
-      // depois do último ponto: deriva leve
-      x = a.x + Math.sin((t - a.em) * 2.1) * 0.006;
-      y = a.y + Math.cos((t - a.em) * 1.7) * 0.005;
-    }
-    const px = left + x * w;
-    const py = top + y * h;
+    const { x: px, y: py } = cursorNoTempo(pts, m.de, t, { w, h, left, top });
     const cliques = pts.filter((q) => q.clique);
     const ultimo = [...cliques].reverse().find((q) => t >= q.em);
     const dt = ultimo ? t - ultimo.em : 9;

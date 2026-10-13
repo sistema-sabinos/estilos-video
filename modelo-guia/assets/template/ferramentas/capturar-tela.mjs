@@ -39,17 +39,20 @@ const agente = UA[opcoes.agente ?? "desktop"] ?? UA.desktop;
 const recorte = opcoes.recorte ? String(opcoes.recorte).split(",").map(Number) : null;
 const acoes = opcoes.acoes ? JSON.parse(String(opcoes.acoes)) : [];
 
-const achaChrome = () => {
-  const raiz = "node_modules/.remotion/chrome-headless-shell";
+// o Chrome headless que o Remotion baixou: o do projeto primeiro, depois o de uma pasta acima
+// (como o Node acha os pacotes); no Windows o arquivo termina em .exe
+const achaChrome = (dir = process.cwd()) => {
+  const raiz = path.join(dir, "node_modules/.remotion/chrome-headless-shell");
   const pilha = existsSync(raiz) ? [raiz] : [];
   while (pilha.length) {
     const d = pilha.pop();
     for (const f of readdirSync(d)) {
       const p = path.join(d, f);
       if (statSync(p).isDirectory()) pilha.push(p);
-      else if (f === "chrome-headless-shell") return path.resolve(p);
+      else if (f === "chrome-headless-shell" || f === "chrome-headless-shell.exe") return path.resolve(p);
     }
   }
+  if (path.dirname(dir) !== dir) return achaChrome(path.dirname(dir));
   throw new Error("Chrome headless do Remotion não encontrado: rode `npx remotion browser ensure`.");
 };
 

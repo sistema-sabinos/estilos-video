@@ -130,7 +130,7 @@ export const Passos: React.FC<P<TPassos>> = ({ m, t, varrida }) => {
 // ——— numero: a etiqueta de preço com furo e barbante ———
 export const Numero: React.FC<P<TNumero>> = ({ m, t, varrida }) => {
   const p = prog(t, m.em, 0.9, desliza);
-  const v = m.valor * p;
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
   const texto = formatar(m.valor, casas);
   const tam = Math.min(260, Math.floor(560 / Math.max(2.4, texto.length * 0.62 + (m.prefixo?.length ?? 0) * 0.4 + (m.sufixo?.length ?? 0) * 0.4)));

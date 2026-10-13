@@ -29,6 +29,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // Etiqueta de preço com furo e barbante: o número conta a partir de `em`.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

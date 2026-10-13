@@ -94,9 +94,17 @@ const recortar = (rx) => {
 };
 
 // Cada trecho entra como uma leitura separada do mesmo arquivo; o concat junta tudo.
+// A duração de cada trecho tem de ser exatamente ate - de, que é o que as palavras somam: o
+// áudio sai na medida (cortado na amostra) e o vídeo para um quadro antes, com o último quadro
+// segurando o resto. Com o vídeo inteiro, o concat estica cada trecho até o fim do último
+// quadro, alguns centésimos além do pedido, e a legenda adianta um pouco mais a cada corte.
+// O ffmpeg do Remotion não tem setpts: o corte fica na leitura (-ss/-t) e o trim só encurta.
 const codificarBase = (c) => {
-  const entradas = segmentos.flatMap((s) => ["-ss", String(s.de), "-t", String((s.ate - s.de).toFixed(3)), "-i", analise.origem]);
-  const pares = segmentos.map((_, i) => `[${i}:v:0][${i}:a:0]`).join("");
+  const entradas = segmentos.flatMap((s) => ["-ss", String(s.de), "-t", (s.ate - s.de).toFixed(6), "-i", analise.origem]);
+  const umQuadro = 1 / analise.fps;
+  const pares =
+    segmentos.map((s, i) => `[${i}:v:0]trim=end=${(s.ate - s.de - umQuadro).toFixed(6)}[v${i}];`).join("") +
+    segmentos.map((_, i) => `[v${i}][${i}:a:0]`).join("");
   const montar = (tonemap) =>
     `${pares}concat=n=${segmentos.length}:v=1:a=1[v][a];[v]crop=${c.w}:${c.h}:${c.x0}:${c.y0},${tonemap}scale=1080:${videoAltura},format=yuv420p[vo]`;
   const codificar = (grafo) => [
@@ -164,11 +172,16 @@ for (const s of segmentos) {
   }
   deslocamento += s.ate - s.de;
 }
-// palavra que encosta num trecho mantido mas ficou de fora (tempo do Whisper suspeito): avisa
+// palavra que encosta num trecho mantido mas ficou de fora (tempo do Whisper suspeito): avisa.
+// Também a que caiu inteira na pausa cortada, a até 0,2 s da borda; a de um item marcado
+// "manter": false não, porque saiu de propósito (a frase ou a tomada que foi tirada).
+const removidos = lerJson("work/cortes.json").filter((c) => c.manter === false);
 const perdidas = analise.palavras.filter((p) => {
   const meio = (p.em + p.ate) / 2;
   if (segmentos.some((s) => meio >= s.de && meio <= s.ate)) return false;
-  return segmentos.some((s) => Math.min(s.ate, p.ate) - Math.max(s.de, p.em) >= 0.05);
+  if (segmentos.some((s) => Math.min(s.ate, p.ate) - Math.max(s.de, p.em) >= 0.05)) return true;
+  if (removidos.some((c) => meio >= c.de && meio <= c.ate)) return false;
+  return segmentos.some((s) => p.em < s.ate + 0.2 && p.ate > s.de - 0.2);
 });
 if (perdidas.length) {
   console.log(`Aviso: ${perdidas.length} palavra(s) na borda de um trecho mantido ficaram de fora: ${perdidas.map((p) => `"${p.w}" (${p.em.toFixed(2)} s)`).join(", ")}.`);

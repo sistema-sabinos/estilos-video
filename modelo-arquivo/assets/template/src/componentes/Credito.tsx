@@ -1,4 +1,4 @@
-import { Datilo, prog, saindo } from "../anim";
+import { Datilo, naVez, prog, saindo } from "../anim";
 import { encaixar, larguraTexto } from "../medida";
 import type { Credito as TCredito } from "../plano";
 import { caber, cor, LARGURA_SANS_CAIXA_ALTA, mono, sans, sombraTexto } from "../tema";
@@ -67,7 +67,7 @@ export const Credito: React.FC<{
       <div style={{ fontFamily: sans, fontWeight: 800, fontSize: tamLugar, lineHeight: 1, letterSpacing: "0.02em", color: cor.claro }}>
         {fitLugar.linhas.map((l, i) => (
           <div key={i} style={{ whiteSpace: "nowrap" }}>
-            <Datilo texto={l} em={m.lugar.em + i * 0.3} t={t} dur={fimLugar - m.lugar.em} />
+            <Datilo texto={l} {...naVez(fitLugar.linhas, i, m.lugar.em, 0, t, { dur: () => fimLugar - m.lugar.em })} t={t} />
           </div>
         ))}
       </div>

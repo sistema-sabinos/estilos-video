@@ -138,7 +138,7 @@ export const Numero: React.FC<{ m: TNumero; ctx: Contexto }> = ({ m, ctx }) => {
           whiteSpace: "nowrap",
         }}
       >
-        {travou ? valor : contar(valor, p)}
+        {travou ? valor : contar(valor, p, m.inicio !== undefined && typeof m.valor === "number" && m.valor !== 0 ? m.inicio / m.valor : 0)}
         {sufixoCurto}
       </div>
       {palavra ? (

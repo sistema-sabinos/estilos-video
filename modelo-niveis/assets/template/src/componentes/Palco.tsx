@@ -6,20 +6,21 @@
 //   `COMENTA "PALAVRA"` na altura do peito. Nada anima: tudo entra e sai em corte seco.
 import { Img, staticFile } from "remotion";
 import { Foto, imagemDoPlano, temImagem } from "../motor/imagem";
+import { entradaDoCartao } from "../ciclo";
 import { larguraTexto } from "../medida";
 import type { Cta as TCta, Niveis as TNiveis, Nivel, Plano } from "../plano";
 import { CARTAO_X, COR, FONTE, SOMBRA_TEXTO, medidas } from "../tema";
 
 const FUNDO_PADRAO = "#F3F0E8";
 
-const ConteudoDoCartao: React.FC<{ plano: Plano; n: Nivel; t: number; ate: number; w: number; h: number }> = ({ plano, n, t, ate, w, h }) => {
+const ConteudoDoCartao: React.FC<{ plano: Plano; n: Nivel; t: number; de: number; ate: number; w: number; h: number }> = ({ plano, n, t, de, ate, w, h }) => {
   const img = imagemDoPlano(plano, n.imagem);
   if (temImagem(img)) {
     // PNG transparente (objeto, recorte): inteiro, centrado sobre o fundo do cartão
     if (img.transparente) {
       return <Img src={staticFile(img.arquivo)} style={{ width: w * 0.9, height: h * 0.9, objectFit: "contain" }} />;
     }
-    return <Foto imagem={img} foco={n.imagem?.foco} de={n.em} ate={ate} t={t} largura={w} altura={h} efeito="parado" />;
+    return <Foto imagem={img} foco={n.imagem?.foco} de={de} ate={ate} t={t} largura={w} altura={h} efeito="parado" />;
   }
   const texto = n.texto ?? img?.palavra ?? n.rotulo;
   let tam = 78;
@@ -34,7 +35,9 @@ export const Niveis: React.FC<{ plano: Plano; m: TNiveis; t: number }> = ({ plan
   return (
     <>
       {m.itens.map((n, i) => {
-        if (t < n.em || (n.ate !== undefined && t >= n.ate)) return null;
+        // o cartão que abre o ciclo entra no corte (ciclo.ts); a foto entra junto com ele
+        const entra = entradaDoCartao(m, i);
+        if (t < entra || (n.ate !== undefined && t >= n.ate)) return null;
         const col = n.posicao ?? Math.min(i, 2);
         const x = CARTAO_X[col];
         const troca = n.depois && t >= n.depois.em ? n.depois.rotulo : n.rotulo;
@@ -75,7 +78,7 @@ export const Niveis: React.FC<{ plano: Plano; m: TNiveis; t: number }> = ({ plan
                 justifyContent: "center",
               }}
             >
-              <ConteudoDoCartao plano={plano} n={n} t={t} ate={m.ate} w={cartaoLar} h={cartaoAlt} />
+              <ConteudoDoCartao plano={plano} n={n} t={t} de={entra} ate={m.ate} w={cartaoLar} h={cartaoAlt} />
             </div>
             <div
               style={{

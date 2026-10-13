@@ -151,7 +151,7 @@ export const Numero: React.FC<{ m: NumeroT } & Comum> = ({ m, palavras, t, topo,
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
   const final = formatar(m.valor, casas);
   const pConta = prog(t, m.em, 1.15);
-  const agora = formatar(m.valor * pConta, casas);
+  const agora = formatar((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta, casas);
   // o número grande cabe na largura (prefixo e sufixo menores)
   const larguraDo = (s: number) =>
     larguraPalavra(final, s, TITULO) +

@@ -30,17 +30,7 @@ export const MERGULHO = 0.34;
 // zoom do quadro cheio: alterna entre estes dois a cada corte, frase longa ou volta de um pôster
 const ZOOM_CHEIO = [1, 1.1];
 
-// Pôsteres em ordem, sem sobreposição (um termina quando o próximo começa).
-export const ordenar = (plano: Plano): Poster[] => {
-  const ordem = plano.momentos.filter((m): m is Poster => !ehPlaca(m)).sort((a, b) => a.de - b.de);
-  return ordem.map((m, i) => {
-    const prox = ordem[i + 1];
-    return prox && m.ate > prox.de ? { ...m, ate: prox.de } : m;
-  });
-};
-
-// Placas: o selo do demo, o número e o destaque (no quadro cheio, na altura do peito).
-export const placas = (plano: Plano): Placa[] => plano.momentos.filter(ehPlaca).sort((a, b) => a.de - b.de);
+export { ordenar, placas } from "./legenda-padrao";
 
 // Fundo de cada pôster: o do plano ou, sem ele, alternando cobalto / papel. A comparação usa os
 // dois (o de cima é o dela). Dois pôsteres colados nunca repetem a cor sozinhos.

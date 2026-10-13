@@ -205,7 +205,7 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: pla
               return <Fala key={chave} m={m} centro={centroDaNarracao(estadoEm(Math.min(m.ate, m.de + 1.0)))} />;
             case "creditos":
             case "cta":
-              return <Creditos key={chave} m={m} marca={plano.marca} topoJanela={estado.topo} centro={centro} />;
+              return <Creditos key={chave} m={m} marca={plano.marca} topoJanela={estado.topo} estado={estado} assentado={assentado} />;
             case "abertura":
               return <Abertura key={chave} m={m} {...comum} />;
             case "numero":

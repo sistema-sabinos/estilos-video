@@ -44,7 +44,7 @@ Cada momento (menos a `abertura`) ocupa o insert inteiro e fica nele **até o pr
 | Campo | Obrigatório | O que é |
 |---|---|---|
 | `captura` | sim | nome do arquivo em `public/tela/` sem a extensão (`chrome` = `public/tela/chrome.jpg`) |
-| `proporcao` | sim | altura ÷ largura da captura (o `capturar.mjs` imprime) |
+| `proporcao` | sim | altura ÷ largura da captura (o `capturar.mjs` imprime, já sem o `--cortar-topo`) |
 | `ini`, `fim` | sim | a câmera no primeiro e no último quadro: `x`,`y` = centro do que se vê, em frações da captura inteira; `zoom` 1 = a captura na largura do insert (a página inteira de ponta a ponta), 2 = metade da largura. Devem ser **diferentes** (a tela nunca para): rolar (`y` muda) e/ou aproximar (`zoom` sobe) |
 | `cursor` | recomendado | pontos `{ x, y, em, clique? }` em frações da captura. O cursor chega ao ponto no `em` (a palavra que nomeia o item), vindo do anterior em até 0,7 s; `clique: true` desenha o toque. Depois do último ponto, deriva de leve |
 
@@ -80,6 +80,21 @@ Regras:
 
 Campos comuns: `tipo`, `de`, `ate`, `legenda?`, `chapeu?`. Ocupam o insert de cima (845 px) no lugar da gravação, em corte seco. Use pouco; o Reel original só tem gravação, imagem e a pessoa.
 
+## O fechamento: `cta` (layout eu, sem texto na tela)
+
+```json
+{ "tipo": "cta", "de": 11.75, "ate": 14.4, "legenda": true }
+```
+
+- A chamada final vai só na voz e na legenda: a pessoa em tela cheia, mais fechada (layout `eu`, o padrão do `cta`), sem texto de chamada na tela (DNA 12 do SKILL.md). Por isso o `cta` do Demo não leva `texto`; se vier, fica fora da tela.
+- Exceção que foge do estilo, só se o usuário pedir a chamada escrita: `"layout": "split"`. Aí o `cta` vira bloco do insert de cima (círculo verde com o ícone e o texto) e precisa de `texto`, com `icone?` (salvar, seguir, comentar ou link) e `destaque?`.
+
+
+## Topo da cabeça (`ateTopo`)
+
+O template põe o topo da cabeça na linha do modelo supondo o cabelo a 0,84 largura de rosto acima do centro do rosto, que é a média. Com cabelo bem mais baixo a cabeça fica abaixo da linha (uns 60 px no 0,70); com cabelo alto, acima. Para acertar, leia também o **topo do cabelo** na grade do passo 4 e, depois do `cortar.mjs`, grave no plano o número `ateTopo` = 0,66 × (rosto-y menos topo do cabelo) ÷ (queixo-y menos rosto-y).
+
+Exemplo: `--rosto-y 0.31`, `--queixo-y 0.42` e o topo do cabelo em 0,18 dão 0,66 × 0,13 ÷ 0,11 = 0,78, e o plano ganha `"ateTopo": 0.78`. A conta usa só as proporções do rosto, então vale em qualquer recorte (9:16 ou 3:4). Sem o campo vale 0,84; o template aceita de 0,6 a 1,2. O `cortar.mjs --manter-plano` mantém o campo; um corte sem `--manter-plano` começa o plano do zero, então grave de novo.
 
 ## Regras de tempo
 

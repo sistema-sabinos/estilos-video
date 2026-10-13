@@ -38,6 +38,8 @@ export type Gancho = Base & { tipo: "gancho"; texto: string; destaque?: string; 
 // que enche junto. Formato pt-BR (83.000; 1,5). `ilustrativo: true` põe a etiqueta.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

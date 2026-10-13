@@ -71,6 +71,7 @@ O exemplo é de outro assunto: copie o **estilo** (quais blocos, em que ordem, o
   - Não invente número, nome, preço, taxa nem fato.
   - Gráfico sem números ditos usa a forma qualitativa (`tendencia`) com `ilustrativo: true`.
   - Se um bloco pede um dado que a fala não tem, use outro bloco. Não preencha com chute.
+  - No `numero`, o `prefixo` e o `sufixo` ficam parados enquanto o número conta, a partir de `inicio` (padrão 0). Com algarismo neles, ponha `inicio`: faixa "6 a 8 horas" é `"prefixo": "6 a "`, `"valor": 8`, `"sufixo": " horas"` e `"inicio": 6` (ou `"inicio": 8`, para o número entrar pronto); sem isso a tela mostra "6 a 0". Para contar do 0 mesmo ("12x R$" + 49,90), `"inicio": 0`. O `conferir` recusa o algarismo sem `inicio`.
 - **Ritmo.**
   - Não repita o mesmo bloco três vezes seguidas.
   - Siga a gramática de layout do modelo: a pessoa muda de lugar nas fronteiras das batidas.

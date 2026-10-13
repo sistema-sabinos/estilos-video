@@ -4,11 +4,12 @@ import { cor, LEGENDA_Y, sans } from "../tema";
 
 // Legenda numa pílula branca, sempre na mesma altura (abaixo do queixo, acima da interface do app).
 // Cada palavra acende em azul-tinta quando é falada.
-export const Legendas: React.FC<{ frases: Frase[] }> = ({ frases }) => {
+// `volta`: antes desse instante a legenda espera (uma prancha ocupa a faixa dela); depois entra suave.
+export const Legendas: React.FC<{ frases: Frase[]; volta?: number }> = ({ frases, volta = -Infinity }) => {
   const t = useTempo();
   const atual = frases.find((f) => t >= f.de - 0.05 && t <= f.ate);
-  if (!atual) return null;
-  const entra = prog(t, atual.de - 0.05, 0.2);
+  if (!atual || t < volta) return null;
+  const entra = prog(t, Math.max(atual.de - 0.05, volta), 0.2);
   const sai = saindo(t, atual.ate, 0.12);
   return (
     <div style={{ position: "absolute", left: 0, right: 0, top: LEGENDA_Y, display: "flex", justifyContent: "center" }}>

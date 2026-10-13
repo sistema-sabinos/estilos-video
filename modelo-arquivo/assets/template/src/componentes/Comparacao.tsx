@@ -1,4 +1,4 @@
-import { Datilo, entra as entraEasing, preciso, prog } from "../anim";
+import { Datilo, entra as entraEasing, naVez, preciso, prog } from "../anim";
 import { partesDaRegiao, type Regiao } from "../layout";
 import { encaixar } from "../medida";
 import type { Comparacao as TComparacao, Layout } from "../plano";
@@ -82,14 +82,14 @@ export const Comparacao: React.FC<{ m: TComparacao; t: number; fim: number; regi
                 >
                   {rot.linhas.map((l, k) => (
                     <div key={k} style={{ whiteSpace: "nowrap" }}>
-                      <Datilo texto={l} em={lado.em + k * 0.2} t={t} semente={410 + i * 3 + k} />
+                      <Datilo texto={l} {...naVez(rot.linhas, k, lado.em, 0.2, t, { cursor: t < lado.em + 0.25 })} t={t} semente={410 + i * 3 + k} />
                     </div>
                   ))}
                 </div>
                 <div style={{ marginTop: 28, fontFamily: sans, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.06, color: cor.tinta, opacity: perdedor ? 1 - 0.45 * marca : 1 }}>
                   {fit.linhas.map((l, k) => (
                     <div key={k} style={{ whiteSpace: "nowrap" }}>
-                      <Datilo texto={l} em={lado.em + 0.25 + k * 0.22} t={t} semente={420 + i * 5 + k} />
+                      <Datilo texto={l} {...naVez(fit.linhas, k, lado.em + 0.25, 0.22, t)} t={t} semente={420 + i * 5 + k} />
                     </div>
                   ))}
                 </div>

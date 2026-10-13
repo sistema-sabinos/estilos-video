@@ -7,9 +7,8 @@ import { encaixar } from "../medida";
 import type { Momento, Plano } from "../plano";
 import { COR, FONTE, MARGEM, SOMBRA_TEXTO, medidas } from "../tema";
 
-// Momentos que mostram a própria fala na faixa: a legenda some neles (salvo `legenda: true`).
-const MOSTRAM_A_FALA = new Set(["abertura", "frase", "pergunta", "cta"]);
-export const legendaNoMomento = (m: Momento) => m.legenda ?? !MOSTRAM_A_FALA.has(m.tipo);
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 type Pedaco = { de: number; ate: number; texto: string };
 
@@ -56,7 +55,7 @@ const guardadas = new WeakMap<object, Pedaco[]>();
 const pedacosDo = (plano: Plano) => {
   let f = guardadas.get(plano);
   if (!f) {
-    const frases = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) });
+    const frases = montarFrases(planoDaLegenda(plano));
     f = frases.flatMap(pedacos);
     guardadas.set(plano, f);
   }

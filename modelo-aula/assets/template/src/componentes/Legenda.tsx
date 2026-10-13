@@ -9,15 +9,14 @@ import { trechoEm } from "../modo";
 import { doProfessor, type Momento, type Plano } from "../plano";
 import { BASE, COR, FONTE, SLIDE_W, W, prog, slideX } from "../tema";
 
-// Momentos em que a legenda continua (salvo `legenda: false`): os cartões que não repetem a fala.
-const COM_LEGENDA = new Set(["capitulo", "destaque"]);
-export const legendaNoMomento = (m: Momento) => m.legenda ?? (COM_LEGENDA.has(m.tipo) || !doProfessor(m));
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 const guardadas = new WeakMap<object, Frase[]>();
 const frasesDo = (plano: Plano) => {
   let f = guardadas.get(plano);
   if (!f) {
-    f = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) });
+    f = montarFrases(planoDaLegenda(plano));
     guardadas.set(plano, f);
   }
   return f;

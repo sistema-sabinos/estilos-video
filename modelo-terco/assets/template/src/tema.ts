@@ -43,7 +43,9 @@ export const UI_DIREITA = 960;
 // folga acima da cabeça, dentro da moldura da pessoa (px), em qualquer zoom
 const FOLGA_CABECA = 48;
 // do centro do rosto (olhos/nariz) ao topo da cabeça e ao queixo, em larguras de rosto
-const ATE_TOPO = 0.84;
+// do centro do rosto ao topo do cabelo, em larguras de rosto: a média (0,84) ou o medido na grade
+// do passo 4 e gravado em `ateTopo` no plano (references/plano.md)
+const ateTopo = (plano: Plano) => Math.min(1.2, Math.max(0.6, plano.ateTopo ?? 0.84));
 const ATE_QUEIXO = 0.68;
 // a legenda: altura reservada (2 linhas) e o limite de baixo
 const LEGENDA_ALTURA = 124;
@@ -71,7 +73,7 @@ export const caixaDaPessoa = (plano: Plano, zoom: number): Caixa => {
     const caixa = { ...CHEIO, x: 0, y: PESSOA_Y, w: LARGURA, h: PESSOA_H, zoom, ancoraY };
     const esc = enquadrar(caixa, plano.rosto, vh, plano.rosto.rastro ? 0 : null).escala;
     const L = largura * 1080 * esc;
-    ancoraY = Math.min(0.62, Math.max(0.18, (FOLGA_CABECA + ATE_TOPO * L) / PESSOA_H));
+    ancoraY = Math.min(0.62, Math.max(0.18, (FOLGA_CABECA + ateTopo(plano) * L) / PESSOA_H));
   }
   return { ...CHEIO, x: 0, y: PESSOA_Y, w: LARGURA, h: PESSOA_H, zoom, ancoraY, raio: 0 };
 };
@@ -83,7 +85,7 @@ export const medidas = (plano: Plano): Medidas => {
   const vh = plano.videoAltura ?? 1920;
   const largura = plano.rosto.rastro?.largura ?? 0.32;
   const L = (z: number) => largura * 1080 * enquadrar(caixaDaPessoa(plano, z), plano.rosto, vh, plano.rosto.rastro ? 0 : null).escala;
-  const queixoEm = (z: number) => PESSOA_Y + FOLGA_CABECA + (ATE_TOPO + ATE_QUEIXO) * L(z);
+  const queixoEm = (z: number) => PESSOA_Y + FOLGA_CABECA + (ateTopo(plano) + ATE_QUEIXO) * L(z);
   // o zoom mais fechado: até 1,2, desde que a legenda caiba abaixo do queixo e acima da interface
   const limite = UI_BASE - LEGENDA_ALTURA - 20;
   let zoomMax = 1.2;

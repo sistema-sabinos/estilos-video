@@ -7,6 +7,7 @@ import { encaixar } from "../medida";
 import type { Camada, Corte as TCorte, Material } from "../plano";
 import { clamp01, EASE_IN, EASE_INOUT, EASE_OUT, FONT, K, lerp, mix, MUS, prog } from "../tema";
 import { MATERIAL } from "./Esquema";
+import { agendaDePulsos } from "./pulsos";
 
 const X0 = 64;
 const Y0 = 196;
@@ -94,17 +95,7 @@ export const Corte: React.FC<{ m: TCorte; t: number }> = ({ m, t }) => {
   ]);
   const ramos = [`M 424 ${J + 17} C 418 ${J + 10}, 414 ${J + 6}, 412 ${J + 2}`, `M 452 ${J + 2} C 470 ${J + 1}, 484 ${J + 1}, 494 ${J + 1}`];
   const placas: Array<[number, number]> = [[412, J], [452, J + 1], [494, J]];
-  const pulsos: Array<{ t: number; bloqueado: boolean }> = [];
-  if (m.sinal) {
-    const base = m.sinal.pulsos?.length ? [...m.sinal.pulsos] : [OPEN[0] + 0.17, m.sinal.em - 0.5, m.sinal.em + 0.12];
-    // o sinal continua chegando (a cada 1,6 s) até o fim do corte: nada parado
-    let ultimo = Math.max(...base);
-    while (ultimo + 1.6 < m.ate - 0.7) {
-      ultimo += 1.6;
-      base.push(ultimo);
-    }
-    for (const p of base) if (p >= OPEN[0] - 0.01) pulsos.push({ t: p, bloqueado: p >= bloqueioEm - 0.6 });
-  }
+  const pulsos = agendaDePulsos(m, bloqueioEm);
   const VIAGEM = 0.5;
 
   // ——— estado: contração, vinco ———

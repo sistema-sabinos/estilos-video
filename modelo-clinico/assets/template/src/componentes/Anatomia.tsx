@@ -2,8 +2,10 @@ import { limitar, prog, saindo } from "../anim";
 import { DESENHOS } from "../desenhos/biblioteca";
 import type { Areas } from "../layout";
 import type { Anatomia as AnatomiaT, Palavra } from "../plano";
-import { cor } from "../tema";
+import { prancha } from "../prancha";
+import { cor, LIMITE_APP } from "../tema";
 import { Cabecalho } from "./Cabecalho";
+import { regraTracoLupa } from "./lupaTraco";
 import { Rotulo } from "./Rotulo";
 import { Veredito } from "./Veredito";
 
@@ -20,12 +22,8 @@ export const Anatomia: React.FC<{ m: AnatomiaT; t: number; fim: number; areas: A
   const sai = saindo(t, fim, 0.3);
   if (sai >= 1) return null;
   const corpo = areas.corpo;
-  const alturaVeredito = m.veredito ? 110 : 0;
-  const reserva = def.reservaVeredito === false ? 0 : alturaVeredito;
-  const area = { x: corpo.x, y: corpo.y, w: corpo.w - def.reservaDireita, h: corpo.h - reserva };
-  const s = Math.min(area.w / def.caixa.w, area.h / def.caixa.h);
-  const x0 = area.x + (area.w - def.caixa.w * s) / 2;
-  const y0 = area.y + (area.h - def.caixa.h * s) / 2;
+  // sem legenda (e sem lupa de detalhe), a prancha desce até perto da interface do app (src/prancha.ts)
+  const { s, x0, y0, yVeredito } = prancha(def, corpo, m, LIMITE_APP);
   const naTela = (x: number, y: number) => ({ x: x0 + (x - def.caixa.x) * s, y: y0 + (y - def.caixa.y) * s });
   const base = `translate(${x0 - def.caixa.x * s} ${y0 - def.caixa.y * s}) scale(${s})`;
   // o desenho começa a se traçar assim que a pessoa começa a ir para a lupa (entra junto com ela)
@@ -40,6 +38,8 @@ export const Anatomia: React.FC<{ m: AnatomiaT; t: number; fim: number; areas: A
   const R = 176;
   const centroLupa = zoomAlvo ? naTela(zoomAlvo.x, zoomAlvo.y) : { x: 0, y: 0 };
   const z = m.aproximar?.zoom ?? 2.2;
+  // o desenho aumenta na lupa, o traço não engrossa (lupaTraco.ts)
+  const escalaLupa = 1 + (z - 1) * lupa;
 
   return (
     <>
@@ -67,7 +67,8 @@ export const Anatomia: React.FC<{ m: AnatomiaT; t: number; fim: number; areas: A
             </clipPath>
             <g clipPath={`url(#${id}-clip)`}>
               <rect x={centroLupa.x - R} y={centroLupa.y - R} width={2 * R} height={2 * R} fill={cor.branco} />
-              <g transform={`translate(${centroLupa.x} ${centroLupa.y}) scale(${1 + (z - 1) * lupa}) translate(${-centroLupa.x} ${-centroLupa.y})`}>
+              <style>{regraTracoLupa(`.${id}-det`, escalaLupa)}</style>
+              <g className={`${id}-det`} transform={`translate(${centroLupa.x} ${centroLupa.y}) scale(${escalaLupa}) translate(${-centroLupa.x} ${-centroLupa.y})`}>
                 <g transform={base}>
                   <Comp t={t} de={de} acoes={acoes} id={`${id}l`} />
                 </g>
@@ -103,7 +104,7 @@ export const Anatomia: React.FC<{ m: AnatomiaT; t: number; fim: number; areas: A
         })}
       </svg>
       {m.veredito ? (
-        <Veredito v={m.veredito} t={t} saida={sai} x={corpo.x} y={corpo.y + corpo.h - alturaVeredito + 20} w={corpo.w} />
+        <Veredito v={m.veredito} t={t} saida={sai} x={corpo.x} y={yVeredito} w={corpo.w} />
       ) : null}
     </>
   );

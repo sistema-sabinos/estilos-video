@@ -42,8 +42,8 @@ export const prepararLayout = (plano: Plano): Layout => {
   const l1 = larguraDoRosto(plano);
   const zoomBase = clamp((0.29 * MOLDURA.w) / Math.max(1, l1), 1, 1.5);
   const lr = l1 * zoomBase;
-  // o centro do rosto fica ~1,15 largura de rosto abaixo do topo da cabeça; 56 px de folga acima do cabelo
-  const ancoraY = clamp((56 + 1.15 * lr) / MOLDURA.h, 0.2, 0.55);
+  // o centro do rosto fica ~0,86 largura de rosto abaixo do topo da cabeça (a conta do cortar.mjs: topo a 1,3 vez a distância até o queixo, queixo a 0,66 largura); 56 px de folga acima do cabelo
+  const ancoraY = clamp((56 + 0.86 * lr) / MOLDURA.h, 0.2, 0.55);
   // escala por trecho: troca só em cortes com mais de 1 s desde a última troca
   const cortes = plano.cortesEm ?? [];
   const trocas: number[] = [];

@@ -4,7 +4,7 @@ O `cortar.mjs` escreve o esqueleto (vídeo, medidas, `rosto` com rastro, `cortes
 
 Todos os tempos são em segundos, **na linha do tempo do vídeo já cortado**. Todo `em`/`…Em` é o início de uma palavra em `work/palavras.json`.
 
-Campos gerais: `recorte` (`false` = sem recorte, para quem não tem macOS), `sfx` (`false` desliga o "vum" do zoom).
+Campos gerais: `recorte` (`false` = sem recorte, para quem não tem macOS), `sfx` (`false` desliga o "vum" do zoom), `pessoaBase` (onde o recorte da pessoa termina, em fração da altura do vídeo: o `recortar.mjs` mede e grava, não escreva à mão).
 
 ## O mapa (um por vídeo)
 
@@ -19,7 +19,7 @@ Campos gerais: `recorte` (`false` = sem recorte, para quem não tem macOS), `sfx
 ## A assinatura 1: `mapa` (momento)
 
 ```json
-{ "tipo": "mapa", "de": 0, "ate": 6.07, "pessoa": "dir" }            // infográfico inteiro
+{ "tipo": "mapa", "de": 0, "ate": 6.07, "pessoa": "canto" }          // infográfico inteiro
 { "tipo": "mapa", "de": 6.07, "ate": 7.23, "foco": 0, "pessoa": "centro" }   // zoom na placa 1
 ```
 
@@ -42,7 +42,7 @@ Campos gerais: `recorte` (`false` = sem recorte, para quem não tem macOS), `sfx
 
 ## O campo `pessoa`
 
-Em qualquer momento: `"dir"`, `"esq"`, `"centro"`, `"topo"`, `"borda"` ou `[{ "em": 41.0, "pose": "dir" }, …]`. Use `topo` com prints grandes, `borda` com conteúdo à esquerda, e varie: nunca a mesma pose em três telas seguidas.
+Em qualquer momento: `"dir"`, `"esq"`, `"centro"`, `"canto"`, `"topo"`, `"borda"` ou `[{ "em": 41.0, "pose": "dir" }, …]`. Use `canto` (menor, embaixo à direita) no mapa inteiro: é o que o template põe sozinho num `mapa` sem `foco` e sem `pessoa`, e ali `dir`, `esq` e `centro` ficam grandes demais e cobrem as placas. Use `topo` com prints grandes, `borda` com conteúdo à esquerda, e varie: nunca a mesma pose em três telas seguidas.
 
 ## Os 11 blocos universais
 

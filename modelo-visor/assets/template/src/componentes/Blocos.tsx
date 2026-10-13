@@ -158,7 +158,7 @@ export const BNumero: React.FC<PropsCheia<Numero>> = ({ m, t, fim, palavras, bas
   const casas = m.casas ?? casasDe(m.valor);
   const agrupar = !(Number.isInteger(m.valor) && m.valor >= 1900 && m.valor <= 2100 && !m.prefixo && !m.sufixo);
   const conta = prog(t, m.em, 1.15, Easing.out(Easing.cubic));
-  const mostra = fmtNum(m.valor * conta, casas, agrupar);
+  const mostra = fmtNum((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta, casas, agrupar);
   const final = fmtNum(m.valor, casas, agrupar);
   const sufixoLetras = /[a-zA-Z]/.test(m.sufixo ?? "");
   // corpo do número: o maior em que prefixo + número final + sufixo cabem numa linha

@@ -1,7 +1,7 @@
 // A moldura larga da pessoa (embaixo), a aba com o nome, a legenda abaixo do queixo e as guias.
 import { AbsoluteFill } from "remotion";
 import { limitar, prog } from "../anim";
-import { encaixar } from "../medida";
+import { encaixar, encaixarSemVazar } from "../medida";
 import type { Caixa, Rosto } from "../motor/caixa";
 import type { Frase } from "../motor/frases";
 import type { Plano } from "../plano";
@@ -22,7 +22,7 @@ export const AbaDoNome: React.FC<{ plano: Plano; t: number; limiteX: number }> =
   const x = PESSOA.x + 28;
   const largura = Math.max(280, Math.min(560, limiteX - x)) - 48;
   const nome = encaixar(plano.marca.nome, { largura, max: 42, min: 34, linhas: 2, fonte: { peso: 800 } });
-  const area = plano.marca.area ? encaixar(plano.marca.area.toUpperCase(), { largura, max: 26, min: 20, linhas: 1, fonte: { elite: true, espacamento: 0.08 } }) : null;
+  const area = plano.marca.area ? encaixarSemVazar(plano.marca.area.toUpperCase(), { largura, max: 26, min: 20, linhas: 1, fonte: { elite: true, espacamento: 0.08 } }) : null;
   const entra = prog(t, 0.25, 0.4);
   const sai = prog(t, 5.2, 0.35);
   const p = entra * (1 - sai);
@@ -49,7 +49,11 @@ export const AbaDoNome: React.FC<{ plano: Plano; t: number; limiteX: number }> =
         ))}
       </div>
       {area ? (
-        <div style={{ marginTop: 8, fontFamily: ELITE, fontSize: area.tamanho, letterSpacing: "0.08em", color: "#3B2E1E", whiteSpace: "nowrap" }}>{area.linhas[0]}</div>
+        <div style={{ marginTop: 8, fontFamily: ELITE, fontSize: area.tamanho, letterSpacing: "0.08em", color: "#3B2E1E", whiteSpace: "nowrap" }}>
+          {area.linhas.map((l, i) => (
+            <div key={i}>{l}</div>
+          ))}
+        </div>
       ) : null}
     </div>
   );

@@ -46,7 +46,7 @@ export const Palco: React.FC<{ plano: Plano; t: number }> = ({ plano, t }) => {
   const atual = momentos[Math.max(0, i)];
   const fim = momentos[Math.max(0, i) + 1]?.de ?? plano.duracao + 1;
   return (
-    <div style={{ position: "absolute", left: TELA.x, top: TELA.y, width: TELA.w, height: TELA.h, borderRadius: TELA.raio, overflow: "hidden", background: COR.palco, boxShadow: "0 14px 44px rgba(0,0,0,0.45), 0 3px 10px rgba(0,0,0,0.3)" }}>
+    <div style={{ position: "absolute", left: TELA.x, top: TELA.y, width: TELA.w, height: TELA.h, borderRadius: TELA.raio, overflow: "hidden", background: COR.palco, boxShadow: "0 12px 64px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.14)" }}>
       <div style={{ position: "absolute", left: 0, top: 0, width: LARGURA, height: PALCO_H, transform: `scale(${ESCALA_PALCO})`, transformOrigin: "0 0" }}>
         {atual ? (
           <AbsoluteFill>

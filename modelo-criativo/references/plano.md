@@ -130,6 +130,7 @@ O template já faz sozinho:
 ```
 
 - Um disco de 276 px na cor da marca, borda branca, o ícone e o `texto` (até ~22 caracteres, 2 linhas em caixa alta) no meio; carimba (entra girado e maior) em `em` e o anel tracejado gira devagar. Fica **no canto de cima à direita do cartão da vez** (é uma camada: o cartão continua).
+- No `heroi` e no `cta` com `titulo`, o selo nunca cobre o título: o título (ou a placa do `cta` sem produto) desce para baixo dele. Em palco curto (rosto baixo no quadro) o selo encolhe até 180 px e, se ainda faltar lugar, carimba no canto de cima à esquerda, por cima do produto (no `cta` sem produto, na ponta direita da placa, com o texto à esquerda). Nos outros cartões ele fica no canto e, em palco curto, pode cobrir o texto: prefira o selo na vez do `heroi` ou do `cta`.
 - `icone`: `frete`, `garantia`, `desconto`, `presente`, `estrela`, `relogio`.
 - Só o que foi dito. Evite um selo ao mesmo tempo que o `numero` de uma prova (os dois ficam no mesmo canto).
 

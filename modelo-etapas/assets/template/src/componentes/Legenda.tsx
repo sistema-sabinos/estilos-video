@@ -2,13 +2,14 @@
 // palavras por vez (uma linha só). Posição: sempre logo abaixo do queixo (nunca cobre a boca), em qualquer modo. Troca seca, sem animação.
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { montarFrases, type Frase } from "../motor/frases";
+import { legendaMinuscula } from "./minusculas";
 import { encaixar, larguraTexto } from "../medida";
 import type { Momento, Plano } from "../plano";
 import { COR, FONTE, SOMBRA_TEXTO, legendaTopo, modoEm } from "../tema";
 import { multNoTempo } from "../camera";
 
-// No Etapas a legenda fica em todo o vídeo (padrão true); `legenda: false` desliga num momento.
-export const legendaNoMomento = (m: Momento) => m.legenda ?? true;
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 type Pedaco = { de: number; ate: number; texto: string };
 const guardadas = new WeakMap<object, Pedaco[]>();
@@ -17,14 +18,14 @@ const guardadas = new WeakMap<object, Pedaco[]>();
 const pedacosDo = (plano: Plano): Pedaco[] => {
   const salvo = guardadas.get(plano);
   if (salvo) return salvo;
-  const frases: Frase[] = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) });
+  const frases: Frase[] = montarFrases(legendaMinuscula(planoDaLegenda(plano)));
   const saida: Pedaco[] = [];
   for (const f of frases) {
     const ws = f.palavras.flatMap((p) => p.w.split(/\s+/).filter(Boolean).map((w) => ({ em: p.em, ate: p.ate, w: w.replace(/^[“"]+|[”"]+$/g, (q) => q) })));
     let atual: typeof ws = [];
     const fechar = () => {
       if (!atual.length) return;
-      saida.push({ de: atual[0].em, ate: atual[atual.length - 1].ate, texto: atual.map((x) => x.w).join(" ").toLowerCase() });
+      saida.push({ de: atual[0].em, ate: atual[atual.length - 1].ate, texto: atual.map((x) => x.w).join(" ") });
       atual = [];
     };
     ws.forEach((w, i) => {

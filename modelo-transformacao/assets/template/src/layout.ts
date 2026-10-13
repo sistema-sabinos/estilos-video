@@ -6,14 +6,20 @@
 //  3. janela: a foto toma a tela inteira (a revelação) e a pessoa vai para uma janela embaixo.
 import { Easing, interpolate } from "remotion";
 import { CHEIO, type Caixa } from "./motor/caixa";
+import { JANELA, janelaDoRosto } from "./janela";
 import { noPainel, type Momento, type Plano } from "./plano";
 
 // onde o painel encontra a pessoa (px)
 export const COSTURA = 1160;
-// a janela da revelação: embaixo, no centro, cobrindo o chão da foto (o que menos importa nela)
-export const JANELA: Caixa = { x: 640, y: 1400, w: 400, h: 420, raio: 34, zoom: 2.2, ancoraY: 0.42 };
+// a janela da revelação (embaixo, no centro; o zoom sai do rosto) mora em janela.ts, sem remotion
+export { JANELA };
 // área útil do painel para texto (a interface do Reels ocupa ~110 px no topo)
 export const AREA = { x: 60, w: 960, topo: 150, base: COSTURA - 60 };
+// centro da legenda no painel: a pílula (58 × 1,7 = 99 px) inteira logo abaixo da emenda (traço de
+// 10 px em COSTURA), longe do cartão da dica, que termina em COSTURA - 40. Mais alto ela pisa na
+// emenda e no cartão; mais baixo cobre mais da pessoa. Com o rosto muito perto da câmera ela encosta
+// no alto da cabeça, nunca nos olhos.
+export const Y_LEGENDA_PAINEL = COSTURA + 56;
 export const DUR_TROCA = 0.45;
 
 const suave = Easing.bezier(0.65, 0, 0.35, 1);
@@ -87,9 +93,12 @@ export const prepararLayout = (plano: Plano): Layout => {
   // a cada corte do vídeo, o enquadramento troca de leve (o pulo do corte some)
   const zoomCorte = (t: number) => (cortes.filter((c) => c <= t + 1e-4).length % 2 === 1 ? 1.06 : 1);
 
+  // a janela da revelação com o zoom pela largura do rosto: a cabeça inteira cabe
+  const janela = janelaDoRosto((plano.rosto as { rastro?: { largura?: number } }).rastro?.largura, plano.videoAltura);
   const forma = (e: Estado, anterior: Estado | undefined, t: number): { caixa: Caixa; painel: Painel; yLegenda: number } => {
-    if (e.lugar === "painel") return { caixa: { ...banda, zoom: zoomCorte(t) }, painel: { y: 0, h: COSTURA }, yLegenda: COSTURA };
-    if (e.lugar === "janela") return { caixa: JANELA, painel: { y: 0, h: 1920 }, yLegenda: JANELA.y - 70 };
+    if (e.lugar === "painel") return { caixa: { ...banda, zoom: zoomCorte(t) }, painel: { y: 0, h: COSTURA }, yLegenda: Y_LEGENDA_PAINEL };
+    // na janela a legenda fica acima do puxador da alça (que na tela cheia ocupa y 989 a 1081)
+    if (e.lugar === "janela") return { caixa: janela, painel: { y: 0, h: 1920 }, yLegenda: JANELA.y - 180 };
     // quadro cheio: depois da janela a foto fica inteira embaixo enquanto a pessoa cresce por cima
     const painel = anterior?.lugar === "janela" ? { y: 0, h: 1920 } : { y: -COSTURA, h: COSTURA };
     return { caixa: { ...CHEIO, zoom: zoomCorte(t), ancoraY: plano.rosto.y }, painel, yLegenda: zona.topo + 96 };

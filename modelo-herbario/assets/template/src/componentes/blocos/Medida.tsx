@@ -22,7 +22,7 @@ export const Medida: React.FC<PropsDoBloco & { m: Numero }> = ({ m, t, palavras,
   // a contagem termina com folga antes de a prancha sair (o número final fica legível)
   const duracaoConta = Math.min(1.5, Math.max(0.6, m.ate - m.em - 0.6));
   const conta = prog(t, m.em, duracaoConta, corre);
-  const atual = m.valor * conta;
+  const atual = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : undefined);
   const final = formatarNumero(m.valor, casas);
   const mostrado = formatarNumero(conta >= 0.999 ? m.valor : Number.isInteger(m.valor) || casas === 0 ? Math.round(atual) : atual, casas);

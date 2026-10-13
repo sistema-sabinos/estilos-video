@@ -276,6 +276,7 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: pla
                 desde={entradaDoTexto(x)}
                 numero={{
                   valor: m.valor,
+                  inicio: m.inicio,
                   unidade: m.sufixo ?? m.unidade,
                   prefixo: m.prefixo,
                   casas: m.casas,

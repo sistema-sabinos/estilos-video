@@ -10,25 +10,8 @@ export const G = { Yw: 560, L: 560, FY: 560, W: 1080 };
 export const ZONA = { x: 60, y: 150, w: 960, h: 830 };
 export const JANELA = { x: 70, y: 1000, w: 940, h: 560 };
 
-export const ordenar = (plano: Plano) => [...plano.momentos].sort((a, b) => a.de - b.de);
-
-// Um momento nunca invade o seguinte.
-export const semSobreposicao = (plano: Plano): Plano => {
-  const ordem = ordenar(plano);
-  return {
-    ...plano,
-    momentos: ordem.map((m, i) => {
-      const proximo = ordem[i + 1];
-      return proximo && m.ate > proximo.de ? { ...m, ate: proximo.de } : m;
-    }),
-  };
-};
-
-// o Iceberg mostra a legenda por padrão (a foto e o nome apoiam a fala, não a substituem)
-export const comLegendaPadrao = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (m.tipo === "iceberg" && m.legenda === undefined ? { ...m, legenda: true } : m)),
-});
+import { comLegendaPadrao, ordenar, semSobreposicao } from "./legenda-padrao";
+export { comLegendaPadrao, ordenar, semSobreposicao };
 
 export const icebergs = (plano: Plano): Iceberg[] => ordenar(plano).filter((m): m is Iceberg => m.tipo === "iceberg");
 export const numNiveis = (plano: Plano) => Math.max(3, ...icebergs(plano).map((m) => m.niveis.length));

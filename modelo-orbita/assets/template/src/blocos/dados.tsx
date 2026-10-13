@@ -30,7 +30,7 @@ const DUR_CONTA = 1.3;
 const textoDoNumero = (m: Numero, u: number) => {
   if (m.relogio) return valorDoRelogio(m.valor, "s", 0, u).numero;
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
-  return numeroBR(m.valor * u, casas);
+  return numeroBR((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * u, casas);
 };
 const layoutNumero = (m: Numero) => {
   const final = textoDoNumero(m, 1);

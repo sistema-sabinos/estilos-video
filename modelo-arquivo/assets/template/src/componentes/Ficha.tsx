@@ -1,4 +1,4 @@
-import { Datilo, prog, saindo } from "../anim";
+import { Datilo, naVez, prog, saindo } from "../anim";
 import type { Regiao } from "../layout";
 import type { Ficha as TFicha } from "../plano";
 import { encaixar, encaixarBloco, larguraTexto } from "../medida";
@@ -198,7 +198,7 @@ export const FichaLarga: React.FC<{ m: TFicha; t: number; fim: number; regiao: R
             >
               {fitTitulo.linhas.map((l, i) => (
                 <div key={i} style={{ whiteSpace: "nowrap", borderBottom: `2px solid ${cor.linha}` }}>
-                  <Datilo texto={l} em={m.titulo.em + i * 0.3} t={t} semente={4 + i} />
+                  <Datilo texto={l} {...naVez(fitTitulo.linhas, i, m.titulo.em, 0.3, t)} t={t} semente={4 + i} />
                 </div>
               ))}
             </div>
@@ -218,7 +218,7 @@ export const FichaLarga: React.FC<{ m: TFicha; t: number; fim: number; regiao: R
                 <div style={{ marginTop: 10, fontFamily: mono, fontWeight: 700, fontSize: fit.tamanho, lineHeight: 1.18, color: cor.tinta, borderBottom: `2px solid ${cor.linha}`, paddingBottom: 6, minHeight: fit.tamanho * 1.18 }}>
                   {fit.linhas.map((l, k) => (
                     <div key={k} style={{ whiteSpace: "nowrap" }}>
-                      <Datilo texto={l} em={c.em + k * 0.3} t={t} semente={7 + i * 3 + k} />
+                      <Datilo texto={l} {...naVez(fit.linhas, k, c.em, 0.3, t)} t={t} semente={7 + i * 3 + k} />
                     </div>
                   ))}
                 </div>

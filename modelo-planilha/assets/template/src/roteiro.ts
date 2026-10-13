@@ -502,7 +502,11 @@ export const escritas = (plano: Plano, palavras: Palavra[], frases: Frase[]): Es
     }
   }
   // legenda: as linhas faladas fora dos momentos (o motor já tira as que caem dentro deles)
-  for (const f of frases) lista.push({ de: f.de, ate: f.ate, texto: f.palavras.map((p) => p.w).join(" "), tempos: f.palavras.map((p) => p.em) });
+  // correção com espaço no valor chega como uma palavra só; o texto se reparte por espaço, a lista também
+  for (const f of frases) {
+    const pedacos = f.palavras.flatMap((p) => p.w.split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));
+    lista.push({ de: f.de, ate: f.ate, texto: pedacos.map((p) => p.w).join(" "), tempos: pedacos.map((p) => p.em) });
+  }
   return lista.sort((a, b) => a.de - b.de);
 };
 

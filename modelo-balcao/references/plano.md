@@ -85,7 +85,7 @@ Dois cuidados seus:
 ```
 
 - `texto`: a condição (até ~24 caracteres; 72 px, 2 linhas), que se monta palavra por palavra na etiqueta kraft a partir de `em` ("Leva" … "3" entra em "três").
-- `valor` (opcional): o carimbo (até ~14 caracteres, em caixa alta, 92 px, reduz até caber em 500 px) que bate em `valorEm`. **Só números ditos.**
+- `valor` (opcional): o carimbo (até ~14 caracteres, em caixa alta, de 92 a 44 px; na etiqueta em pé ele reduz até caber já girado dentro da borda, e valor que nem assim cabe alarga a etiqueta) que bate em `valorEm`. **Só números ditos.**
 - Colado depois de uma `vitrine`: os produtos se juntam e a fita os amarra; a etiqueta fica deitada na frente da prateleira (condição à esquerda, carimbo à direita, até 820 px). Sozinho: a fita atravessa o vidro e a etiqueta fica de pé no meio (condição em cima, carimbo embaixo).
 - Em outros assuntos, é a regra ou o aviso que se carimba: "Sem promessa de lucro", "Grátis", "Só hoje", "2ª unidade" + "pela metade".
 

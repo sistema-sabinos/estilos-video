@@ -95,7 +95,7 @@ export const cartaoNumero = (m: Numero, { palavras }: Ctx): Cartao => {
     h,
     desenhar: (t) => {
       const p = prog(t, m.em, 0.95, suave);
-      const v = m.valor * p;
+      const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
       const tam = 84; // corpo dos pedaços pequenos (prefixo/sufixo)
       const entra = prog(t, m.em - 0.05, 0.25, desliza);
       return (

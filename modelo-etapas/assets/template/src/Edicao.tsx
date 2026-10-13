@@ -9,7 +9,7 @@ import * as B from "./componentes/Blocos";
 import { Legenda } from "./componentes/Legenda";
 import { VideoNaCaixa, rostoNaTela } from "./motor/caixa";
 import type { Momento, Plano } from "./plano";
-import { COR, FONTE, PILULA, TELA, UI_BASE, UI_DIREITA, caixaDaPessoa, legendaTopo, momentoEm, modoDe, queixoDe } from "./tema";
+import { CABECA_A, COR, FONTE, PILULA, TELA, UI_BASE, UI_DIREITA, caixaDaPessoa, legendaTopo, momentoEm, modoDe, queixoDe } from "./tema";
 
 // o que cada momento mostra na tela do topo (modo B)
 const Conteudo: React.FC<{ plano: Plano; m: Momento; t: number }> = ({ plano, m, t }) => {
@@ -46,6 +46,8 @@ const Conteudo: React.FC<{ plano: Plano; m: Momento; t: number }> = ({ plano, m,
 
 const rotuloDa = (m: Momento): string | undefined => (m.tipo === "etapa" ? m.rotulo : m.tipo === "prova" ? (m.rotulo ?? m.pilula) : m.pilula);
 const iconeDe = (m: Momento) => (m.tipo === "etapa" || m.tipo === "prova" ? m.icone : undefined);
+// quantos px do fundo acima do cabelo o reflexo do modo A estica (folga de 110 px acima da cabeça)
+const reflexo = (y: number) => Math.max(60, Math.min(y, Math.round(CABECA_A - y - 110)));
 const COM_FUNDO_ESCURO = new Set(["topicos", "passos", "numero", "comparacao", "grafico", "destaque", "definicao", "frase", "pergunta"]);
 
 // Guias de conferência (só nos stills com --guias).
@@ -87,6 +89,14 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano, gui
       <VideoNaCaixa src={plano.video} caixa={caixaDaPessoa(plano, "C", multNoTempo(plano, t))} rosto={plano.rosto} videoAltura={plano.videoAltura ?? 1920} mudo />
       {/* o vídeo fica montado o tempo todo (é dele que vem a voz) */}
       <VideoNaCaixa src={plano.video} caixa={caixa} rosto={plano.rosto} videoAltura={plano.videoAltura ?? 1920} />
+      {/* modo A com o rosto alto no vídeo: a pessoa desceu (descidaA) e o alto é o reflexo do fundo logo acima do cabelo, esticado até o topo; nunca mostra a pessoa */}
+      {modo === "A" && caixa.y > 0 ? (
+        <div style={{ position: "absolute", left: 0, top: 0, width: 1080, height: caixa.y, overflow: "hidden" }}>
+          <div style={{ position: "absolute", left: 0, top: 0, width: 1080, height: reflexo(caixa.y), overflow: "hidden", transformOrigin: "0 0", transform: `translateY(${caixa.y}px) scaleY(${-caixa.y / reflexo(caixa.y)})` }}>
+            <VideoNaCaixa src={plano.video} caixa={{ ...caixa, y: 0 }} rosto={plano.rosto} videoAltura={plano.videoAltura ?? 1920} mudo />
+          </div>
+        </div>
+      ) : null}
       {modo === "A" && m?.tipo === "abertura" ? <Cabecalho m={m} t={t} /> : null}
       {modo === "B" && m ? (
         <div style={{ position: "absolute", left: TELA.x, top: TELA.y, width: TELA.w, height: TELA.h, overflow: "hidden", background: COM_FUNDO_ESCURO.has(m.tipo) ? COR.palco : "#FFFFFF" }}>

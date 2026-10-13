@@ -50,6 +50,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: ItemFalado
 // (`valor` em texto, `unidade`, `complemento`) continuam funcionando.
 export type NumeroUniversal = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

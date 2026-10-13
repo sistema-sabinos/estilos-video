@@ -32,7 +32,8 @@ Uma pessoa real fala com a câmera (o formato que mais converte no Meta e no Tik
   - gancho com foto: o cartão da foto em cima e a placa por cima da base dele (28 px para dentro);
   - herói: o cartão claro na parte de baixo do palco, com ~130 px livres em cima para o produto passar da borda; produto à esquerda, título à direita, etiquetas embaixo à direita;
   - prova: o cartão da foto no palco inteiro (borda de vidro de 14 px), a faixa fumê 30 px acima da base (28 px para dentro), o selo do número no canto de cima à direita;
-  - no `cta`, o palco começa abaixo do botão e o selo de oferta cola no canto de cima à direita do cartão.
+  - no `cta`, o palco começa abaixo do botão e o selo de oferta cola no canto de cima à direita do cartão;
+  - o selo nunca cobre o título do herói nem o do `cta`: o título desce para baixo dele (a placa do `cta` sem produto também); em palco curto (rosto baixo no quadro) o selo encolhe até 180 px e, se ainda faltar lugar, carimba no canto de cima à esquerda, sobre o produto (no `cta` sem produto, na ponta direita da placa, com o texto à esquerda).
 - **Zona segura do Ads**: nada importante acima de y 192 (10%: nome da conta, "Patrocinado") nem abaixo de y 1651 (14%: texto do anúncio e botão da plataforma); margem lateral de 64 px.
 - **Tarja de nome**: um cartão de perfil de vidro fumê em x 64, y 214, na largura livre entre a margem e a cabeça (nunca encosta no cabelo): círculo de 56 px com a inicial, o nome em Sora 800 de até 46 px (mínimo 34) em até 2 linhas, a área em 600 de até 30 px; de 0,25 s a ~3 s.
 - **Manchete do gancho**: a ideia-chave curta ("Não segura o gelo?"), não a frase inteira que a legenda já mostra.

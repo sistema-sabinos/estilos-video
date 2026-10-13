@@ -43,6 +43,7 @@ export type Conteudo =
       rotulo: string[];
       tamRotulo: number;
       valor?: number;
+      inicio?: number;
       resultado?: string;
       prefixo: string;
       sufixo: string;
@@ -502,7 +503,7 @@ const blocosDoMomento = (m: Momento, mi: number, plano: Plano, palavras: Palavra
         em: rotuloEm,
         altura: ALTURA.total + (rotulo.length - 1) * 46 + (m.ilustrativo ? 48 : 0),
         momento: mi,
-        c: { k: "total", rotulo, tamRotulo, valor: m.valor, prefixo: (m.prefixo ?? "").toUpperCase(), sufixo: (m.sufixo ?? "").toUpperCase(), casas, passos: 0, contaDe: m.em, contaAte, ilustrativo: !!m.ilustrativo },
+        c: { k: "total", rotulo, tamRotulo, valor: m.valor, inicio: m.inicio, prefixo: (m.prefixo ?? "").toUpperCase(), sufixo: (m.sufixo ?? "").toUpperCase(), casas, passos: 0, contaDe: m.em, contaAte, ilustrativo: !!m.ilustrativo },
       });
       return saida;
     }

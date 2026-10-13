@@ -15,19 +15,7 @@ import { montarRoteiro, type Fabrica } from "./mundo";
 import type { Momento, Plano } from "./plano";
 import { COR, LIMITE_APP } from "./tema";
 
-// Um momento nunca invade o seguinte; a legenda aparece por padrão onde a peça não escreve a fala.
-const COM_LEGENDA = new Set<Momento["tipo"]>(["quadro", "numero", "grafico", "comparacao"]);
-const preparar = (plano: Plano): Plano => {
-  const ordem = [...plano.momentos].sort((a, b) => a.de - b.de);
-  return {
-    ...plano,
-    momentos: ordem.map((m, i) => {
-      const proximo = ordem[i + 1];
-      const cortado = proximo && m.ate > proximo.de ? { ...m, ate: proximo.de } : m;
-      return cortado.legenda === undefined && COM_LEGENDA.has(cortado.tipo) ? { ...cortado, legenda: true } : cortado;
-    }),
-  };
-};
+import { planoDaLegenda as preparar } from "./legenda-padrao";
 
 export const fabrica: Fabrica = {
   peca: (m, plano, { letra, fim, abertura }) => {

@@ -250,7 +250,7 @@ export const Numero: React.FC<{ plano: Plano; m: TNumero; t: number }> = ({ plan
   const tag = m.ilustrativo ? 40 : 0;
   const h = PT + hCab + hNum + 30 + hRot + tag + PB;
   const p = prog(t, m.em, 0.9);
-  const valor = m.valor * p;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const atual = `${m.prefixo ?? ""}${formatar(casas === 0 ? Math.round(valor) : valor, casas)}${m.sufixo ?? ""}`;
   const er = prog(t, m.rotuloEm ?? m.em + 0.3, 0.35);
   const yNum = PT + hCab;

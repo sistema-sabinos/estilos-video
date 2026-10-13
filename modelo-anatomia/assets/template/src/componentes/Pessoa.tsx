@@ -11,6 +11,7 @@ import { type Frase as FraseMotor, montarFrases } from "../motor/frases";
 import type { Momento, Palavra, Plano, Virada } from "../plano";
 import { CARD, CARD_GRANDE, EASE_INOUT, EASE_OUT, FONT, K, LIMITE_APP, lerp, prog } from "../tema";
 import { encaixar } from "../medida";
+import { legendaNaCostura } from "../legendaNaCostura";
 
 export type Layout = "cheio" | "consultorio" | "dividido" | "tela";
 export const PRANCHA = new Set<Momento["tipo"]>(["anatomia", "corte", "linhaDoTempo", "abertura", "topicos", "passos", "numero", "comparacao", "grafico", "destaque", "definicao", "frase", "pergunta", "cta"]);
@@ -151,12 +152,12 @@ export const Legenda: React.FC<{ plano: Plano; t: number; y: number }> = ({ plan
   const texto = c.palavras.map((p) => p.w).join(" ");
   const fit = encaixar(texto, { largura: 900, max: 66, min: 44, linhas: 1, fonte: { peso: 800 } });
   return (
-    <div style={{ position: "absolute", left: 70, width: 940, top: y, transform: "translateY(-50%)", textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.12, letterSpacing: "-0.015em", color: "#FFF8F2", WebkitTextStroke: "10px #000", paintOrder: "stroke fill", filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.45))", whiteSpace: "nowrap" }}>
+    <div style={{ position: "absolute", left: 70, width: 940, top: y, transform: "translateY(-50%)", textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.12, color: "#FFF8F2", WebkitTextStroke: "10px #000", paintOrder: "stroke fill", filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.45))", whiteSpace: "nowrap" }}>
       {c.palavras.map((w, k) => {
         const p = prog(t, w.em - 0.06, w.em + 0.12, EASE_OUT);
         const ativa = t >= w.em - 0.04 && t < w.ate + 0.02;
         return (
-          <span key={k} style={{ display: "inline-block", clipPath: "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: k < c.palavras.length - 1 ? "0.2em" : 0 }}>
+          <span key={k} style={{ display: "inline-block", clipPath: "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: k < c.palavras.length - 1 ? "0.36em" : 0 }}>
             <span style={{ display: "inline-block", transform: `translateY(${(1 - p) * 110}%) scale(${ativa ? 1.04 : 1})`, opacity: 0.15 + 0.85 * p }}>{w.w}</span>
           </span>
         );
@@ -165,11 +166,13 @@ export const Legenda: React.FC<{ plano: Plano; t: number; y: number }> = ({ plan
   );
 };
 
-/** altura (centro) da legenda: abaixo do queixo; na tela dividida, na costura acima da cabeça */
-export const alturaDaLegenda = (plano: Plano, est: Estado & { alvo: Layout }, t: number) => {
+/** altura (centro) da legenda: abaixo do queixo; na tela dividida, na costura acima da cabeça.
+ * null enquanto a moldura desce até o card e a cabeça ainda passa pela costura (a legenda espera). */
+export const alturaDaLegenda = (plano: Plano, est: Estado & { alvo: Layout }, t: number): number | null => {
   if (est.alvo === "tela") return 1560;
-  if (est.alvo === "dividido" && plano.legendaNoDividido !== "queixo") return CARD.y + 90;
   const rs = rostoNaTela(est.caixa, plano.rosto as Rosto, plano.videoAltura ?? 1920, t);
+  // assentada = a moldura já chegou ao card; na transição a caixa ainda está a caminho
+  if (est.alvo === "dividido" && plano.legendaNoDividido !== "queixo") return legendaNaCostura(CARD.y + 90, est.caixa.y === CARD.y, rs);
   const y = rs.y + rs.largura * 1.45;
   const limite = Math.min(LIMITE_APP - 60, est.caixa.y + est.caixa.h - 70);
   return Math.max(rs.y + rs.largura * 0.95, Math.min(limite, y));
@@ -186,15 +189,25 @@ export const Tarja: React.FC<{ plano: Plano; t: number }> = ({ plano, t }) => {
     <div style={{ position: "absolute", left: 88, bottom: 1920 - (LIMITE_APP - 14), opacity: p, transform: `translateX(${(1 - p) * -30}px)`, padding: "14px 26px 16px 22px", borderRadius: 18, background: "rgba(255,255,255,0.94)", boxShadow: `inset 0 0 0 1.5px ${K.line}, 0 10px 26px rgba(19,32,47,0.18)`, fontFamily: FONT, display: "flex", gap: 16, alignItems: "center" }}>
       <div style={{ width: 6, alignSelf: "stretch", borderRadius: 3, background: K.acc }} />
       <div>
-        <div style={{ fontWeight: 700, fontSize: nome.tamanho, color: K.ink, lineHeight: 1.1, whiteSpace: "nowrap" }}>{nome.linhas[0]}</div>
-        {area ? <div style={{ fontWeight: 500, fontSize: area.tamanho, color: K.slate, marginTop: 4, whiteSpace: "nowrap" }}>{area.linhas[0]}</div> : null}
+        <div style={{ fontWeight: 700, fontSize: nome.tamanho, color: K.ink, lineHeight: 1.1, whiteSpace: "nowrap" }}>
+          {nome.linhas.map((l, i) => (
+            <div key={i}>{l}</div>
+          ))}
+        </div>
+        {area ? (
+          <div style={{ fontWeight: 500, fontSize: area.tamanho, color: K.slate, marginTop: 4, whiteSpace: "nowrap" }}>
+            {area.linhas.map((l, i) => (
+              <div key={i}>{l}</div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );
 };
 
 /** guias de conferência (stills --guias): rosto, topo seguro, moldura, legenda e o limite do app */
-export const Guias: React.FC<{ rosto: { x: number; y: number; largura: number }; yLegenda: number; topoMoldura: number }> = ({ rosto, yLegenda, topoMoldura }) => {
+export const Guias: React.FC<{ rosto: { x: number; y: number; largura: number }; yLegenda: number | null; topoMoldura: number }> = ({ rosto, yLegenda, topoMoldura }) => {
   const linha = (y: number, cor: string, rotulo: string) => (
     <div style={{ position: "absolute", left: 0, top: y, width: 1080, borderTop: `3px dashed ${cor}` }}>
       <span style={{ position: "absolute", left: 12, top: 4, fontFamily: FONT, fontSize: 24, fontWeight: 700, color: cor }}>{rotulo}</span>
@@ -204,7 +217,7 @@ export const Guias: React.FC<{ rosto: { x: number; y: number; largura: number };
     <AbsoluteFill>
       {linha(130, "#2FBF4A", "topo seguro (130)")}
       {linha(topoMoldura, "#FF4FC3", "topo da moldura")}
-      {linha(yLegenda, "#E0A800", "centro da legenda")}
+      {yLegenda === null ? null : linha(yLegenda, "#E0A800", "centro da legenda")}
       {linha(LIMITE_APP, "#FF4B4B", "limite do app (1700)")}
       <div style={{ position: "absolute", left: 64, top: 0, width: 2, height: 1920, background: "rgba(47,191,74,0.6)" }} />
       <div style={{ position: "absolute", left: 1016, top: 0, width: 2, height: 1920, background: "rgba(47,191,74,0.6)" }} />

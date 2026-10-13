@@ -102,6 +102,8 @@ export type Topicos = Base & { tipo: "topicos"; titulo?: string; itens: Item[] }
 export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

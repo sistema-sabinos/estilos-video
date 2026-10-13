@@ -1,5 +1,6 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Palavra } from "./plano";
+import { faladasDoTexto } from "./fala";
 import { cor } from "./tema";
 
 // Movimento de espelho: desliza decidido e assenta. Sem quique, sem giro, sem pulsar.
@@ -78,7 +79,8 @@ export const SIMBOLOS = new Set(["≠", "=", "×", "+", "→"]);
 // Quando cada palavra de um texto é dita: procura, em ordem, entre as palavras faladas no trecho.
 // Palavra não achada (texto reescrito) entra logo depois da anterior, no mesmo ritmo.
 export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, ate: number, inicio = de) => {
-  const faladas = palavras.filter((p) => p.em >= de - 0.35 && p.em < ate + 0.1);
+  // a fala desde o `de` ou desde o `inicio`, a que casar mais palavras do texto (ver fala.ts)
+  const faladas = faladasDoTexto(texto, palavras, de, ate, inicio, (a, b) => !!normalizar(a) && normalizar(a) === normalizar(b));
   const tokens = texto.split(/\s+/).filter(Boolean);
   const tempos: (number | null)[] = [];
   let cursor = 0;

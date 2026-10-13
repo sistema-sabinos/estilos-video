@@ -94,6 +94,7 @@ Dois cuidados seus:
 - `fracao`: a proporção **dita** ("metade" 0.5, "um terço" 0.333, "um quarto" 0.25, "três quartos" 0.75; "o dobro" 2: a escala dobra e o nível sobe de meio até o topo). Nunca escreva a porcentagem na tela se ela não foi dita.
 - `titulo` (opcional, até ~20 caracteres): o contexto, numa etiqueta na foto (ou acima do texto, sem foto), em `em`.
 - `mudaEm`: o nível começa a mudar ("gastou", "caiu", "usou"); `fracaoEm`: a palavra da fração (a marca amarela trava).
+- A foto (`imagem`, opcional) entra em `em` e ocupa o painel inteiro até 0,3 s antes do `mudaEm` (sem ele, do `fracaoEm`), por mais longe que ele esteja; aí ela recolhe para a faixa de cima e o reservatório pousa com o nível começando a mudar. Nunca há tanque cheio e parado esperando a fala.
 - `texto` (até ~40 caracteres, 3 linhas) se monta a partir de `textoEm` (padrão `fracaoEm`); `destaque` ganha o grifo.
 - `cor`: `agua` (padrão), `terra` (ração, combustível, solo, dinheiro que vai embora) ou `verde` (o que cresce).
 

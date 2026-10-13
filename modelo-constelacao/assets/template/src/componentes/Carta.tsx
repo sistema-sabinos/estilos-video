@@ -1,5 +1,6 @@
 import { gira, limitar, mistura, prog, ruido, saindo, TextoAceso, temposDoTexto } from "../anim";
 import { type Cena, ehCarta, entradaNoTempo, naTela, type Ocular, type P, type Vista, localizadorNoTempo, ocularVigente, vistaNoTempo } from "../ceu";
+import { afastamentoDaCota } from "../cota";
 import type { Carta as CartaMomento, Direcao, Palavra, Passo, Plano } from "../plano";
 import { cor, LIMITE_DIREITA, sans, serifa } from "../tema";
 import { EstrelaQuatroPontas, Rosa } from "./Rosa";
@@ -182,13 +183,9 @@ export const Carta: React.FC<{ cena: Cena; plano: Plano; t: number; presenca: nu
     const meio = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
     let perp = { x: -n.y, y: n.x };
     if ((perp.x > 0 ? 1 : -1) * (meio.x < 540 ? 1 : -1) < 0) perp = { x: -perp.x, y: -perp.y };
-    // afastamento: passa por fora da figura (as estrelas do mesmo momento)
-    // a figura inteira a que o segmento pertence (todas as linhas que tocam as duas estrelas)
-    const figura = new Set<string>([p.de, p.ate]);
-    for (const x of todos) if (x.p.acao === "ligar") for (const [l1, l2] of x.p.linhas) if (figura.has(l1) || figura.has(l2)) (figura.add(l1), figura.add(l2));
-    const outros = [...figura].map(Q).filter(Boolean) as P[];
-    const larguraFigura = Math.max(0, ...outros.map((o) => (o.x - meio.x) * perp.x + (o.y - meio.y) * perp.y));
-    const off = Math.max(64, larguraFigura + 52);
+    // afastamento: passa por fora da figura já desenhada sem levar a cota nem o texto para fora da
+    // área segura (figura que ainda vai ser ligada ou estrela fora do quadro não empurram; ver ../cota.ts)
+    const off = afastamentoDaCota(p.de, p.ate, segs, t, Q, meio, perp, p.texto);
     const c1 = { x: a.x + perp.x * off, y: a.y + perp.y * off };
     const c2 = { x: b.x + perp.x * off, y: b.y + perp.y * off };
     const uc = prog(t, assenta, 0.6, gira);

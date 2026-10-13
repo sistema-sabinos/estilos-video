@@ -401,7 +401,11 @@ export const montarCena = (plano: Plano): Cena => {
       const folgas: Record<string, number> = {};
       for (const p of ordem) if (p.acao === "prolongar" && p.marca?.rosa) folgas[p.alvo] = 120;
       const empurrar = direcaoDoAlvo(mundo, ids, ordem);
-      chaves.push({ em: i === 0 ? b.de - 5 : inicio, dur: i === 0 ? 0.01 : 0.7, alvo: enquadrar(mundo, ids, ocular, fator, empurrar) });
+      // abertura do bloco: a câmera pula enquanto o céu está escondido, 5 s antes ou logo que o bloco
+      // anterior some (ate + 0.9, a mesma janela do blocoNoTempo), nunca por cima dele
+      const blocoAntes = blocos[blocos.indexOf(b) - 1];
+      const abre = blocoAntes ? Math.max(b.de - 5, blocoAntes.ate + 0.9) : b.de - 5;
+      chaves.push({ em: i === 0 ? abre : inicio, dur: i === 0 ? 0.01 : 0.7, alvo: enquadrar(mundo, ids, ocular, fator, empurrar) });
       let ultimo = chaves[chaves.length - 1].alvo;
       for (const p of ordem) {
         passos.push({ p, m, ocular, fim: m.ate });

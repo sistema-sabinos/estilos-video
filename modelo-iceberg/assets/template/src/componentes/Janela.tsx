@@ -56,12 +56,14 @@ export const Janela: React.FC<{ plano: Plano; t: number; escuro: number; frases:
 const Legenda: React.FC<{ t: number; frases: Frase[]; y: number }> = ({ t, frases, y }) => {
   const f = frases.find((x) => t >= x.de - 0.04 && t < x.ate + 0.1);
   if (!f) return null;
-  const texto = f.palavras.map((p) => p.w).join(" ");
+  // correção com espaço no valor chega como uma palavra só; o texto se reparte por espaço, a lista também
+  const palavras = f.palavras.flatMap((p) => p.w.split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));
+  const texto = palavras.map((p) => p.w).join(" ");
   const { tamanho, linhas } = encaixar(texto, { largura: 820, max: 52, min: 38, linhas: 2, fonte: { peso: 800 } });
   const altura = linhas.length * tamanho * 1.18 + tamanho * 0.5;
   const largura = Math.max(...linhas.map((l) => larguraTexto(l, tamanho, { peso: 800 }))) + tamanho * 1.2;
   // palavra atual: conta as palavras já ditas
-  const ditas = f.palavras.filter((p) => p.em <= t).length;
+  const ditas = palavras.filter((p) => p.em <= t).length;
   const atual = Math.max(0, ditas - 1);
   let idx = 0;
   const entrada = prog(t, f.de - 0.04, 0.16);

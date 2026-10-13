@@ -90,6 +90,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;
@@ -172,6 +174,8 @@ export type Plano = {
   duracao: number;
   // altura que o vídeo ocupa no quadro, a partir do topo (1920 = quadro cheio)
   videoAltura?: number;
+  // do centro do rosto ao topo do cabelo, em larguras de rosto (sem o campo: 0,84); references/plano.md
+  ateTopo?: number;
   // centro do rosto no quadro (0–1), com o rastro quando houver
   rosto: Rosto;
   // faixa abaixo do queixo (o motor calcula; o Terço não usa: ele reposiciona a pessoa)

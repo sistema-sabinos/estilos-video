@@ -282,7 +282,7 @@ Todo texto é medido com a fonte de verdade (Figtree) e diminui até um mínimo 
 
 A legenda é montada sozinha a partir de `palavras`: uma linha por vez, numa pílula branca, logo acima da interface do aplicativo, cada palavra acendendo quando é falada. Ela **some durante um momento**, porque o bloco já mostra o que é dito. Dois ajustes:
 
-- `"legenda": true` no momento: a legenda continua durante ele (num `anatomia` ou `cronometro` com bem mais fala do que o título mostra).
+- `"legenda": true` no momento: a legenda continua durante ele (num `anatomia` ou `cronometro` com bem mais fala do que o título mostra). Num `anatomia` sem ela (e sem `aproximar`), o desenho desce até a faixa da legenda e a legenda só volta quando ele sai da tela; com ela, o desenho fica acima da legenda, menor.
 - `semLegenda`: faixas extras sem legenda: `"semLegenda": [ { "de": 3.2, "ate": 6.0 } ]`.
 
 Palavras que a transcrição errou vão em `correcoes`, sem pontuação: `{ "jengiva": "gengiva", "Rafa El": "Rafael" }`. A chave pode ter várias palavras seguidas e `""` apaga. Não edite `palavras` à mão. Para ver as linhas de legenda: `node scripts/legendas.mjs`.

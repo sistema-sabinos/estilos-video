@@ -14,7 +14,7 @@ O `cortar.mjs` escreve o esqueleto (vídeo, medidas, `rosto` com o rastro, `cort
 
 ```json
 { "tipo": "niveis", "de": 0, "ate": 4.25, "itens": [
-  { "rotulo": "R$ 200",   "em": 0.02, "imagem": { "id": "tenis1" }, "fundo": "#DCE3EE" },
+  { "rotulo": "R$ 200",   "em": 0,    "imagem": { "id": "tenis1" }, "fundo": "#DCE3EE" },
   { "rotulo": "R$ 600",   "em": 1.67, "imagem": { "id": "tenis2" }, "fundo": "#D3EAE4" },
   { "rotulo": "R$ 1.500", "em": 2.43, "imagem": { "id": "tenis3" }, "fundo": "#F7D9D1" }
 ] }
@@ -25,7 +25,7 @@ O `cortar.mjs` escreve o esqueleto (vídeo, medidas, `rosto` com o rastro, `cort
 | `de`, `ate` | sim | o ciclo inteiro. `de` = o corte para o tema novo (~0,1 s antes da primeira palavra; o primeiro ciclo começa em 0); `ate` = o próximo corte. Ciclos consecutivos: o `ate` de um é o `de` do seguinte. ~3 s cada |
 | `itens` | sim | de 1 a 3 cartões (um por nível), na ordem da grade (esquerda, centro, direita) |
 | `itens[].rotulo` | sim | a palavra do nível, curta ("RUIM", "R$ 200", "1º MÊS"). Vira caixa alta, branca, 56 px, embaixo do cartão. Máximo ~10 caracteres por linha (nunca abaixo de 52 px): passou disso, quebra em duas linhas; escolha a palavra-chave ("BÁSICO", "CARBONO"), não a frase |
-| `itens[].em` | sim | quando o cartão e o rótulo entram: de 0 a 0,2 s antes da palavra do nível (o primeiro cartão do primeiro ciclo entra em ~0,02) |
+| `itens[].em` | sim | quando o cartão e o rótulo entram: de 0 a 0,2 s antes da palavra do nível (o primeiro cartão de cada ciclo entra com `em` igual ao `de` do ciclo, para já estar na tela no quadro do corte; marcado até 0,1 s depois do corte, o template o põe no corte) |
 | `itens[].imagem` | não | `{ "id": "tenis1" }` (de `work/imagens.json`; `foco` opcional). PNG transparente aparece inteiro; foto preenche o cartão |
 | `itens[].texto` | não | sem imagem: o texto do cartão (grande, preto). Sem `texto`, usa a palavra pedida ou o rótulo |
 | `itens[].fundo` | não | cor do cartão (padrão papel `#F3F0E8`). Dê uma cor para cada nível, em tons claros |

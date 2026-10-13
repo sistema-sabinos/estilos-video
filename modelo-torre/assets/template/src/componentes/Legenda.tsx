@@ -67,7 +67,6 @@ export const Legenda: React.FC<{ t: number; frases: Frase[]; y: number }> = ({ t
         fontWeight: 800,
         fontSize: 66,
         lineHeight: 1.12,
-        letterSpacing: "-0.015em",
         color: "#FFF8F2",
         WebkitTextStroke: "10px #000",
         paintOrder: "stroke fill",
@@ -80,7 +79,7 @@ export const Legenda: React.FC<{ t: number; frases: Frase[]; y: number }> = ({ t
         // depois que a palavra assentou, sai a máscara e o deslocamento da entrada (texto simples)
         const assentou = p >= 1;
         return (
-          <span key={k} style={{ display: "inline-block", clipPath: assentou ? undefined : "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.2em" }}>
+          <span key={k} style={{ display: "inline-block", clipPath: assentou ? undefined : "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.36em" }}>
             <span style={{ display: "inline-block", transform: assentou ? (ativa ? "scale(1.04)" : undefined) : `translateY(${(1 - p) * 110}%) scale(${ativa ? 1.04 : 1})`, opacity: assentou ? 1 : 0.15 + 0.85 * p }}>{tk.w}</span>
           </span>
         );

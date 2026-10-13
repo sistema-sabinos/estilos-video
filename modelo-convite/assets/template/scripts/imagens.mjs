@@ -48,6 +48,8 @@ const LIMITES = {
 // ---------- utilidades ----------
 
 const sha1 = (s) => createHash("sha1").update(String(s)).digest("hex");
+// marca da foto do aluno: o conteúdo, não o caminho nem a data (projeto movido ou baixado do GitHub não conta como troca)
+const marcaDoAluno = (arq) => createHash("sha1").update(readFileSync(arq)).digest("hex");
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 const normalizar = (s) =>
   String(s ?? "")
@@ -756,6 +758,7 @@ const prepararCandidata = async (c) => {
 const buscarPedido = async (p, listaDoAluno) => {
   p.avisos = [];
   p.candidatas = [];
+  delete p.marcaAluno;
   const preparadas = [];
 
   // (a) a pasta do aluno
@@ -763,6 +766,7 @@ const buscarPedido = async (p, listaDoAluno) => {
   if (doAluno) {
     const norm = await normalizarArquivo(doAluno.arquivo, sha1(`${path.resolve(doAluno.arquivo)}|${statSync(doAluno.arquivo).size}|${statSync(doAluno.arquivo).mtimeMs}`));
     if (!norm.erro) {
+      p.marcaAluno = marcaDoAluno(doAluno.arquivo);
       preparadas.push({ fonte: "sua pasta (imagens/)", titulo: path.basename(doAluno.arquivo), autor: "aluno", licenca: "do aluno", credito: false, link: doAluno.arquivo, norm });
       p.avisos.push(`da pasta imagens/ (${doAluno.como}): ${path.basename(doAluno.arquivo)}`);
       return preparadas;
@@ -1036,8 +1040,16 @@ if (opcoes.busca && refazer && refazer !== "todos") pedidos.find((p) => p.id ===
 const assinatura = (p) => `${p.busca}|${p.tipo}|${p.arquivo ?? ""}`;
 const candidatasNoDisco = (p) => (p.candidatas ?? []).length > 0 && p.candidatas.every((c) => existsSync(path.join("public", c.arquivo)));
 const listaDoAluno = arquivosDoAluno();
-// o arquivo do aluno apareceu depois da busca? Ele passa na frente.
-const alunoNovo = (p) => !(p.candidatas?.[0]?.fonte ?? "").startsWith("sua pasta") && !!acharNoAluno(p, listaDoAluno);
+// o arquivo do aluno apareceu depois da busca, ou foi trocado por outro (mesmo nome, outro conteúdo)? Ele passa na frente.
+const alunoNovo = (p) => {
+  const doAluno = acharNoAluno(p, listaDoAluno);
+  if (!doAluno) return false;
+  if (!(p.candidatas?.[0]?.fonte ?? "").startsWith("sua pasta")) return true;
+  const marca = marcaDoAluno(doAluno.arquivo);
+  // pedido de antes da marca: guarda a do arquivo de hoje sem refazer (o foco marcado fica)
+  p.marcaAluno ??= marca;
+  return p.marcaAluno !== marca;
+};
 const aFazer = opcoes.folha
   ? []
   : pedidos.filter(

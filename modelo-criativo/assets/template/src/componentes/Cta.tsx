@@ -5,6 +5,7 @@ import { prog, salto, saindo } from "../anim";
 import { larguraTexto } from "../medida";
 import type { Cta as TCta } from "../plano";
 import { cor, fonte, type Tons } from "../tema";
+import { geometriaPlaca } from "../selo";
 import { CartaoHeroi, Placa, type PropsPalco } from "./Assinatura";
 import { Icone } from "./Vidro";
 
@@ -80,7 +81,7 @@ export const Botao: React.FC<{ t: number; m: TCta; y: number; tons: Tons }> = ({
 };
 
 // O cartão final no palco (abaixo do botão): o produto herói, ou a chamada numa placa se não houver produto.
-export const CartaoFinal: React.FC<PropsPalco & { m: TCta }> = ({ t, plano, m, fim, palco, tons, imediato }) => {
+export const CartaoFinal: React.FC<PropsPalco & { m: TCta }> = ({ t, plano, m, fim, palco, tons, imediato, selo }) => {
   if (m.imagem) {
     return (
       <CartaoHeroi
@@ -96,9 +97,13 @@ export const CartaoFinal: React.FC<PropsPalco & { m: TCta }> = ({ t, plano, m, f
         tituloEm={m.tituloEm}
         destaque={m.destaque}
         de={m.de}
+        selo={selo}
       />
     );
   }
   if (!m.titulo) return null;
-  return <Placa t={t} plano={plano} texto={m.titulo} em={m.tituloEm ?? m.de} ate={fim} destaque={m.destaque} ret={palco} tons={tons} imediato={imediato} modo="aparece" entra={m.de} />;
+  // com selo, a placa desce para baixo dele (ou abre lugar para ele na ponta direita): conta no selo.ts;
+  // max leva a letra que a conta reduziu, senão a Placa mede de novo com o máximo e passa do palco
+  const g = geometriaPlaca(palco, m.titulo, selo);
+  return <Placa t={t} plano={plano} texto={m.titulo} em={m.tituloEm ?? m.de} ate={fim} destaque={m.destaque} ret={{ ...palco, y: g.y, h: g.altura }} direita={g.direita} max={g.tamanho} tons={tons} imediato={imediato} modo="aparece" entra={m.de} />;
 };

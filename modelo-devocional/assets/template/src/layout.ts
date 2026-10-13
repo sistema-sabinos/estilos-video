@@ -50,11 +50,11 @@ export const prepararLayout = (plano: Plano): Layout => {
   const hN = 1920 - COSTURA + 60;
   const zN = limitar((0.28 * MOLDURA.w) / Math.max(1, rostoPx(MOLDURA.w, hN, 1)), 1, 1.5);
   const lrN = rostoPx(MOLDURA.w, hN, zN);
-  const NORMAL = { x: MOLDURA.x, y: COSTURA, w: MOLDURA.w, h: hN, raio: MOLDURA.raio, zoom: zN, ancoraY: limitar((52 + 1.15 * lrN) / hN, 0.2, 0.55) };
+  const NORMAL = { x: MOLDURA.x, y: COSTURA, w: MOLDURA.w, h: hN, raio: MOLDURA.raio, zoom: zN, ancoraY: limitar((52 + 0.86 * lrN) / hN, 0.2, 0.55) };
   // medalhão: o rosto com ~44% da largura do medalhão, 34 px de folga acima do cabelo
   const zM = limitar((0.44 * MEDALHAO.w) / Math.max(1, rostoPx(MEDALHAO.w, MEDALHAO.h, 1)), 1, 2.4);
   const lrM = rostoPx(MEDALHAO.w, MEDALHAO.h, zM);
-  const CHEIA = { ...MEDALHAO, raio: MEDALHAO.w / 2, zoom: zM, ancoraY: limitar((34 + 1.15 * lrM) / MEDALHAO.h, 0.25, 0.6) };
+  const CHEIA = { ...MEDALHAO, raio: MEDALHAO.w / 2, zoom: zM, ancoraY: limitar((34 + 0.86 * lrM) / MEDALHAO.h, 0.25, 0.6) };
 
   // trechos de página cheia: cada versículo, do `de` até o próximo bloco entrar
   const trechos: [number, number][] = [];

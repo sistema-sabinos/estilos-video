@@ -58,6 +58,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // Número que conta até `valor` a partir de `em`. `titulo` (deste modelo): a linha pequena acima.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

@@ -74,7 +74,7 @@ export const Placa: React.FC<{ m: Numero | Destaque; t: number; topo: number; fi
     const pRot = prog(t, rotEm - 0.04, 0.26);
     const yNum = PAD + rotLinhas.length * (MONO + 10) + 14;
     const conta = prog(t, m.em - 0.03, 1.1, firme);
-    const agora = t < m.em - 0.03 ? final : numeroBR(m.valor * conta, casas);
+    const agora = t < m.em - 0.03 ? final : numeroBR((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta, casas);
     vazado = vazado && tam >= 96;
     const wNum = larguraEm(final, 900, APERTO) * tam;
     const wPre = pre ? 0.42 * larguraEm(pre, 700) * tam + 0.16 * tam : 0;

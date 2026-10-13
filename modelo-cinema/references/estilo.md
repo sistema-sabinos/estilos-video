@@ -25,7 +25,7 @@ Uma pessoa falando numa sala escura, filmada como cinema. A tela respira com a f
 
 ## 3. Tipografia
 
-- **Cormorant Garamond** (serifada de livro/cinema), 600, para tudo que é dito; itálico (500 a 600) para ênfase, termos, falas e perguntas. Algarismos alinhados.
+- **Cormorant Garamond** (serifada de livro/cinema), 600, para tudo que é dito; itálico (500 a 600) para ênfase, termos, falas e perguntas. Algarismos alinhados. O â, o ê e o ô minúsculos fora do itálico vêm da **Cormorant Circunflexo** (`src/circunflexo.ts`: a Cormorant com o circunflexo redesenhado, mais baixo e centrado, mesma licença OFL), que o `tema.ts` põe na frente da Cormorant; nos componentes use sempre `serif`, nunca o nome da fonte solto.
 - **Jost** 500, só em caixa alta espaçada (0,34 em), pequena e âmbar, como crédito de filme.
 - Os textos são **medidos com as larguras reais das fontes** (`src/larguras.ts` e `src/medida.ts`) e diminuem até caber, em até 2 ou 3 linhas equilibradas; nunca vazam. Crédito comprido demais para uma linha vira itálico.
 - Tamanhos na tela de 1080 de largura: títulos 72 a 150 px, números até 210 px, itens 46 a 96 px, narração 66 a 76 px, detalhes 48 px, créditos 30 a 36 px. A Cormorant tem letras pequenas para o tamanho: não desça desses mínimos.

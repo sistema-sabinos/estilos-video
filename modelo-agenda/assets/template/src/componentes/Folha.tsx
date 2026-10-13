@@ -2,7 +2,7 @@
 // dia, régua de horas com linhas finas a cada 15 minutos. A escala acompanha a cena.
 import { escreverHora, mistura, prog } from "../anim";
 import { ANTES, type Agenda, cortinaNoTempo, recorteDaCortina, tituloNoTempo, trechoNoTempo } from "../agenda";
-import { CABECALHO, cor, FOLHA, numeros, RAIA, sans, sombraFolha } from "../tema";
+import { CABECALHO, CONTEUDO, cor, FOLHA, numeros, RAIA, sans, sombraFolha } from "../tema";
 import { medir } from "../medida";
 import { Icone } from "./Icones";
 
@@ -81,7 +81,8 @@ export const Folha: React.FC<{ t: number; ag: Agenda; dia: string; tituloEm: num
       </div>
       <div style={{ position: "absolute", left: 0, right: 0, top: CABECALHO, height: 2, background: cor.linha, opacity: cabecalho }} />
 
-      {/* régua de horas */}
+      {/* régua de horas (agenda que não coube e rolou para cima passa por baixo do cabeçalho) */}
+      <div style={{ position: "absolute", inset: 0, clipPath: Math.min(a.topoAgenda, c.topoAgenda) < CONTEUDO.topo ? `inset(${CABECALHO + 2}px 0 0 0)` : undefined }}>
       <div style={{ position: "absolute", inset: 0, clipPath: recorteDaCortina(cortina, cortina ? (cortina.agendaSai ? "sai" : "entra") : null, FOLHA.y, FOLHA.h) }}>
       {regua > 0.01
         ? linhas.map((m) => (
@@ -127,6 +128,7 @@ export const Folha: React.FC<{ t: number; ag: Agenda; dia: string; tituloEm: num
             );
           })
         : null}
+      </div>
       </div>
     </div>
   );

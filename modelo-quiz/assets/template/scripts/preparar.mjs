@@ -10,6 +10,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import os from "node:os";
 import path from "node:path";
 import { argumentos, exigirProjeto, ffmpeg, ffprobe, gravarJson, medirVolume, mmss } from "./comum.mjs";
+import { fimDaVoz } from "./fim-da-voz.mjs";
 
 // 1.7.2: última versão que compila só com `make` e já conhece o modelo turbo.
 // No Windows a 1.7.2 não tem programa pronto no GitHub; a 1.7.6 tem.
@@ -291,7 +292,8 @@ const falas = [];
 let cursor = 0;
 for (const s of [...silencios, { de: duracao, ate: duracao }]) {
   if (s.de - cursor > 0.12) {
-    falas.push({ de: Math.max(0, cursor - FOLGA_ANTES), ate: Math.min(duracao, s.de + FOLGA_DEPOIS) });
+    // o fim vem da voz (scripts/fim-da-voz.mjs), não do início do silêncio: a sílaba final fraca fica abaixo do limiar
+    falas.push({ de: Math.max(0, cursor - FOLGA_ANTES), ate: Math.min(duracao, fimDaVoz(pcm, TAXA, s, limiar) + FOLGA_DEPOIS) });
   }
   cursor = s.ate;
 }

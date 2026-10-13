@@ -1,4 +1,4 @@
-import { aPartirDe, Datilo, DatiloFalado, preciso, prog, saindo, temposDoTexto } from "../anim";
+import { aPartirDe, Datilo, DatiloFalado, naVez, preciso, prog, saindo, temposDoTexto } from "../anim";
 import { encaixar, encaixarBloco, larguraTexto } from "../medida";
 import type { Palavra, Pergunta as TPergunta } from "../plano";
 import { cor, sans, sombraTexto } from "../tema";
@@ -108,7 +108,7 @@ export const Pergunta: React.FC<{
                   <div style={{ fontFamily: sans, fontWeight: 700, fontSize: linha.tamanho, lineHeight: 1.12, color: cor.tinta }}>
                     {linha.linhas.map((l, k) => (
                       <div key={k} style={{ whiteSpace: "nowrap" }}>
-                        <Datilo texto={l} em={o.em + k * 0.25} t={t} semente={180 + i * 3 + k} />
+                        <Datilo texto={l} {...naVez(linha.linhas, k, o.em, 0.25, t)} t={t} semente={180 + i * 3 + k} />
                       </div>
                     ))}
                   </div>

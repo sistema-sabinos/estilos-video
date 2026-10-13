@@ -8,7 +8,7 @@ import { assenta, escreverHora, limitar, Linhas, prog, temposDoTexto } from "../
 import { encaixar, medir } from "../medida";
 import { type Agenda, type BlocoNaAgenda, minutosAgora, retNoTempo, trechoNoTempo } from "../agenda";
 import type { Palavra } from "../plano";
-import { CATEGORIAS, cor, FOLHA, numeros, RAIO_BLOCO, sans } from "../tema";
+import { CABECALHO, CATEGORIAS, CONTEUDO, cor, FOLHA, numeros, RAIO_BLOCO, sans } from "../tema";
 import { Icone } from "./Icones";
 
 export const QUEDA = 0.42;
@@ -33,7 +33,9 @@ export const Blocos: React.FC<{
   // posição x da marcação que percorre a linha do dia (blocos à esquerda dela ganham ✓)
   marcaX: number | null;
 }> = ({ t, ag, palavras, marcaX }) => {
-  const { atual } = trechoNoTempo(t, ag.trechos);
+  const { atual, anterior } = trechoNoTempo(t, ag.trechos);
+  // agenda que não coube na folha (o começo rolou para cima): os blocos passam por baixo do cabeçalho
+  const rolou = Math.min(atual.cena.topoAgenda, anterior.cena.topoAgenda) < CONTEUDO.topo;
   // duas camadas: primeiro todos os lugares a lápis, depois os blocos (um lápis nunca fica por cima de um bloco)
   const camada = (esbocos: boolean) =>
       ag.blocos.map((b) => {
@@ -146,8 +148,8 @@ export const Blocos: React.FC<{
         );
       });
   return (
-    // nada sai da folha (nem durante a mudança de escala)
-    <div style={{ position: "absolute", inset: 0, clipPath: `inset(${FOLHA.y}px ${1080 - FOLHA.x - FOLHA.w}px ${1920 - FOLHA.y - FOLHA.h}px ${FOLHA.x}px round ${FOLHA.raio}px)` }}>
+    // nada sai da folha (nem durante a mudança de escala); agenda que rolou corta embaixo do cabeçalho
+    <div style={{ position: "absolute", inset: 0, clipPath: `inset(${rolou ? FOLHA.y + CABECALHO + 2 : FOLHA.y}px ${1080 - FOLHA.x - FOLHA.w}px ${1920 - FOLHA.y - FOLHA.h}px ${FOLHA.x}px round ${rolou ? 0 : FOLHA.raio}px ${rolou ? 0 : FOLHA.raio}px ${FOLHA.raio}px ${FOLHA.raio}px)` }}>
       {camada(true)}
       {camada(false)}
     </div>

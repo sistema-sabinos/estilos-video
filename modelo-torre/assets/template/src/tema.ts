@@ -3,6 +3,8 @@
 // pinos, etiquetas e rotas. Serifa elegante só nos números grandes e no nome do empreendimento;
 // Manrope nos rótulos (caixa alta espaçada) e Sora nos títulos e na legenda.
 import { loadFont as carregarSerifa } from "@remotion/google-fonts/CormorantGaramond";
+import { continueRender, delayRender } from "remotion";
+import { FAMILIA_CIRCUNFLEXO, registrarCircunflexo } from "./circunflexo";
 import { loadFont as carregarManrope } from "@remotion/google-fonts/Manrope";
 import { loadFont as carregarSora } from "@remotion/google-fonts/Sora";
 
@@ -10,7 +12,20 @@ const serifa = carregarSerifa("normal", { weights: ["500", "600", "700"], subset
 const manrope = carregarManrope("normal", { weights: ["500", "600", "700", "800"], subsets: ["latin", "latin-ext"] });
 const sora = carregarSora("normal", { weights: ["600", "700", "800"], subsets: ["latin", "latin-ext"] });
 
-export const FONTE = { serifa: serifa.fontFamily, sans: manrope.fontFamily, sora: sora.fontFamily };
+// O circunflexo minúsculo da Cormorant (â, ê, ô) é um bico alto e estreito: a Cormorant Circunflexo
+// (circunflexo.ts) redesenha só essas três letras e vem na frente dela. O render espera ela carregar;
+// se falhar, segue com a Cormorant inteira.
+if (typeof document !== "undefined" && typeof FontFace !== "undefined") {
+  const espera = delayRender("Cormorant Circunflexo");
+  registrarCircunflexo((face) => (document.fonts as unknown as { add: (f: FontFace) => void }).add(face), FontFace).then(
+    () => continueRender(espera),
+    (erro) => {
+      console.error("Cormorant Circunflexo", erro);
+      continueRender(espera);
+    },
+  );
+}
+export const FONTE = { serifa: `"${FAMILIA_CIRCUNFLEXO}", ${serifa.fontFamily}`, sans: manrope.fontFamily, sora: sora.fontFamily };
 
 export const K = {
   noite: "#070C17",

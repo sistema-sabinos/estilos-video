@@ -66,7 +66,9 @@ export const ZOOM_EU = 1.3;
 // no split a pessoa já vem um pouco mais perto (o rosto do Reel é ~8% maior que o enquadramento solto)
 export const ZOOM_SPLIT = 1.08;
 // do centro do rosto (olhos/nariz) ao topo da cabeça e ao queixo, em larguras de rosto
-const ATE_TOPO = 0.84;
+// do centro do rosto ao topo do cabelo, em larguras de rosto: a média (0,84) ou o medido na grade
+// do passo 4 e gravado em `ateTopo` no plano (references/plano.md)
+const ateTopo = (plano: Plano) => Math.min(1.2, Math.max(0.6, plano.ateTopo ?? 0.84));
 const ATE_QUEIXO = 0.68;
 
 // A caixa da pessoa em cada layout. A cabeça fica sempre na mesma linha; só o zoom do "eu" aproxima.
@@ -83,7 +85,7 @@ export const caixaDaPessoa = (plano: Plano, modo: Layout = "split"): Caixa => {
     const caixa = { ...CHEIO, x: 0, y, w: LARGURA, h, zoom, ancoraY };
     const esc = enquadrar(caixa, plano.rosto, vh, plano.rosto.rastro ? 0 : null).escala;
     const L = largura * 1080 * esc;
-    ancoraY = Math.min(0.62, Math.max(0.1, (folga + ATE_TOPO * L) / h));
+    ancoraY = Math.min(0.62, Math.max(0.1, (folga + ateTopo(plano) * L) / h));
   }
   return { ...CHEIO, x: 0, y, w: LARGURA, h, zoom, ancoraY, raio: 0 };
 };
@@ -98,8 +100,8 @@ export const medidas = (plano: Plano): Medidas => {
   const L = (m: Layout) => largura * 1080 * enquadrar(caixaDaPessoa(plano, m), plano.rosto, vh, plano.rosto.rastro ? 0 : null).escala;
   const r = {
     rostoL: L("split"),
-    queixo: PESSOA_Y + FOLGA_SPLIT + (ATE_TOPO + ATE_QUEIXO) * L("split"),
-    queixoEu: FOLGA_EU + (ATE_TOPO + ATE_QUEIXO) * L("eu"),
+    queixo: PESSOA_Y + FOLGA_SPLIT + (ateTopo(plano) + ATE_QUEIXO) * L("split"),
+    queixoEu: FOLGA_EU + (ateTopo(plano) + ATE_QUEIXO) * L("eu"),
     topoCabeca: PESSOA_Y + FOLGA_SPLIT,
   };
   guardadas.set(plano, r);

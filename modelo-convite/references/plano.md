@@ -30,7 +30,7 @@ Todos os tempos são em segundos, na linha do tempo do vídeo **já cortado**. P
 }
 ```
 
-- `marca`: `nome` e `area` são a assinatura do convite: em caixa-alta espaçada no pé do convite grande ("LUCAS PRADO · CRIPTO") e em itálico embaixo da foto do convite pequeno. Juntos, até ~26 caracteres (encolhe até 32 px para caber). `nome` vazio = sem assinatura.
+- `marca`: `nome` e `area` são a assinatura do convite: em caixa-alta espaçada no pé do convite grande ("LUCAS PRADO · CRIPTO") e em itálico embaixo da foto do convite pequeno. Juntos, até ~26 caracteres. A assinatura fica sempre numa linha só e encolhe até 32 px para caber; no convite grande, se ainda faltar, as letras ficam menos espaçadas e o corpo desce o que precisar, sem passar dos fios da moldura. `nome` vazio = sem assinatura.
 - `monograma` (opcional): a letra do lacre de cera. Sem ele, vale a inicial de `marca.nome`; com `""` (ou sem nome), o lacre leva um ornamento.
 - `pessoa` (opcional): ajuste do rosto nas fotos em arco. `zoom` 1,15 aproxima (gravação aberta, rosto pequeno); 0,86 afasta (gravação perto da câmera, rosto grande ou cabelo cortado pelo arco). `ancoraY` (padrão 0,40) é a altura do rosto dentro da foto grande: maior desce o rosto.
 - `sfx`: `false` desliga os sons.

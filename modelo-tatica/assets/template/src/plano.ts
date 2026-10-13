@@ -146,6 +146,8 @@ export type Cta = Base & {
 // Número: placar de TV; o número conta em pt-BR dentro do quadrado amarelo
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

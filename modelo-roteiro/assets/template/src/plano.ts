@@ -68,6 +68,8 @@ export type Embarque = Base & {
 // Número: etiqueta de bagagem com o número contando em pt-BR e uma escala de mapa com o marcador.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

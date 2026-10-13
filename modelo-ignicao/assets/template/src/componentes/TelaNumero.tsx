@@ -32,7 +32,7 @@ export const TelaNumero: React.FC<{ m: Numero; palavras: Palavra[]; t: number; i
   const max = fimDaEscala(m.valor, m.sufixo);
   // o número conta em ~1 s, o ponteiro acompanha (sem passar do ponto)
   const conta = prog(t, m.em - 0.05, 1.05);
-  const valor = m.valor * conta;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
   const f = valor / max;
   const g = anguloDe(f);
 

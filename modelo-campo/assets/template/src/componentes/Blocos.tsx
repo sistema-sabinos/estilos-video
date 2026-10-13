@@ -185,7 +185,7 @@ export const Numero: React.FC<Comum & { m: TNumero }> = ({ t, m, fim }) => {
       {e.visivel ? (
         <Cartao x={PAINEL.x} y={y0} w={W} h={altCard} style={{ opacity: e.opacity, transform: e.transform }}>
           <div style={{ position: "absolute", left: 0, right: 0, top: 44, textAlign: "center", transform: golpe ? `scale(${1 + 0.05 * golpe})` : undefined }}>
-            <span style={{ fontFamily: mono, fontWeight: 700, fontSize: fN.tamanho, color: cor.verdeEscuro, letterSpacing: "-0.03em", lineHeight: 1.1, whiteSpace: "nowrap" }}>{texto(m.valor * pC)}</span>
+            <span style={{ fontFamily: mono, fontWeight: 700, fontSize: fN.tamanho, color: cor.verdeEscuro, letterSpacing: "-0.03em", lineHeight: 1.1, whiteSpace: "nowrap" }}>{texto((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pC)}</span>
           </div>
           {/* régua de campo */}
           <svg width={regua} height={70} style={{ position: "absolute", left: 60, bottom: 40 }}>

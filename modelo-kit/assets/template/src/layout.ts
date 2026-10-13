@@ -15,24 +15,8 @@ export const AREA = { x: 60, y: 146, w: 960, h: 724 };
 const suave = Easing.bezier(0.65, 0, 0.35, 1);
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-export const ordenar = (plano: Plano) => [...plano.momentos].sort((a, b) => a.de - b.de);
-
-export const semSobreposicao = (plano: Plano): Plano => {
-  const ordem = ordenar(plano);
-  return {
-    ...plano,
-    momentos: ordem.map((m, i) => {
-      const proximo = ordem[i + 1];
-      return proximo && m.ate > proximo.de ? { ...m, ate: proximo.de } : m;
-    }),
-  };
-};
-
-// o Kit mostra a legenda por padrão (a fala acompanha as peças que caem)
-export const comLegendaPadrao = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (m.tipo === "kit" && m.legenda === undefined ? { ...m, legenda: true } : m)),
-});
+import { comLegendaPadrao, ordenar, semSobreposicao } from "./legenda-padrao";
+export { comLegendaPadrao, ordenar, semSobreposicao };
 
 // ——— a pessoa: moldura larga embaixo ———
 

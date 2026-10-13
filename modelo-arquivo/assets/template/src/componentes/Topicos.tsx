@@ -1,4 +1,4 @@
-import { Datilo, preciso, prog } from "../anim";
+import { Datilo, naVez, preciso, prog } from "../anim";
 import { partesDaRegiao, type Regiao } from "../layout";
 import { encaixar } from "../medida";
 import type { Layout, Topicos as TTopicos } from "../plano";
@@ -60,7 +60,7 @@ export const Topicos: React.FC<{ m: TTopicos; t: number; fim: number; regiao: Re
                     <div style={{ fontFamily: sans, fontWeight: 700, fontSize: fit.tamanho, lineHeight: 1.08, color: cor.tinta }}>
                       {fit.linhas.map((l, k) => (
                         <div key={k} style={{ whiteSpace: "nowrap" }}>
-                          <Datilo texto={l} em={it.em + k * 0.22} t={t} semente={210 + i * 5 + k} />
+                          <Datilo texto={l} {...naVez(fit.linhas, k, it.em, 0.22, t)} t={t} semente={210 + i * 5 + k} />
                         </div>
                       ))}
                     </div>

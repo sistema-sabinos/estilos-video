@@ -233,7 +233,7 @@ export const Passos: React.FC<PropsBloco<TPassos>> = ({ plano, m, t }) => <Lista
 export const Numero: React.FC<PropsBloco<TNumero>> = ({ m, t }) => {
   const casas = m.casas ?? 0;
   const p = prog(t, m.em, 1.0, suave);
-  const valor = formatar(m.valor * p, casas);
+  const valor = formatar((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p, casas);
   const final = formatar(m.valor, casas);
   const pre = m.prefixo ?? "";
   const suf = m.sufixo ?? "";
@@ -551,6 +551,7 @@ export const Destaque: React.FC<PropsBloco<TDestaque>> = ({ plano, m, t }) => {
       <Aproxima t={t} de={m.de}>
         {fit.linhas.map((l, i) => {
           const ei = prog(t, inicioLinha[i] - 0.05, 0.4);
+          if (ei <= 0) return null;
           return (
             <div key={i} style={{ position: "absolute", left: MARGEM, top: topo + i * lh, height: lh, width: larg + 20, overflow: ei >= 1 ? undefined : "hidden" }}>
               <div
@@ -723,7 +724,7 @@ export const Cta: React.FC<PropsBloco<TCta>> = ({ plano, m, t }) => {
   const em = m.em ?? m.de;
   const icone = m.icone ?? "salvar";
   const xTexto = MARGEM + 210;
-  const d = disporTexto(m.texto, { largura: LARGURA - MARGEM - xTexto, max: 84, min: 48, linhas: 3, fala: plano.palavras, de: em, ate: m.ate, destaque: m.destaque });
+  const d = disporTexto(m.texto ?? "", { largura: LARGURA - MARGEM - xTexto, max: 84, min: 48, linhas: 3, fala: plano.palavras, de: em, ate: m.ate, destaque: m.destaque });
   const cy = PALCO_H / 2 + 20;
   const ec = prog(t, m.de, 0.45);
   return (

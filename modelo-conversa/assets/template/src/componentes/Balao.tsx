@@ -177,7 +177,7 @@ export const Balao: React.FC<{
     const p = prog(t, n.em, 1.1, Easing.out(Easing.cubic));
     const casas = n.casas ?? 0;
     const fator = 10 ** casas;
-    const valor = Math.round(n.valor * p * fator) / fator;
+    const valor = Math.round(((n.inicio ?? 0) + (n.valor - (n.inicio ?? 0)) * p) * fator) / fator;
     const pRotulo = n.rotuloEm !== undefined ? prog(t, n.rotuloEm - 0.05, 0.3) : 1;
     const rotuloH = Math.round(med.rotuloCorpo * 1.2);
     return (

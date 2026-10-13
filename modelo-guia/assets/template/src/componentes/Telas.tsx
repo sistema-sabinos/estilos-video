@@ -107,7 +107,7 @@ export const TelaPassos: React.FC<P & { m: Passos }> = ({ m, t }) => {
 export const TelaNumero: React.FC<P & { m: Numero }> = ({ m, t }) => {
   const e = prog(t, m.em, 1.1, saida);
   const casas = m.casas ?? 0;
-  const v = m.valor * e;
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * e;
   const corpo = formatar(v, casas);
   const cheio = formatar(m.valor, casas);
   const pre = m.prefixo ?? "";

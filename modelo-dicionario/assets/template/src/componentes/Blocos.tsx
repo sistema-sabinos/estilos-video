@@ -274,7 +274,7 @@ export const NumeroBloco: React.FC<{ m: Numero; t: number; R: Regiao }> = ({ m, 
   const y0 = R.y + Math.max(0, (R.h - total) / 2);
 
   const pConta = prog(t, m.em - 0.02, 1.1);
-  const valor = m.valor * pConta;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta;
   const mostrado = formatarNumero(pConta >= 1 ? m.valor : casas ? valor : Math.round(valor), casas);
   const antes = t < m.em - 0.02;
   const yExt = y0 + c * 1.02 + 6;

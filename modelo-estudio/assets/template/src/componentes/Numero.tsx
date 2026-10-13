@@ -31,7 +31,7 @@ export const Numero: React.FC<{ m: NumeroT; palavras: Palavra[]; t: number; fim:
   const p = prog(t, m.em, dur, Easing.out(Easing.cubic));
   const casas = m.casas ?? 0;
   const final = formatarNumero(m.valor, casas);
-  const texto = p > 0 ? formatarNumero(m.valor * p, casas) : final.replace(/\d/g, "0");
+  const texto = p > 0 || m.inicio !== undefined ? formatarNumero((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p, casas) : final.replace(/\d/g, "0");
   const pre = m.prefixo ?? "";
   const suf = m.sufixo ?? "";
   const escalaSuf = 0.42;

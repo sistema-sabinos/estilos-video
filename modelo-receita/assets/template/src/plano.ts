@@ -100,6 +100,8 @@ export type Passos = Base & {
 // Número que conta: na ficha do peito, grande, com o copo medidor enchendo até a marca.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

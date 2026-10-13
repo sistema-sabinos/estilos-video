@@ -216,7 +216,7 @@ export const PassosBloco = ListaBloco;
 export const NumeroBloco: React.FC<P<Numero>> = ({ m, t, fim }) => {
   const casas = m.casas ?? 0;
   const c = prog(t, m.em, 1.1, rapido);
-  const valor = m.valor * c;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * c;
   const txt = `${m.prefixo ?? ""}${formatar(valor, casas)}${m.sufixo ?? ""}`;
   const cheio = `${m.prefixo ?? ""}${formatar(m.valor, casas)}${m.sufixo ?? ""}`;
   const e = encaixar(cheio, { largura: Z.w - 100, max: 260, min: 120, linhas: 1, fonte: { peso: 800 } });

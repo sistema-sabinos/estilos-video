@@ -4,80 +4,17 @@
 // palavra: a câmera vai até a região, a retícula marca, o músculo pulsa com fibras de luz, o rótulo
 // entra com a função e as rugas que ela faz aparecem. No modo "esquema", vira um corpo em traço fino
 // (Esquema.tsx).
-import type { Anatomia as TAnatomia, Estrutura, Plano } from "../plano";
+import type { Anatomia as TAnatomia, Plano } from "../plano";
 import { Face, type FaceState, facePoint } from "../rosto/Face";
 import { type Rugas, doCatalogo, ehMusculo } from "../rosto/catalogo";
 import { projUnit } from "../rosto/geom";
+import { GERAL, type Mergulho, type Plan, type Shot, roteiro } from "../rosto/roteiro";
 import { EASE_IN, EASE_INOUT, EASE_OUT, lerp, prog, win } from "../tema";
 import { Esquema } from "./Esquema";
 import { Reticula, Rotulo, Selo } from "./Pecas";
 
 export type NoVideo = (x: number, y: number, t: number) => { x: number; y: number; escala: number };
-export type Mergulho = { de: number; regiao?: string };
-
-type Shot = { t: number; S: number; ax: number; ay: number; fx: number; fy: number; yaw: number };
-const GERAL = { S: 370, ax: 540, ay: 535, fx: 0, fy: -0.085, yaw: 0 };
-
-type Lado = "esquerda" | "direita";
-type Plan = {
-  e: Estrutura;
-  inicio: number;
-  shot0: number;
-  out: number;
-  lado: Lado;
-  // −1 quando uma estrutura lateral vai para o lado esquerdo (espelha)
-  sg: number;
-  shot: Omit<Shot, "t">;
-};
-
-const inicioDe = (e: Estrutura) => Math.min(e.regiaoEm ?? e.em, e.em);
-
-// o roteiro da câmera e dos rótulos de uma anatomia (rosto)
-const roteiro = (m: TAnatomia, mergulho?: Mergulho) => {
-  const ests = [...m.estruturas].sort((a, b) => inicioDe(a) - inicioDe(b));
-  const plans: Plan[] = [];
-  let anterior: Lado = "direita";
-  ests.forEach((e) => {
-    const c = doCatalogo(e.id);
-    const lado: Lado = e.lado ?? (c.central ? (anterior === "esquerda" ? "direita" : "esquerda") : "direita");
-    const sg = !c.central && lado === "esquerda" ? -1 : 1;
-    anterior = lado;
-    const ax = c.central ? (lado === "esquerda" ? 650 : 400) : lado === "direita" ? 430 : 650;
-    const ay = c.foco.fy < -0.3 ? 400 : 470;
-    const inicio = inicioDe(e);
-    plans.push({ e, inicio, shot0: inicio - 0.35, out: 0, lado, sg, shot: { S: c.foco.S, ax, ay, fx: c.foco.fx * sg, fy: c.foco.fy, yaw: c.foco.yaw * sg } });
-  });
-  const fim = mergulho ? mergulho.de - 0.1 : m.ate - 0.35;
-  plans.forEach((p, i) => {
-    p.out = i + 1 < plans.length ? plans[i + 1].shot0 - 0.05 : fim;
-  });
-  // câmera: geral → cada estrutura (0,7 s de viagem) → (mergulho na região do corte, ou volta ao geral)
-  const SH: Shot[] = [{ t: m.de + 0.68, ...GERAL }];
-  plans.forEach((p) => {
-    const last = SH[SH.length - 1];
-    const t0 = Math.max(last.t + 0.05, p.shot0);
-    SH.push({ ...last, t: t0 });
-    SH.push({ t: t0 + 0.7, ...p.shot });
-  });
-  const ultimo = plans[plans.length - 1];
-  if (mergulho) {
-    const alvo = plans.find((p) => p.e.id === mergulho.regiao) ?? ultimo;
-    const last = SH[SH.length - 1];
-    const t0 = Math.max(last.t + 0.05, mergulho.de - 0.06);
-    SH.push({ ...last, t: t0 });
-    SH.push({ t: t0 + 0.58, S: 2400, ax: 540, ay: 470, fx: alvo ? alvo.shot.fx * 0.5 : 0.12, fy: alvo ? alvo.shot.fy : -0.34, yaw: 0 });
-  } else if (ultimo) {
-    // estrutura final que fica muito tempo na tela: a câmera recua devagar (nada parado)
-    const ultimaPalavra = Math.max(ultimo.e.em, ultimo.e.funcaoEm ?? 0, ultimo.e.grandeEm ?? 0);
-    if (m.ate - ultimaPalavra > 3.2) {
-      const last = SH[SH.length - 1];
-      const t0 = Math.max(last.t + 0.05, ultimaPalavra + 1.4);
-      SH.push({ ...last, t: t0 });
-      SH.push({ t: t0 + 1.2, ...GERAL });
-    }
-  }
-  return { plans, SH };
-};
+export type { Mergulho };
 
 const shotAt = (SH: Shot[], t: number): Shot => {
   if (t <= SH[0].t) return SH[0];

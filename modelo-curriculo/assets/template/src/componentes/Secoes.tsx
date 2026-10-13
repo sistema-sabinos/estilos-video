@@ -231,7 +231,7 @@ export const SecaoNumero: React.FC<P> = ({ s, m, t, dy }) => {
   ));
   const conta = prog(t, r.em, 0.95, entra);
   const chegou = t >= r.em - 0.02;
-  const valor = formatarNumero(r.valor * conta, r.casas ?? 0);
+  const valor = formatarNumero((r.inicio ?? 0) + (r.valor - (r.inicio ?? 0)) * conta, r.casas ?? 0);
   const tinta = prog(t, r.em - 0.05, 0.2);
   const corTexto = tinta >= 1 ? cor.tinta : interpolateColors(tinta, [0, 1], [cor.lapis, cor.tinta]);
   const fimConta = r.em + 0.95;

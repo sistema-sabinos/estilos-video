@@ -140,6 +140,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; rotulo?: string; 
 // Um número medido como um espécime: o ramo cresce ao lado de uma cota enquanto o número conta.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

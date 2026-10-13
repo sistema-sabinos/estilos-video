@@ -60,7 +60,7 @@ export const NumeroDeRevista: React.FC<{ m: Numero; t: number; fim: number; area
   // a contagem termina antes de a página sair (momento curto: conta mais rápido)
   const durConta = Math.max(0.45, Math.min(1.15, fim - em - 0.2));
   const pc = conta(prog(t, em - 0.05, durConta, Easing.linear));
-  const atual = m.valor * pc;
+  const atual = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pc;
   const texto = formatar(atual, casas);
   const teto = tetoRedondo(Math.abs(m.valor));
   const entra = prog(t, m.de + 0.1, 0.5);

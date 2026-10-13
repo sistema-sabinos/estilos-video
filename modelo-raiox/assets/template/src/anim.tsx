@@ -1,5 +1,6 @@
 import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Palavra } from "./plano";
+import { faladasDoTexto } from "./fala";
 import { cor } from "./tema";
 
 // Movimento de laudo: entra decidido e assenta, sem quique nem elástico.
@@ -81,7 +82,8 @@ const casa = (escrita: string, falada: string) => {
 // O texto pode ser dito bem depois do começo do momento (o apoio de um título, uma frase que vem
 // depois de "Agora,…"): o ponto de partida da busca é o que casa mais palavras (em empate, o primeiro).
 export const temposDoTexto = (texto: string, palavras: Palavra[], de: number, ate: number, inicio = de) => {
-  const faladas = palavras.filter((p) => p.em >= de - 0.35 && p.em < ate + 0.1);
+  // a fala desde o `de` ou desde o `inicio`, a que casar mais palavras do texto (ver fala.ts)
+  const faladas = faladasDoTexto(texto, palavras, de, ate, inicio, casa);
   const ws = texto.split(/\s+/).filter(Boolean);
   const casar = (partida: number) => {
     const tempos: number[] = [];

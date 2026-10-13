@@ -1,6 +1,7 @@
 import { Easing } from "remotion";
 import { marcar, Palavras, prog, saindo, temposDoTexto, TextoFalado, Traco } from "../anim";
 import { encaixar, larguraLinha } from "../medida";
+import { riscosDaFrase } from "../risco";
 import type { Capa as TCapa, Cta as TCta, Frase as TFrase, Palavra, Plano } from "../plano";
 import { BASE_CONTEUDO, BASE_SEM_LEGENDA, cor, fonte, MARGEM, rotulo, sombraCartao, W } from "../tema";
 import { misturarCor } from "./Desenhos";
@@ -260,13 +261,11 @@ export const Frase: React.FC<{ m: TFrase; palavras: Palavra[]; t: number; zonaTo
   const riscadas = marcar(todas, m.risco ?? m.risca);
   const enfase = marcar(todas, m.destaque ?? m.enfase);
   // o risco acompanha a fala: cada palavra riscada é atravessada logo depois de assentar (a primeira
-  // não antes de `riscoEm`), nunca antes de aparecer
+  // não antes de `riscoEm`), nunca antes de aparecer, e acaba antes de o cartão ou a página começar
+  // a sair (m.ate - 0,3), adiantando e encurtando quando a palavra é dita perto do fim (risco.ts)
   const idx = [...riscadas].sort((a, b) => a - b);
-  const inicioRisco = new Map<number, number>();
-  idx.forEach((i, ordem) => {
-    const anterior = ordem ? (inicioRisco.get(idx[ordem - 1]) as number) + 0.12 : (m.riscoEm ?? 0);
-    inicioRisco.set(i, Math.max((tempos[i] ?? m.de) + 0.24, anterior));
-  });
+  const riscos = riscosDaFrase(idx.map((i) => tempos[i] ?? m.de), m.ate - 0.3, m.riscoEm ?? 0);
+  const risco = new Map(idx.map((i, ordem) => [i, riscos[ordem]] as const));
   const entrada = Math.max(m.de, (tempos[0] ?? m.de) - 0.3);
   const altura = alturaFraseCom(m, k);
   // o cartão cresce linha a linha, quando cada linha começa a ser dita
@@ -309,7 +308,8 @@ export const Frase: React.FC<{ m: TFrase; palavras: Palavra[]; t: number; zonaTo
                 const pronta = p >= 0.999;
                 const riscada = riscadas.has(i);
                 // fração do risco que já passou por esta palavra
-                const pr = riscada ? prog(t, inicioRisco.get(i) as number, 0.26, Easing.inOut(Easing.quad)) : 0;
+                const r = risco.get(i);
+                const pr = riscada && r ? prog(t, r.inicio, r.dur, Easing.inOut(Easing.quad)) : 0;
                 return (
                   <span
                     key={`${w}-${q}`}

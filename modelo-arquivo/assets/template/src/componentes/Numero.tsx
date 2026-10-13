@@ -1,5 +1,6 @@
-import { Datilo, limitar, preciso, prog, saindo } from "../anim";
+import { Datilo, limitar, naVez, preciso, prog, saindo } from "../anim";
 import { encaixar, formatarNumero, larguraTexto, numeroCurto, passoRedondo } from "../medida";
+import { tintaNumero } from "../lapis";
 import type { Numero as TNumero } from "../plano";
 import { cor, mono, sans, sombraTexto } from "../tema";
 import { Carimbo } from "./Carimbo";
@@ -22,7 +23,7 @@ export const Numero: React.FC<{
   // a contagem termina antes de o momento acabar (momento curto, contagem mais rápida)
   const conta = Math.max(0.5, Math.min(CONTA, m.ate - m.em - 0.4));
   const p = prog(t, m.em, conta, preciso);
-  const atual = m.valor * p;
+  const atual = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const centro = 540;
   const baseY = area.y + area.h + 18;
   const passo = passoRedondo(Math.abs(m.valor) / 5 || 1);
@@ -81,7 +82,7 @@ export const Numero: React.FC<{
           <div style={{ fontFamily: mono, fontWeight: 700, fontSize: rot.tamanho, letterSpacing: "0.14em", lineHeight: 1.15, color: cor.claro, textAlign: "center" }}>
             {rot.linhas.map((l, i) => (
               <div key={i}>
-                <Datilo texto={l} em={rotuloEm + i * 0.3} t={t} semente={140 + i} />
+                <Datilo texto={l} {...naVez(rot.linhas, i, rotuloEm, 0.3, t)} t={t} semente={140 + i} />
               </div>
             ))}
           </div>
@@ -95,9 +96,9 @@ export const Numero: React.FC<{
             fontWeight: 800,
             color: cor.claro,
             lineHeight: 1,
-            // o número só aparece quando começa a ser dito (antes, só o rótulo e a régua no zero)
-            opacity: prog(t, m.em - 0.12, 0.15),
-            translate: `0 ${(1 - prog(t, m.em - 0.12, 0.3)) * 16}px`,
+            // espera a lápis: o zero já está impresso em cinza desde a entrada do bloco e ganha
+            // tinta quando começa a ser dito (impresso, ele não desliza)
+            opacity: tintaNumero(prog(t, m.em - 0.12, 0.15)),
           }}
         >
           {m.prefixo ? <span style={{ fontSize: menor, fontWeight: 700 }}>{m.prefixo}</span> : null}

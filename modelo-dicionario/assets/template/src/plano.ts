@@ -73,6 +73,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 // Número que conta como palavra-título, com o valor por extenso embaixo e o rótulo como acepção
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

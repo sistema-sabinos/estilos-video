@@ -1,10 +1,25 @@
 import { loadFont as carregarCormorant } from "@remotion/google-fonts/CormorantGaramond";
+import { continueRender, delayRender } from "remotion";
+import { FAMILIA_CIRCUNFLEXO, registrarCircunflexo } from "./circunflexo";
 import { loadFont as carregarJost } from "@remotion/google-fonts/Jost";
 
 // Duas fontes: uma serifada de livro/cinema (Cormorant Garamond) para tudo que é narrado,
 // e uma sans geométrica discreta (Jost), só em caixa alta espaçada, como crédito de filme.
 carregarCormorant("italic", { weights: ["500", "600"], subsets: ["latin", "latin-ext"] });
-export const serif = carregarCormorant("normal", { weights: ["500", "600", "700"], subsets: ["latin", "latin-ext"] }).fontFamily;
+// O circunflexo minúsculo da Cormorant (â, ê, ô) é um bico alto e estreito: a Cormorant Circunflexo
+// (circunflexo.ts) redesenha só essas três letras e vem na frente dela. O render espera ela carregar;
+// se falhar, segue com a Cormorant inteira.
+if (typeof document !== "undefined" && typeof FontFace !== "undefined") {
+  const espera = delayRender("Cormorant Circunflexo");
+  registrarCircunflexo((face) => (document.fonts as unknown as { add: (f: FontFace) => void }).add(face), FontFace).then(
+    () => continueRender(espera),
+    (erro) => {
+      console.error("Cormorant Circunflexo", erro);
+      continueRender(espera);
+    },
+  );
+}
+export const serif = `"${FAMILIA_CIRCUNFLEXO}", ${carregarCormorant("normal", { weights: ["500", "600", "700"], subsets: ["latin", "latin-ext"] }).fontFamily}`;
 export const sans = carregarJost("normal", { weights: ["400", "500"], subsets: ["latin", "latin-ext"] }).fontFamily;
 
 export const cor = {

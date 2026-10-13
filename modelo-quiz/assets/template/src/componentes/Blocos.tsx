@@ -142,7 +142,7 @@ export const Numero: React.FC<Comum & { m: TNumero }> = ({ t, m, fim }) => {
   const final = texto(m.valor);
   const f = caber(final.replace(/\d/g, "0"), PAINEL.w - 120, 230, 90, 1);
   const pC = prog(t, m.em, 0.9, Easing.out(Easing.cubic));
-  const v = m.valor * pC;
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pC;
   const entra = Math.max(m.de, m.em - 0.2);
   const e = entrada(t, entra, { de: 0.85, sobe: 30 });
   const altCard = f.tamanho * 1.25 + 90;

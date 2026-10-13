@@ -52,8 +52,8 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano, gui
       <AbsoluteFill style={{ filter: "blur(14px) brightness(0.92)", transform: "scale(1.08)" }}>
         <VideoNaCaixa src={plano.video} caixa={fundo} rosto={plano.rosto} videoAltura={plano.videoAltura ?? 1920} mudo seguirRosto={false} />
       </AbsoluteFill>
-      {/* a pessoa: o vídeo nítido (é dele que vem a voz); a borda de cima se dissolve no cenário e fica escondida sob a tela */}
-      <AbsoluteFill style={{ WebkitMaskImage: `linear-gradient(to bottom, transparent ${TELA.y + TELA.h - 6}px, #000 ${TELA.y + TELA.h + 70}px)`, maskImage: `linear-gradient(to bottom, transparent ${TELA.y + TELA.h - 6}px, #000 ${TELA.y + TELA.h + 70}px)` }}>
+      {/* a pessoa: o vídeo nítido (é dele que vem a voz); a borda de cima nasce sob a tela e assume 16 px abaixo dela, só pra não marcar linha nas laterais (faixa maior mostra o cenário borrado, com cabelo e rosto do próprio vídeo, entre a tela e a cabeça) */}
+      <AbsoluteFill style={{ WebkitMaskImage: `linear-gradient(to bottom, transparent ${TELA.y + TELA.h - 6}px, #000 ${TELA.y + TELA.h + 16}px)`, maskImage: `linear-gradient(to bottom, transparent ${TELA.y + TELA.h - 6}px, #000 ${TELA.y + TELA.h + 16}px)` }}>
         <VideoNaCaixa src={plano.video} caixa={caixa} rosto={plano.rosto} videoAltura={plano.videoAltura ?? 1920} />
       </AbsoluteFill>
       <Palco plano={plano} t={t} />

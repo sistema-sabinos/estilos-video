@@ -55,7 +55,6 @@ export const Legenda: React.FC<{ frases: Frase[]; t: number; y: number }> = ({ f
         fontWeight: 800,
         fontSize: 66,
         lineHeight: 1.12,
-        letterSpacing: "-0.015em",
         color: COR.branco,
         WebkitTextStroke: "10px #000",
         paintOrder: "stroke fill",
@@ -66,7 +65,7 @@ export const Legenda: React.FC<{ frases: Frase[]; t: number; y: number }> = ({ f
         const q = prog(t, p.em - 0.06, p.em + 0.12, EASE_OUT);
         const ativa = t >= p.em - 0.04 && t < p.ate + 0.02;
         return (
-          <span key={k} style={{ display: "inline-block", clipPath: "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.2em" }}>
+          <span key={k} style={{ display: "inline-block", clipPath: "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.36em" }}>
             <span style={{ display: "inline-block", transform: q < 1 || ativa ? `translateY(${(1 - q) * 110}%) scale(${ativa ? 1.04 : 1})` : undefined, opacity: 0.15 + 0.85 * q }}>{p.w}</span>
           </span>
         );

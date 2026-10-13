@@ -13,11 +13,13 @@ export const Legenda: React.FC<{ frases: Frase[]; t: number; visivel: number }> 
   const entra = prog(t, atual.de - 0.08, 0.2);
   const sai = saindo(t, atual.ate, 0.14);
   const larguraTexto = W - 2 * MARGEM - 2 * (BOTAO + 20) - 24;
-  const texto = atual.palavras.map((p) => p.w).join(" ");
+  // correção com espaço no valor chega como uma palavra só; o texto se reparte por espaço, a lista também
+  const palavras = atual.palavras.flatMap((p) => p.w.split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));
+  const texto = palavras.map((p) => p.w).join(" ");
   const linhas = quebrarLinhas(texto, larguraTexto, T.legenda, 500);
   const altura = Math.max(108, 34 + linhas.length * Math.round(T.legenda * 1.22));
   let k = 0;
-  const ditas = atual.palavras.filter((p) => p.em - 0.04 <= t).length;
+  const ditas = palavras.filter((p) => p.em - 0.04 <= t).length;
   const cursor = Math.floor(t * 2.2) % 2 === 0;
   return (
     <div
@@ -46,7 +48,7 @@ export const Legenda: React.FC<{ frases: Frase[]; t: number; visivel: number }> 
           <div key={li} style={{ display: "flex", whiteSpace: "nowrap", alignItems: "center" }}>
             {linha.split(" ").map((w, wi, arr) => {
               const i = k++;
-              const p = atual.palavras[i];
+              const p = palavras[i];
               const dita = i < ditas;
               const daVez = dita && i === ditas - 1;
               return (

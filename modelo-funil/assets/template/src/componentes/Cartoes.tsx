@@ -453,7 +453,7 @@ export const CartaoNumero: React.FC<{ m: Numero; palavras: Palavra[]; t: number;
   // poucos inteiros (até 12): o número já entra no valor e os pontos caem um a um (contar "1 vezes,
   // 2 vezes…" soaria errado); os outros números contam
   const poucos = (m.casas ?? 0) === 0 && Number.isInteger(m.valor) && m.valor >= 1 && m.valor <= 12 && m.sufixo?.trim() !== "%";
-  const valor = poucos ? m.valor : m.valor * p;
+  const valor = poucos ? m.valor : (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const quedaDosPontos = m.valor * p;
   const final = formatar(m.valor, casas);
   // antes de ser dito, o número fica "a lápis" (um traço), como os contadores do funil

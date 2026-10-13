@@ -24,6 +24,8 @@ export type Abertura = Base & { tipo: "abertura"; texto: string; destaque?: stri
 
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

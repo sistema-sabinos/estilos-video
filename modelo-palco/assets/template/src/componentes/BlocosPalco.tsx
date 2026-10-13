@@ -112,7 +112,7 @@ const Numero: React.FC<{ m: TNumero; t: number }> = ({ m, t }) => {
   const rot = encaixar(m.rotulo, { largura: W - PAD * 2, max: 58, min: 32, linhas: 2, fonte: { peso: 700 } });
   const larg = larguraTexto(final, num.tamanho, { peso: 800 });
   const p = prog(t, m.em, 1.0);
-  const valor = m.valor * p;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const atual = `${m.prefixo ?? ""}${formatar(casas === 0 ? Math.round(valor) : valor, casas)}${m.sufixo ?? ""}`;
   const r = prog(t, m.rotuloEm ?? m.em + 0.5, 0.35);
   const hNum = num.tamanho * 1.05;

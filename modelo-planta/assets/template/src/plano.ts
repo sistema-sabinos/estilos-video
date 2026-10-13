@@ -156,6 +156,8 @@ export type Passos = Base & {
 // Número: o número conta e a cota cresce embaixo dele
 export type NumeroBloco = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

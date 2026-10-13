@@ -1,4 +1,4 @@
-import { Datilo, entra as entraEasing, preciso, prog } from "../anim";
+import { Datilo, entra as entraEasing, naVez, preciso, prog } from "../anim";
 import { partesDaRegiao, type Regiao } from "../layout";
 import { encaixar } from "../medida";
 import type { Layout, Passos as TPassos } from "../plano";
@@ -102,7 +102,7 @@ export const Passos: React.FC<{ m: TPassos; t: number; fim: number; regiao: Regi
                   <div style={{ fontFamily: sans, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.06, color: cor.tinta }}>
                     {fit.linhas.map((l, k) => (
                       <div key={k} style={{ whiteSpace: "nowrap" }}>
-                        <Datilo texto={l} em={it.em + 0.05 + k * 0.22} t={t} semente={310 + i * 5 + k} />
+                        <Datilo texto={l} {...naVez(fit.linhas, k, it.em + 0.05, 0.22, t)} t={t} semente={310 + i * 5 + k} />
                       </div>
                     ))}
                   </div>

@@ -88,6 +88,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[] };
 
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;
@@ -137,7 +139,8 @@ export type Frase = Base & { tipo: "frase"; texto: string; destaque?: string; ri
 // `opcoes[].imagem` (opcional): o id de uma imagem do plano, que vira miniatura na opção.
 export type Pergunta = Base & { tipo: "pergunta"; texto: string; opcoes?: { texto: string; em: number; imagem?: string }[]; em?: number };
 
-export type Cta = Base & { tipo: "cta"; texto: string; icone?: "salvar" | "seguir" | "comentar" | "link"; destaque?: string; em?: number };
+// `texto` só é desenhado com layout "split"; no "eu" (o padrão do cta) a chamada é só voz e o texto pode faltar.
+export type Cta = Base & { tipo: "cta"; texto?: string; icone?: "salvar" | "seguir" | "comentar" | "link"; destaque?: string; em?: number };
 
 export type Momento =
   | Tela
@@ -170,6 +173,8 @@ export type Plano = {
   duracao: number;
   // altura que o vídeo ocupa no quadro, a partir do topo (1920 = quadro cheio)
   videoAltura?: number;
+  // do centro do rosto ao topo do cabelo, em larguras de rosto (sem o campo: 0,84); references/plano.md
+  ateTopo?: number;
   // centro do rosto no quadro (0–1), com o rastro quando houver
   rosto: Rosto;
   // faixa abaixo do queixo (o motor calcula; a Tela Viva não usa: ela reposiciona a pessoa)

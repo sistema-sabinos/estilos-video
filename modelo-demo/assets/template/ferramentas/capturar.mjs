@@ -3,11 +3,16 @@
 //
 // Uso:  node ferramentas/capturar.mjs <url> <nome> [--largura 1440] [--altura 1000] [--max 5200]
 //                                     [--clicar "texto 1" --clicar "texto 2"] [--esperar 2.5]
+//                                     [--cortar-topo 0]
 //
 // Grava public/tela/<nome>.jpg (e imprime largura x altura). Use o nome no campo `captura` de um
 // momento `tela`. `--clicar` abre acordeões e abas pelo texto visível do botão antes de capturar
 // (use para mostrar o item que a pessoa cita). `--max` limita a altura total da página (px de CSS).
+// Antes de capturar, espera o load e a rede quieta (teto de 15 s, com aviso), e nunca menos que
+// `--esperar` + 2,5 s. `--cortar-topo` tira N px de CSS do alto (a barra do site); a proporção
+// impressa já sai sem eles.
 import { spawn } from "node:child_process";
+import { esperarPagina, montarClip } from "./pagina.mjs";
 import { existsSync, mkdirSync, readdirSync, writeFileSync, rmSync, mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -23,7 +28,7 @@ for (let i = 0; i < args.length; i++) {
 }
 const [url, nome] = pos;
 if (!url || !nome) {
-  console.error('Uso: node ferramentas/capturar.mjs <url> <nome> [--largura 1440] [--altura 1000] [--max 5200] [--clicar "texto"] [--esperar 2.5]');
+  console.error('Uso: node ferramentas/capturar.mjs <url> <nome> [--largura 1440] [--altura 1000] [--max 5200] [--clicar "texto"] [--esperar 2.5] [--cortar-topo 0]');
   process.exit(2);
 }
 
@@ -40,7 +45,9 @@ const achar = (dir, depth = 0) => {
   }
   return null;
 };
-const chrome = achar(path.resolve("node_modules/.remotion"));
+// o do projeto primeiro, depois o de uma pasta acima (como o Node acha os pacotes)
+const subir = (d) => achar(path.join(d, "node_modules", ".remotion")) ?? (path.dirname(d) === d ? null : subir(path.dirname(d)));
+const chrome = subir(process.cwd());
 if (!chrome) {
   console.error("Chrome headless do Remotion não encontrado em node_modules/.remotion. Rode `npx remotion browser ensure`.");
   process.exit(1);
@@ -70,10 +77,13 @@ try {
   await new Promise((r, e) => { ws.onopen = r; ws.onerror = e; });
   let n = 0;
   const pend = new Map();
+  const ouvintes = new Set();
   ws.onmessage = (m) => {
     const d = JSON.parse(m.data);
     if (d.id && pend.has(d.id)) { pend.get(d.id)(d); pend.delete(d.id); }
+    else if (d.method) for (const f of ouvintes) f(d);
   };
+  const assinar = (f) => { ouvintes.add(f); return () => ouvintes.delete(f); };
   const cdp = (method, params = {}) => new Promise((res, rej) => {
     const id = ++n;
     pend.set(id, (d) => (d.error ? rej(new Error(d.error.message)) : res(d.result)));
@@ -82,9 +92,12 @@ try {
   const js = async (expressao) => (await cdp("Runtime.evaluate", { expression: expressao, returnByValue: true, awaitPromise: true })).result?.value;
 
   await cdp("Page.enable");
+  await cdp("Network.enable");
   await cdp("Emulation.setDeviceMetricsOverride", { width: op.largura, height: op.altura, deviceScaleFactor: 2, mobile: false });
+  const pronta = esperarPagina(assinar);
   await cdp("Page.navigate", { url });
-  await dormir(op.esperar * 1000 + 2500);
+  const [estado] = await Promise.all([pronta, dormir(op.esperar * 1000 + 2500)]);
+  if (estado === "teto") console.log("AVISO: a página não sossegou em 15 s e saiu assim mesmo. Abra a imagem: se tiver caixa cinza no lugar do conteúdo, refaça com --esperar 10.");
   // fecha avisos de cookies/entrar mais comuns (só os botões de recusar/fechar)
   await js(`(()=>{for(const b of document.querySelectorAll('button,[role=button]')){const t=(b.innerText||b.getAttribute('aria-label')||'').trim().toLowerCase();if(['rejeitar tudo','recusar','rejeitar','reject all','fechar','close','não, obrigado'].includes(t)){try{b.click()}catch(e){}}}})()`);
   for (const texto of op.clicar) {
@@ -93,9 +106,10 @@ try {
     await dormir(700);
   }
   await js("window.scrollTo(0,0)");
-  let altura = await js("Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)");
-  altura = Math.min(Math.round(altura), op.max);
-  const { data } = await cdp("Page.captureScreenshot", { format: "jpeg", quality: 88, captureBeyondViewport: true, clip: { x: 0, y: 0, width: op.largura, height: altura, scale: 1 } });
+  const alturaPagina = await js("Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)");
+  const clip = montarClip({ largura: op.largura, alturaPagina, max: op.max, cortarTopo: op["cortar-topo"] });
+  const altura = clip.height;
+  const { data } = await cdp("Page.captureScreenshot", { format: "jpeg", quality: 88, captureBeyondViewport: true, clip });
   mkdirSync("public/tela", { recursive: true });
   writeFileSync(`public/tela/${nome}.jpg`, Buffer.from(data, "base64"));
   console.log(`public/tela/${nome}.jpg  (${op.largura * 2} x ${altura * 2} px; proporção altura/largura = ${(altura / op.largura).toFixed(3)})`);

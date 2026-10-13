@@ -87,6 +87,8 @@ export type Passos = { tipo: "passos"; titulo?: string; itens: Item[] };
 // (`unidade`, `texto` e `emFim` são os nomes antigos de `sufixo`, `rotulo` e o fim da contagem.)
 export type Numero = {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em?: number;
   rotulo?: string;

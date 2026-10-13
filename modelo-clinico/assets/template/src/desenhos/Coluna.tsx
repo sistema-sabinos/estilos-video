@@ -4,22 +4,10 @@
 import { limitar, misturarCor, prog, Traco } from "../anim";
 import type { Acao } from "../plano";
 import { cor } from "../tema";
+import { BASE, N, pontaEspinho, ponto, TOPO, vertebrasColuna } from "./colunaGeo";
 
-const N = 15;
-const TOPO = 70;
-const BASE = 760;
-
-// deslocamento horizontal da coluna ao longo da altura (s = 0 no topo, 1 embaixo)
-const neutra = (s: number) => -30 * Math.cos(2.5 * Math.PI * s);
-const ruim = (s: number) => neutra(s) + 78 * Math.sin(Math.PI * Math.min(1, s / 0.72)) - 120 * Math.pow(Math.max(0, 1 - s / 0.32), 2);
-
-const ponto = (s: number, torto: number) => {
-  const x = 300 + neutra(s) + (ruim(s) - neutra(s)) * torto;
-  const y = TOPO + (BASE - TOPO) * s;
-  return { x, y };
-};
-
-export const CAIXA_COLUNA = { x: 120, y: 24, w: 380, h: 880 };
+// a caixa encosta no traço: do prumo (28,5 com a ponta) ao pé do sacro (872,75 com o traço), ~3 de folga
+export const CAIXA_COLUNA = { x: 120, y: 26, w: 380, h: 850 };
 
 export const ALVOS_COLUNA: Record<string, { x: number; y: number; dx: number; dy: number; s?: number }> = {
   cervical: { x: 300, y: 150, dx: 130, dy: -30, s: 0.12 },
@@ -53,19 +41,7 @@ export const Coluna: React.FC<{ t: number; de: number; acoes: { em: number; acao
   const alinhou = emAlinha !== undefined ? prog(t, emAlinha + 0.5, 0.6) : 0;
   // eixo de referência (prumo): linha tracejada vertical que mostra o alinhamento
   const prumo = prog(t, de, 0.8);
-  const vertebras = Array.from({ length: N }, (_, i) => {
-    const s = (i + 0.5) / N;
-    const a = ponto(s - 0.01, torto);
-    const b = ponto(s + 0.01, torto);
-    const ang = (Math.atan2(b.x - a.x, b.y - a.y) * -180) / Math.PI;
-    const c = ponto(s, torto);
-    // tamanho cresce de cima para baixo (cervicais pequenas, lombares grandes)
-    const w = 84 + 64 * s;
-    const h = (BASE - TOPO) / N - 11;
-    // o desvio pinta de vermelho as vértebras que saíram do lugar
-    const desvio = Math.min(1, (Math.abs(ruim(s) - neutra(s)) / 70) * torto);
-    return { s, c, ang, w, h, desvio, i };
-  });
+  const vertebras = vertebrasColuna(torto);
   return (
     <g>
       <Traco d={`M 300 ${TOPO - 40} L 300 ${BASE + 70}`} p={prumo} cor={misturarCor(cor.cinzaLinha, cor.azul, alinhou)} largura={3} tracejado="10 12" />
@@ -78,7 +54,7 @@ export const Coluna: React.FC<{ t: number; de: number; acoes: { em: number; acao
             {/* disco entre esta vértebra e a de baixo */}
             {i < N - 1 ? <rect x={-w * 0.42} y={h / 2 + 1} width={w * 0.84} height={9} rx={4.5} fill={misturarCor(cor.azulClaro, cor.vermelhoVeu, desvio)} /> : null}
             {/* processo espinhoso, para trás (direita) */}
-            <path d={`M ${w / 2 - 4} ${-h * 0.25} L ${w / 2 + 44 + 14 * (i / N)} ${h * 0.12} L ${w / 2 - 4} ${h * 0.32} Z`} fill={cor.branco} stroke={contorno} strokeWidth={4} strokeLinejoin="round" />
+            <path d={`M ${w / 2 - 4} ${-h * 0.25} L ${pontaEspinho(w, i)} ${h * 0.12} L ${w / 2 - 4} ${h * 0.32} Z`} fill={cor.branco} stroke={contorno} strokeWidth={4} strokeLinejoin="round" />
             <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={12} fill={misturarCor(cor.branco, "#FBEDEB", desvio)} stroke={contorno} strokeWidth={5.5} />
           </g>
         );

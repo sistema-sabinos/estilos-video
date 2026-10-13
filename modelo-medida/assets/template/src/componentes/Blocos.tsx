@@ -191,7 +191,7 @@ export const BlocoNumero: React.FC<{ m: Numero }> = ({ m }) => {
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
   const p = prog(t, m.em - 0.02, m.em + 0.9, EASE_OUT);
   const final = numeroBR(m.valor, casas);
-  const atual = numeroBR(m.valor * p, casas);
+  const atual = numeroBR((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p, casas);
   const px = caber(`${m.prefixo ?? ""}${final}${m.sufixo ?? ""}`, LARG - 60, 260, 110, SORA, 800);
   const a = prog(t, m.em - 0.06, m.em + 0.3, EASE_OUT);
   const fita = prog(t, m.em - 0.1, m.ate, (x) => x);

@@ -1,6 +1,7 @@
 {
   "recorte": {
-    "vertical": "9:16"
+    "vertical": "9:16",
+    "horizontal": "9:16"
   },
   "imagens": true,
   "blocos": {

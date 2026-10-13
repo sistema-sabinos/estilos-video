@@ -37,7 +37,7 @@ export const Numero: React.FC<{ m: TNumero; palavras: Palavra[]; t: number }> = 
   const p = prog(t, m.em, 0.9, (s) => 1 - (1 - s) * (1 - s));
   const pCirculo = prog(t, m.em + 0.85, 0.55, caneta);
   const pMarca = prog(t, m.em + 0.8, 0.35, caneta);
-  const valor = formatarNumero(m.valor * p, g.casas);
+  const valor = formatarNumero((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p, g.casas);
   const { S, rx, ry } = g;
   const { x: cx, y: cy } = CENTRO;
   // elipse levemente torta, desenhada à mão a partir da esquerda (dá um pouco mais que uma volta)

@@ -39,7 +39,7 @@ export const CartaoNumero: React.FC<{ m: Numero; t: number; topo: number; fim: n
   const largura = DIREITA - x0;
   const casas = m.casas ?? casasDe(m.valor);
   const conta = prog(t, m.em, 1.1, (x) => 1 - (1 - x) ** 3);
-  const valor = formatarNumero(m.valor * conta, casas);
+  const valor = formatarNumero((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta, casas);
   const final = formatarNumero(m.valor, casas);
   const pre = m.prefixo ?? "";
   const suf = m.sufixo ?? "";

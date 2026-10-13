@@ -248,7 +248,7 @@ export const Destaque: React.FC<P<TDestaque>> = ({ m, t, y, fim }) => {
 export const Numero: React.FC<P<TNumero>> = ({ m, t, y, fim }) => {
   const casas = m.casas ?? 0;
   const p = prog(t, m.em, 0.9, rapido);
-  const valor = formatar(m.valor * p, casas);
+  const valor = formatar((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p, casas);
   const final = formatar(m.valor, casas);
   const pre = m.prefixo ?? "";
   const suf = m.sufixo ?? "";

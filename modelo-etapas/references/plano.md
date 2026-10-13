@@ -16,7 +16,7 @@ A troca de modo é sempre corte seco. Campos de todo momento: `de`, `ate`, `lege
 
 ## Legenda
 
-Minúscula, branca, sem caixa, 2 a 3 palavras por vez, uma linha. Em todos os modos, logo abaixo do queixo. `correcoes` troca palavras na legenda (`{ "com o texto": "contexto", "comenta claude": "comenta \"claude\"" }`).
+Minúscula, branca, sem caixa, 2 a 3 palavras por vez, uma linha. Em todos os modos, logo abaixo do queixo. `correcoes` troca palavras na legenda (`{ "com o texto": "contexto", "comenta claude": "comenta \"claude\"" }`); o texto da correção sai do jeito que você escreveu, maiúsculas incluídas (`"i a": "IA"` mostra `IA`), e o resto da legenda fica minúsculo.
 
 ## A assinatura (1): `etapa`
 
@@ -81,6 +81,12 @@ Modo C: rosto grande em tela cheia; nada por cima além da legenda (a chamada ve
 ## Câmera
 
 Sem `camera`, o rosto dá um salto de escala (8 a 15%) em cada corte, em cada início ou fim de momento e a cada ~3 s de rosto parado. `camera: [{ "em": 3.18, "zoom": 1.12 }]` força um salto (multiplicador sobre o tamanho base) num instante; use no máximo duas vezes.
+
+## Topo da cabeça (`ateTopo`)
+
+O template põe o topo da cabeça na linha do modelo supondo o cabelo a 0,84 largura de rosto acima do centro do rosto, que é a média. Com cabelo bem mais baixo a cabeça fica abaixo da linha (uns 60 px no 0,70); com cabelo alto, acima. Para acertar, leia também o **topo do cabelo** na grade do passo 4 e, depois do `cortar.mjs`, grave no plano o número `ateTopo` = 0,66 × (rosto-y menos topo do cabelo) ÷ (queixo-y menos rosto-y).
+
+Exemplo: `--rosto-y 0.31`, `--queixo-y 0.42` e o topo do cabelo em 0,18 dão 0,66 × 0,13 ÷ 0,11 = 0,78, e o plano ganha `"ateTopo": 0.78`. A conta usa só as proporções do rosto, então vale em qualquer recorte (9:16 ou 3:4). Sem o campo vale 0,84; o template aceita de 0,6 a 1,2. O `cortar.mjs --manter-plano` mantém o campo; um corte sem `--manter-plano` começa o plano do zero, então grave de novo.
 
 ## Tempo
 

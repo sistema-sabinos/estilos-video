@@ -49,7 +49,7 @@ export const NumeroTv: React.FC<Base & { m: Numero }> = ({ m, palavras, t, topo,
       </div>
       <div style={{ position: "absolute", inset: 0, ...conteudoDaTarja(pTarja) }}>
         <div style={{ position: "absolute", left: 0, top: 0, width: L, height: alturaAmarela, display: "flex", alignItems: "center", paddingLeft: 48 }}>
-          <span style={{ ...larga, fontSize: tam, color: cor.tv, lineHeight: 1, fontVariantNumeric: "tabular-nums lining-nums", whiteSpace: "nowrap" }}>{p >= 1 ? final : textoDoNumero(m, m.valor * p)}</span>
+          <span style={{ ...larga, fontSize: tam, color: cor.tv, lineHeight: 1, fontVariantNumeric: "tabular-nums lining-nums", whiteSpace: "nowrap" }}>{p >= 1 ? final : textoDoNumero(m, (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p)}</span>
         </div>
         {m.ilustrativo ? (
           <div style={{ position: "absolute", right: 28, top: 22, background: cor.tv, borderRadius: 6, padding: "8px 18px" }}>

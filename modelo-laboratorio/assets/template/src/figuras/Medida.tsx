@@ -62,7 +62,7 @@ export const Medida: React.FC<PropsFigura<Numero>> = ({ m, t, areas, palavras, c
   const alvo = limitar(m.valor / escala);
   const em = Math.max(m.em, chegada + 0.25);
   const conta = prog(t, em, 1.15, Easing.bezier(0.2, 0.7, 0.3, 1));
-  const valorAgora = m.valor * conta;
+  const valorAgora = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * conta;
   // a proveta: corpo de vidro, boca com aba, pé; a escala com 10 marcas
   const pw = Math.min(176, a.w * 0.19);
   const px = a.x + 34;

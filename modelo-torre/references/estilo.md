@@ -32,7 +32,7 @@ A pessoa apresenta; o mundo 3D **constrói** o que ela diz, na palavra. Primeiro
 
 ## 3. Tipografia
 
-- **Cormorant Garamond 600** (serifa elegante): números grandes (andares, minutos, m², preço) e o nome do empreendimento. Texto grande e bem espaçado; nunca em parágrafo.
+- **Cormorant Garamond 600** (serifa elegante): números grandes (andares, minutos, m², preço) e o nome do empreendimento. Texto grande e bem espaçado; nunca em parágrafo. O â, o ê e o ô minúsculos vêm da **Cormorant Circunflexo** (`src/circunflexo.ts`: a Cormorant com o circunflexo redesenhado, mais baixo e centrado, mesma licença OFL), que o `tema.ts` põe na frente da Cormorant; nos componentes use sempre `FONTE.serifa`, nunca o nome da fonte solto.
 - **Manrope 700** em caixa alta espaçada (0,3em; 0,46em no "Residencial") nos rótulos dourados; Manrope 700 normal no texto das etiquetas e listas; 600 nas notas.
 - **Sora** nos títulos (800, tracking −0,02em), nas frases (700) e na legenda (800, 66 px).
 - Nada condensado; tracking nunca mais apertado que −0,025em. Mínimos: 28 px em rótulos, 34 px em texto de leitura, 34 px no nome da tarja.

@@ -6,7 +6,9 @@
 import { Img, staticFile } from "remotion";
 import { prog, rapido, salto, suave, temposDoTexto, usePalavras } from "../anim";
 import { COSTURA } from "../layout";
+import { opacidadeDoPino } from "../pino";
 import { encaixar, larguraTexto } from "../medida";
+import { D, larguraDoCartao, larguraDoDetalhe, larguraDoTitulo, PAD } from "./dica";
 import { imagemDoPlano, SemImagem, temImagem, type Foco, type Imagem } from "../motor/imagem";
 import type { AntesDepois, Marcador, Plano } from "../plano";
 import { cor, fonte, sombraCartao, sombraLeve } from "../tema";
@@ -190,12 +192,10 @@ const CartaoDaDica: React.FC<{ t: number; x: ReturnType<typeof temposDosMarcador
   sai,
 }) => {
   const { mk, ts } = x;
-  const LARG = 1000;
-  const PAD = 22;
-  const D = 78;
-  const largTexto = LARG - PAD * 2 - D - 30;
+  // o título nunca entra na faixa dos pontos de progresso (canto de cima à direita); o detalhe fica embaixo, com a largura cheia
+  const largTexto = larguraDoTitulo(n);
   const enc = encaixar(mk.texto, { largura: largTexto, max: 52, min: 38, linhas: 2, fonte: { peso: 800 } });
-  const det = mk.detalhe ? encaixar(mk.detalhe, { largura: largTexto, max: 34, min: 28, linhas: 1, fonte: { peso: 500 } }) : null;
+  const det = mk.detalhe ? encaixar(mk.detalhe, { largura: larguraDoDetalhe, max: 34, min: 28, linhas: 1, fonte: { peso: 500 } }) : null;
   const altTexto = enc.linhas.length * enc.tamanho * 1.12 + (det ? det.linhas.length * det.tamanho * 1.25 + 10 : 0);
   const alt = Math.max(D, altTexto) + PAD * 2;
   // o cartão cresce com o texto: largura pelas palavras já ditas, altura pelas linhas
@@ -217,7 +217,7 @@ const CartaoDaDica: React.FC<{ t: number; x: ReturnType<typeof temposDosMarcador
     if (fr > 0) linhasVistas = li + fr;
   });
   const detW = det && t >= (mk.detalheEm ?? (ts[ts.length - 1] ?? mk.em) + 0.4) ? larguraTexto(det.linhas.join(" "), det.tamanho, { peso: 500 }) : 0;
-  const cardW = Math.min(LARG, Math.max(PAD * 2 + D + 30 + Math.max(dir, detW) + 70, PAD * 2 + D + 200));
+  const cardW = larguraDoCartao(n, Math.max(dir, detW));
   const cardH = Math.max(D + PAD * 2, Math.max(1, linhasVistas) * enc.tamanho * 1.12 + PAD * 2 + (detW ? det!.linhas.length * det!.tamanho * 1.25 + 10 : 0));
   // o cartão entra uma vez (na primeira dica); depois só o conteúdo troca
   const entra = i === 0 ? prog(t, mk.em, 0.35, rapido) : 1;
@@ -322,12 +322,13 @@ export const CortinaAntesDepois: React.FC<{ m: AntesDepois; t: number; plano: Pl
     const sx = ref.left + p.x * ref.w;
     const limite = j < 0.5 ? COSTURA - 40 - 190 - 50 : 1920;
     const sy = Math.min(ref.top + p.y * ref.h, limite);
-    // o pino marca o depois: aparece quando a cortina passa por ele
+    // o pino marca o depois: aparece quando a cortina passa por ele e some na revelação (pino.ts)
     const lado = clamp((sx - X - 70) / 60, 0, 1);
-    if (lado <= 0) return null;
+    const op = opacidadeDoPino(t, lado, m.janelaEm);
+    if (op <= 0) return null;
     const d = 74;
     return (
-      <div key={i} style={{ position: "absolute", left: sx - d / 2, top: sy - d / 2, opacity: lado, transform: `scale(${0.5 + 0.5 * salto(lado)})` }}>
+      <div key={i} style={{ position: "absolute", left: sx - d / 2, top: sy - d / 2, opacity: op, transform: `scale(${0.5 + 0.5 * salto(lado)})` }}>
         <Disco n={i + 1} d={d} />
       </div>
     );

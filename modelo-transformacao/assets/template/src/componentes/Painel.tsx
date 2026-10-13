@@ -2,6 +2,7 @@
 // Cartões claros com cantos redondos, números em discos verdes, tudo no ritmo da fala.
 import { AREA } from "../layout";
 import { formatar, prog, rapido, salto, temposDoTexto, usePalavras } from "../anim";
+import { caixaComparacao, ETIQUETA } from "../comparacao";
 import { encaixar } from "../medida";
 import type { Comparacao as TComparacao, Definicao as TDefinicao, Grafico as TGrafico, Passos as TPassos, Pergunta as TPergunta, Plano, Topicos as TTopicos } from "../plano";
 import { cor, fonte, sombraCartao, sombraLeve } from "../tema";
@@ -95,9 +96,8 @@ export const Lista: React.FC<PropsPainel & { m: TTopicos | TPassos }> = ({ m, t,
 
 // ——— comparação: dois cartões lado a lado ———
 export const Comparacao: React.FC<PropsPainel & { m: TComparacao }> = ({ m, t, t0, saiCruzando, ate }) => {
-  const topo = AREA.topo + alturaTitulo(m.titulo);
-  const alt = AREA.base - topo - 10;
-  const W2 = (AREA.w - 28) / 2;
+  const caixa = caixaComparacao(m.lados, AREA, AREA.topo + alturaTitulo(m.titulo));
+  const { topo, alt, W2 } = caixa;
   const venceu = m.vencedor !== undefined ? prog(t, m.vencedorEm ?? Math.max(m.lados[0].em, m.lados[1].em) + 0.7, 0.35, salto) : 0;
   const modo = m.modo ?? "contra";
   const cores = modo === "contra" ? [cor.depois, cor.depoisEscuro] : [cor.alerta, cor.depois];
@@ -109,7 +109,7 @@ export const Comparacao: React.FC<PropsPainel & { m: TComparacao }> = ({ m, t, t
         if (t < l.em - 0.05) return null;
         const ganha = m.vencedor === i;
         const apaga = m.vencedor !== undefined && !ganha ? venceu * 0.45 : 0;
-        const enc = encaixar(l.texto, { largura: W2 - 70, max: 56, min: 36, linhas: 5, fonte: { peso: 800 } });
+        const enc = caixa.encs[i];
         return (
           <div
             key={i}
@@ -126,8 +126,10 @@ export const Comparacao: React.FC<PropsPainel & { m: TComparacao }> = ({ m, t, t
               transform: e < 1 ? `translateY(${(1 - e) * 60}px)` : ganha && venceu > 0 && venceu < 1 ? `scale(${1 + 0.03 * venceu})` : undefined,
             }}
           >
-            <div style={{ margin: 28, display: "inline-block", padding: "10px 24px", borderRadius: 18, background: cores[i], color: cor.cartao, fontFamily: fonte, fontWeight: 800, fontSize: 34, letterSpacing: "0.06em" }}>
-              {l.rotulo.toLocaleUpperCase("pt-BR")}
+            <div style={{ margin: ETIQUETA.margem, display: "inline-block", padding: `${ETIQUETA.padV}px ${ETIQUETA.padH}px`, borderRadius: 18, background: cores[i], color: cor.cartao, fontFamily: fonte, fontWeight: 800, fontSize: ETIQUETA.tamanho, lineHeight: ETIQUETA.alturaLinha, letterSpacing: `${ETIQUETA.espacamento}em` }}>
+              {caixa.rotulos[i].map((r, k) => (
+                <div key={k} style={{ whiteSpace: "nowrap" }}>{r}</div>
+              ))}
             </div>
             <div style={{ padding: "6px 34px" }}>
               <TextoNaFala t={t} texto={l.texto} em={l.em} ate={l.em + 4} tamanho={enc.tamanho} linhas={enc.linhas} alinhar="left" />

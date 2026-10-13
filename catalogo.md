@@ -1,6 +1,6 @@
 # Catálogo de estilos de edição de vídeo
 
-Importado em 2026-10-11. A próxima importação reescreve este arquivo; não edite à mão.
+Importado em 2026-10-13. A próxima importação reescreve este arquivo; não edite à mão.
 Cada estilo mora na pasta com o nome dele e se usa pela `/aplicar-estilo`. Estilo com
 sistema `mac` só roda no Mac.
 

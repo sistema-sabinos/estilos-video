@@ -254,9 +254,11 @@ export const PerguntaNaBarra: React.FC<{ m: Pergunta; palavras: Palavra[]; t: nu
 export const Legendas: React.FC<{ frases: FraseDaLegenda[]; t: number; presenca: number }> = ({ frases, t, presenca }) => {
   const atual = frases.find((f) => t >= f.de - 0.05 && t < f.ate);
   if (!atual || presenca < 0.01) return null;
-  const linha = atual.palavras.map((p) => p.w).join(" ");
+  // correção com espaço no valor chega como uma palavra só; o texto se reparte por espaço, a lista também
+  const palavras = atual.palavras.flatMap((p) => p.w.split(/\s+/).filter(Boolean).map((w) => ({ ...p, w })));
+  const linha = palavras.map((p) => p.w).join(" ");
   const { linhas, tam } = diagramar(linha, { largura: BARRA.w - 80, maximo: 54, minimo: 44, linhas: 2, peso: 600, caixaAlta: false });
-  const tempos = atual.palavras.map((p) => p.em - 0.04);
+  const tempos = palavras.map((p) => p.em - 0.04);
   return (
     <div
       style={{

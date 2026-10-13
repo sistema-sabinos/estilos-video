@@ -54,6 +54,8 @@ export type Passos = Base & { tipo: "passos"; titulo?: string; itens: Item[]; pe
 // para na porcentagem). Primeiro momento do vídeo: vira um widget no peito com a pessoa em tela cheia.
 export type Numero = Base & {
   tipo: "numero";
+  // de onde a contagem parte (padrão 0)
+  inicio?: number;
   valor: number;
   em: number;
   rotulo: string;

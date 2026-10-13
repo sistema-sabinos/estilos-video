@@ -171,7 +171,7 @@ export const Numero: React.FC<{ plano: Plano; m: TNumero; t: number }> = ({ plan
   const h = Math.round(pad + hTit + hNum + 18 + rotFit.tamanho * 1.4 + pad * 0.8);
   const x = xNoLado(m.lado ?? "centro", w);
   const p = prog(t, m.em, 1.0);
-  const valor = m.valor * p;
+  const valor = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const atual = `${m.prefixo ?? ""}${formatar(casas === 0 ? Math.round(valor) : valor, casas)}${m.sufixo ?? ""}`;
   const rot = prog(t, m.rotuloEm ?? m.em + 0.5, 0.3);
   return (

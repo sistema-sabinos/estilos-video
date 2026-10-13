@@ -40,7 +40,7 @@ Vem do Reel "Google enterrou 90% do mercado de apps" (93 s, 894 comentários na 
 
 1. **Ambiente.**
    - Este modelo roda **no computador** do usuário: Claude Code, o app do Claude com acesso ao terminal, ou o Codex (no app do ChatGPT ou no terminal).
-   - Ele precisa de Node 18+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB, que também faz as capturas de tela). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
+   - Ele precisa de Node 22+, de uns 3,5 GB livres e de internet na primeira vez (Whisper e modelo de transcrição, 1,6 GB, baixados uma vez só; navegador de render, 100 MB, que também faz as capturas de tela). No Mac, a transcrição compila o Whisper com as ferramentas do Xcode: se faltarem, rode você mesmo `xcode-select --install` e diga ao usuário que abriu uma janela da Apple, para clicar em **Instalar** e depois em **Concordo**.
    - Se você não consegue rodar comandos no computador do usuário (ChatGPT ou Claude no navegador, sem terminal), **pare e explique isso**. Não entregue uma versão simplificada (só legenda, cortes feitos por outro caminho).
 2. **Carregue a skill do Remotion** (`remotion-best-practices`). Se ela não estiver instalada, avise o usuário que vai baixar uma peça que falta (é grátis e leva uns segundos) e, com o sim dele, rode você mesmo `npx skills add remotion-dev/skills -a claude-code -y`. O projeto já vem pronto: não precisa do `remotion-create` nem do Studio (os quadros do `stills.mjs` são a prévia). O pedido de edição já é o pedido para renderizar.
 3. Confirme o caminho do vídeo. Pergunte **uma vez**, numa mensagem só:
@@ -94,7 +94,8 @@ Ele transforma cada pausa de 0,38 s ou mais entre trechos mantidos num corte com
 Abra `work/medir-1.jpg`, `-2` e `-3` (começo, meio e fim da gravação, com uma grade de 0,05 em 0,05 por cima) e leia, em frações (0 = esquerda/topo, 1 = direita/base):
 
 - o **centro do rosto** (entre os olhos e a ponta do nariz) → `--rosto-x` e `--rosto-y`;
-- a **ponta do queixo** → `--queixo-y`.
+- a **ponta do queixo** → `--queixo-y`;
+- o **topo do cabelo** (a linha mais alta do cabelo): não vai no comando; depois do corte ele vira o `ateTopo` do plano (`references/plano.md`).
 
 Use a posição mais comum; se a pessoa se mexe muito, fique no meio do movimento. Então:
 
@@ -132,7 +133,7 @@ Um bloco só dura até a próxima ideia; a troca acontece **na palavra que nomei
 2. Capture cada uma:
 
 ```bash
-node ferramentas/capturar.mjs "https://…" <nome> [--clicar "texto do botão"] [--altura 1000] [--max 5200]
+node ferramentas/capturar.mjs "https://…" <nome> [--clicar "texto do botão"] [--altura 1000] [--max 5200] [--esperar 2.5] [--cortar-topo 0]
 ```
 
    Grava `public/tela/<nome>.jpg` (página inteira, 2× de resolução, sem interface do navegador) e imprime a **proporção altura ÷ largura**. `--clicar` abre acordeões e abas pelo texto do botão antes da captura (para mostrar o item que a pessoa cita). Print ou gravação do próprio usuário: ponha o arquivo `.jpg` em `public/tela/`; a proporção é altura ÷ largura em pixels (`ffprobe -v error -show_entries stream=width,height -of csv=p=0 arquivo`).
@@ -236,6 +237,8 @@ A assinatura é **"o material na hora em que é nomeado"**: a pessoa fala corrid
 - **O `capturar.mjs` não acha o Chrome**: rode `npx remotion browser ensure` dentro do projeto.
 - **A captura saiu com banner de cookies, login ou "entrar"**: tente outra página do mesmo assunto, ou use `--clicar` num botão de recusar/fechar; se o aviso ficar num canto e o cursor/câmera não passam por ele, tudo bem.
 - **A página está colapsada (acordeão, aba)**: use `--clicar "texto do título"` para abrir antes de capturar.
+- **A captura saiu com caixas cinza no lugar do conteúdo** (página que carrega a lista depois, como o GitHub): o `capturar.mjs` já espera a rede ficar quieta, até 15 s, e avisa quando estoura; refaça com `--esperar 10` e olhe a imagem de novo antes de medir.
+- **A barra do site saiu no alto da captura**: refaça com `--cortar-topo` e a altura da barra em px de CSS (a da imagem ÷ 2); a proporção impressa já sai sem ela, e as frações se medem nessa imagem nova.
 - **A câmera não chega no que a pessoa cita**: reveja as frações `x` e `y` no recorte da captura; o centro da câmera é limitado pelas bordas da captura (nunca mostra borda vazia).
 - **O texto da captura está pequeno**: aumente o `zoom` do `fim` (2,0 a 2,4 é legível no celular) e ajuste `x` para o item ficar no centro.
 - **A legenda ficou com um pedaço estranho** ("+ s tira"): corrija com `correcoes` (`{ "Shift + S": "Shift+S" }`).

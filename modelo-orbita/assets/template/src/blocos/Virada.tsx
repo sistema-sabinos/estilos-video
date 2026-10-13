@@ -70,7 +70,7 @@ export const ViradaTitulo: React.FC<{ m: ViradaM; t: number }> = ({ m, t }) => {
     <>
       <div style={{ position: "absolute", left: 0, width: 1080, top: yBloco, transform: `translateY(-50%) scale(${1 + ex * 0.08})`, opacity: 1 - ex, textAlign: "center", filter: ex > 0 ? `blur(${ex * 10}px)` : undefined }}>
         <div style={{ overflow: "hidden", height: Math.round(tamLead * 1.4) }}>
-          <div style={{ transform: `translateY(${(1 - a) * 100}%)`, fontFamily: SORA, fontWeight: 600, fontSize: tamLead, letterSpacing: "0.01em", color: "rgba(255,248,242,0.82)", textShadow: "0 3px 18px rgba(0,0,0,0.5)" }}>{m.texto}</div>
+          <div style={{ transform: `translateY(${(1 - a) * 100}%)`, fontFamily: SORA, fontWeight: 600, fontSize: tamLead, letterSpacing: "0.01em", color: "#FFF8F2", WebkitTextStroke: "7px #000", paintOrder: "stroke fill", textShadow: "0 3px 18px rgba(0,0,0,0.5)" }}>{m.texto}</div>
         </div>
         <div style={{ marginTop: 6, display: "flex", justifyContent: "center", alignItems: "center", gap: 22 }}>
           <div style={{ opacity: prog(t, m.nomeEm - 0.05, m.nomeEm + 0.25), transform: `scale(${0.6 + 0.4 * prog(t, m.nomeEm - 0.05, m.nomeEm + 0.35)})` }}>
@@ -90,7 +90,7 @@ export const ViradaTitulo: React.FC<{ m: ViradaM; t: number }> = ({ m, t }) => {
       </div>
       {comp ? (
         <div style={{ position: "absolute", left: 0, width: 1080, top: 402, textAlign: "center", opacity: cA * (1 - ex), filter: cA < 1 || ex > 0 ? `blur(${(1 - cA) * 8 + ex * 10}px)` : undefined, transform: `translateY(${(1 - cA) * 24}px)` }}>
-          <span style={{ fontFamily: SORA, fontWeight: 600, fontSize: tamComp, letterSpacing: "0.02em", color: "rgba(255,248,242,0.9)", textShadow: "0 4px 24px rgba(0,0,0,0.55)" }}>{comp}</span>
+          <span style={{ fontFamily: SORA, fontWeight: 600, fontSize: tamComp, letterSpacing: "0.02em", color: "#FFF8F2", WebkitTextStroke: "7px #000", paintOrder: "stroke fill", textShadow: "0 4px 24px rgba(0,0,0,0.55)" }}>{comp}</span>
         </div>
       ) : null}
     </>

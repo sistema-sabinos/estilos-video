@@ -213,7 +213,7 @@ export const BlocoNumero: React.FC<P & { m: Numero }> = ({ m, t, fundo }) => {
   const p = prog(t, m.em - 0.05, m.em + 1.1, EASE_OUT);
   const arco = prog(t, m.de, m.de + 0.5, EASE_INOUT);
   const casas = m.casas ?? (Number.isInteger(m.valor) ? 0 : 1);
-  const v = m.valor * p;
+  const v = (m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * p;
   const texto = `${m.prefixo ?? ""}${formatarNumero(casas ? v : Math.round(v), casas)}${m.sufixo ?? ""}`;
   const final = `${m.prefixo ?? ""}${formatarNumero(m.valor, casas)}${m.sufixo ?? ""}`;
   const fit = encaixar(final.replace(/\s+/g, "\u00a0"), { largura: 520, max: 170, min: 56, linhas: 1, fonte: { peso: 700 } });

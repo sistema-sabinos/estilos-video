@@ -8,7 +8,8 @@ import { larguraTexto } from "../medida";
 import type { Momento, Palavra, Plano } from "../plano";
 import { COR, FONTE, LEG_TAMANHO, LEG_Y } from "../tema";
 
-export const legendaNoMomento = (m: Momento) => m.legenda ?? true;
+import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
+export { legendaNoMomento };
 
 type Bloco = { de: number; ate: number; texto: string };
 
@@ -45,7 +46,7 @@ const guardados = new WeakMap<object, Bloco[]>();
 const blocosDo = (plano: Plano) => {
   let b = guardados.get(plano);
   if (!b) {
-    b = montarFrases({ ...plano, momentos: plano.momentos.map((m) => ({ ...m, legenda: legendaNoMomento(m) })) }).flatMap((f) =>
+    b = montarFrases(planoDaLegenda(plano)).flatMap((f) =>
       blocosDaFrase(f.palavras, f.ate + 0.25),
     );
     guardados.set(plano, b);

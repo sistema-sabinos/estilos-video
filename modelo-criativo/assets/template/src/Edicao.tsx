@@ -7,7 +7,7 @@ import { Audio } from "@remotion/media";
 import { useMemo } from "react";
 import { AbsoluteFill, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { prog, saindo } from "./anim";
-import { Gancho, Heroi, inicioDaFoto, Prova, Selo, type PropsPalco } from "./componentes/Assinatura";
+import { Gancho, Heroi, inicioDaFoto, lugarDoSelo, Prova, Selo, type PropsPalco } from "./componentes/Assinatura";
 import { Comparacao, Definicao, Destaque, Frase, Grafico, Lista, Numero, Pergunta } from "./componentes/Blocos";
 import { Botao, CartaoFinal } from "./componentes/Cta";
 import { Guias } from "./componentes/Guias";
@@ -17,6 +17,7 @@ import { larguraTexto } from "./medida";
 import { ocupaPalco, ordenar, prepararLayout, tempoNoVideo } from "./layout";
 import { VideoNaCaixa, type Caixa } from "./motor/caixa";
 import { montarFrases } from "./motor/frases";
+import { planoDaLegenda } from "./legenda-padrao";
 import type { Cta as TCta, Momento, Plano, Prova as TProva, Selo as TSelo } from "./plano";
 import { cor, tons as calcularTons, vidroEscuro } from "./tema";
 
@@ -133,8 +134,7 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: pla
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
-  // a legenda fica sempre ligada: todo momento mostra a legenda, salvo `legenda: false`
-  const plano = useMemo<Plano>(() => ({ ...planoBruto, momentos: planoBruto.momentos.map((m) => ({ ...m, legenda: m.legenda ?? true })) as Momento[] }), [planoBruto]);
+  const plano = useMemo<Plano>(() => planoDaLegenda(planoBruto), [planoBruto]);
   const ordem = useMemo(() => ordenar(plano), [plano]);
   const noPalco = useMemo(() => ordem.filter(ocupaPalco), [ordem]);
   const selos = useMemo(() => ordem.filter((m) => m.tipo === "selo") as TSelo[], [ordem]);
@@ -167,7 +167,7 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: pla
     const fim = fimDe(i);
     if (t < m.de - 0.6 || t > fim + 0.2) return null;
     const anterior = noPalco[i - 1];
-    const p: PropsPalco = { t, plano, fim, palco: m.tipo === "cta" ? lay.palcoCta : lay.palco, tons, imediato: m.de <= 0.05 };
+    const p: PropsPalco = { t, plano, fim, palco: m.tipo === "cta" ? lay.palcoCta : lay.palco, tons, imediato: m.de <= 0.05, selo: comSelo(m, i) };
     let el: React.ReactNode = null;
     switch (m.tipo) {
       case "gancho":
@@ -227,15 +227,19 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: pla
     );
   };
 
-  // o selo cola no canto de cima à direita do cartão da vez
+  // o selo cola no canto de cima à direita do cartão da vez; no heroi e no cta ele desvia do título
+  // (lugarDoSelo). O cartão que vai receber um selo já nasce sabendo, para o título não pular quando ele entra.
   const palcoAtual = comBotao ? lay.palcoCta : lay.palco;
+  const comSelo = (m: Momento, i: number) => selos.some((s) => s.em - 0.02 <= fimDe(i) && s.ate + 0.3 >= m.de - 0.05);
+  const iAtual = noPalco.reduce((a, m, i) => (t >= m.de - 0.05 && t <= fimDe(i) ? i : a), -1);
+  const lugar = lugarDoSelo(plano, noPalco[iAtual], palcoAtual);
 
   return (
     <AbsoluteFill style={{ backgroundColor: cor.tinta }}>
       {/* o vídeo fica montado o tempo todo (é dele que vem a voz) */}
       <Pessoa plano={plano} caixa={caixa} />
       {noPalco.map((m, i) => desenhar(m, i))}
-      {selos.map((m) => (t >= m.de - 0.05 && t <= m.ate + 0.3 ? <Selo key={`selo-${m.de}`} t={t} m={m} x={palcoAtual.x + palcoAtual.w - 150} y={palcoAtual.y + 150} tons={tons} /> : null))}
+      {selos.map((m) => (t >= m.de - 0.05 && t <= m.ate + 0.3 ? <Selo key={`selo-${m.de}`} t={t} m={m} x={lugar.x} y={lugar.y} diametro={lugar.d} tons={tons} /> : null))}
       <Tarja t={t} plano={plano} cor0={tons.destaque} />
       <Legenda t={t} frases={frases} y={lay.yLegenda} tons={tons} />
       {cta ? <Botao t={t} m={cta} y={lay.yBotao} tons={tons} /> : null}

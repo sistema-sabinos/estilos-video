@@ -15,25 +15,8 @@ export const TOPO = PLACAR;
 const suave = Easing.bezier(0.65, 0, 0.35, 1);
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-export const ordenar = (plano: Plano) => [...plano.momentos].sort((a, b) => a.de - b.de);
-
-// Um momento nunca invade o seguinte (termina quando o próximo começa).
-export const semSobreposicao = (plano: Plano): Plano => {
-  const ordem = ordenar(plano);
-  return {
-    ...plano,
-    momentos: ordem.map((m, i) => {
-      const proximo = ordem[i + 1];
-      return proximo && m.ate > proximo.de ? { ...m, ate: proximo.de } : m;
-    }),
-  };
-};
-
-// a prateleira mostra a legenda por padrão (o produto é apoio da fala, não substitui o texto)
-export const comLegendaPadrao = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (m.tipo === "etiqueta" && m.legenda === undefined ? { ...m, legenda: true } : m)),
-});
+import { comLegendaPadrao, ordenar, semSobreposicao } from "./legenda-padrao";
+export { comLegendaPadrao, ordenar, semSobreposicao };
 
 // trechos com a pessoa embaixo (momentos de placar com menos de 0,4 s entre eles viram um trecho só)
 const trechosNoPlacar = (plano: Plano) => {

@@ -10,6 +10,7 @@ import { useTempo } from "./anim";
 import { Anatomia, type Mergulho } from "./componentes/Anatomia";
 import { BlocoAbertura, BlocoComparacao, BlocoCta, BlocoDefinicao, BlocoDestaque, BlocoFrase, BlocoGrafico, BlocoNumero, BlocoPassos, BlocoPergunta, BlocoTopicos } from "./componentes/Blocos";
 import { LinhaDeLuz, linhaY, Mito, Pergunta } from "./componentes/Cabecalhos";
+import { topoDaCabeca } from "./pergunta";
 import { Corte } from "./componentes/Corte";
 import { LinhaDoTempo } from "./componentes/LinhaDoTempo";
 import { alturaDaLegenda, estadoDaPessoa, eventosDoLayout, Guias, Legenda, pontoNoVideo, rostoDeslocado, sombraDaMoldura, Tarja, trocaDa, viradaDo } from "./componentes/Pessoa";
@@ -17,12 +18,7 @@ import { type Rosto, rostoNaTela, VideoNaCaixa } from "./motor/caixa";
 import type { Anatomia as TAnatomia, Corte as TCorte, Momento, Plano } from "./plano";
 import { CARD, K, lerp, win } from "./tema";
 
-// a legenda continua por padrão nos efeitos próprios (eles não escrevem a fala)
-const COM_LEGENDA = new Set<Momento["tipo"]>(["virada", "mito", "anatomia", "corte", "linhaDoTempo"]);
-const preparar = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (m.legenda === undefined && COM_LEGENDA.has(m.tipo) ? { ...m, legenda: true } : m)),
-});
+import { planoDaLegenda as preparar } from "./legenda-padrao";
 
 type Som = { em: number; arquivo: string; volume: number };
 const TONS = ["sfx/tone1.wav", "sfx/tone2.wav", "sfx/tone3.wav"];
@@ -113,6 +109,11 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: bru
   const banda = mito ? win(t, mito.de - 0.1, mito.ate - 0.3, 0.45, 0.35) * (1 - est.papel) : 0;
   const yLegenda = alturaDaLegenda(plano, est, t);
   const rs = rostoNaTela(caixa, rosto, videoAltura, t);
+  // a pergunta da virada fica acima do topo da cabeça mais alto entre `em` e a troca (pergunta.ts)
+  const topoCabeca = useMemo(
+    () => (virada ? topoDaCabeca(virada.em ?? virada.de, troca, (ti) => rostoNaTela(estadoDaPessoa(plano, eventos, ti).caixa, rosto, videoAltura, ti)) : Infinity),
+    [plano, eventos, rosto, videoAltura, virada, troca],
+  );
   const noVideo = (x: number, y: number, tt: number) => pontoNoVideo(estadoDaPessoa(plano, eventos, tt).caixa, plano, tt, x, y);
 
   const pessoaEstilo = { boxShadow: sombraDaMoldura(est.moldura), opacity: est.opacidade };
@@ -185,9 +186,9 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano: bru
 
       {/* cabeçalhos */}
       {mito && mito.tipo === "mito" ? <Mito m={mito} t={t} y={yMito} /> : null}
-      {virada ? <Pergunta m={virada} t={t} troca={troca} /> : null}
+      {virada ? <Pergunta m={virada} t={t} troca={troca} topoCabeca={topoCabeca} /> : null}
 
-      <Legenda plano={plano} t={t} y={yLegenda} />
+      {yLegenda === null ? null : <Legenda plano={plano} t={t} y={yLegenda} />}
       <Tarja plano={plano} t={t} />
       {guias ? <Guias rosto={rs} yLegenda={yLegenda} topoMoldura={caixa.y} /> : null}
 

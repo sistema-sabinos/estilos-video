@@ -22,25 +22,8 @@ const sobe = Easing.bezier(0.16, 1, 0.3, 1);
 const suave = Easing.bezier(0.65, 0, 0.35, 1);
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-export const ordenar = (plano: Plano) => [...plano.momentos].sort((a, b) => a.de - b.de);
-
-// Um momento nunca invade o seguinte (termina quando o próximo começa).
-export const semSobreposicao = (plano: Plano): Plano => {
-  const ordem = ordenar(plano);
-  return {
-    ...plano,
-    momentos: ordem.map((m, i) => {
-      const proximo = ordem[i + 1];
-      return proximo && m.ate > proximo.de ? { ...m, ate: proximo.de } : m;
-    }),
-  };
-};
-
-// a rodada mostra a legenda por padrão (a fala tem mais do que as barras escrevem)
-export const comLegendaPadrao = (plano: Plano): Plano => ({
-  ...plano,
-  momentos: plano.momentos.map((m) => (m.tipo === "rodada" && m.legenda === undefined ? { ...m, legenda: true } : m)),
-});
+import { comLegendaPadrao, ordenar, semSobreposicao } from "./legenda-padrao";
+export { comLegendaPadrao, ordenar, semSobreposicao };
 
 // instantes de golpe: cada um dá um soco de zoom na pessoa
 export const golpesDo = (plano: Plano): number[] => {

@@ -72,6 +72,15 @@ export const encaixar = (
   return { tamanho, linhas: quebrarLinhas(t, largura, tamanho, f) };
 };
 
+// O encaixar, sem deixar linha passar da `largura`: a palavra única que não cabe nem no corpo mínimo
+// baixa o corpo até caber (o encaixar só baixa até 22 px, e rótulo miúdo tem mínimo abaixo disso).
+export const encaixarSemVazar = (texto: string, opcoes: Parameters<typeof encaixar>[1]): Encaixe => {
+  const fit = encaixar(texto, opcoes);
+  const f = { ...opcoes.fonte, caixaAlta: false };
+  const teto = Math.min(fit.tamanho, ...fit.linhas.map((l) => opcoes.largura / larguraTexto(l, 1, f)));
+  return teto < fit.tamanho ? { tamanho: Math.floor(teto * 10) / 10, linhas: fit.linhas } : fit;
+};
+
 // O maior corpo em que o texto cabe numa caixa `largura` × `altura`, com até `maxLinhas` linhas.
 export const encaixarBloco = (
   texto: string,

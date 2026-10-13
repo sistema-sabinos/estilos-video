@@ -89,8 +89,8 @@ export const Corpo: React.FC<{ t: number; de: number; acoes: { em: number; acao:
         const d = `M ${a[0]} ${a[1]} L ${b[0]} ${b[1]}`;
         return (
           <g key={i} opacity={limitar(p * 2)}>
-            <Traco d={d} p={p} cor={cor.azul} largura={w + 11} />
-            <Traco d={d} p={p} cor={cor.branco} largura={w} />
+            <Traco d={d} p={p} cor={cor.azul} largura={w + 11} data-volume={w} />
+            <Traco d={d} p={p} cor={cor.branco} largura={w} data-volume={w} />
           </g>
         );
       })}

@@ -115,7 +115,7 @@ export const NumeroNoConvite: React.FC<Props<Numero>> = ({ m, t, palavras, area,
   const tRot = tempos(m.rotulo, palavras, m.de, m.ate, m.rotuloEm ?? m.de);
   // conta de 0 até o valor: rápido no começo, assenta no fim
   const pConta = prog(t, m.em - 0.05, 1.3, (x) => 1 - Math.pow(1 - x, 3));
-  const agora = pConta >= 0.999 ? final : formatar(m.valor * pConta, casas);
+  const agora = pConta >= 0.999 ? final : formatar((m.inicio ?? 0) + (m.valor - (m.inicio ?? 0)) * pConta, casas);
   const dito = t >= m.em - 0.05;
   const corNum = dito ? cor.tinta : cor.lapis;
   const pOrn = prog(t, m.em + 0.9, 0.6, pena);
@@ -222,7 +222,7 @@ export const FraseNoConvite: React.FC<Props<Frase>> = ({ m, t, palavras, area, a
           corDe={(i) => (risco.has(i) && pRisco > 0.5 ? cor.tintaSuave : undefined)}
         />
       </div>
-      <Assinatura plano={plano} p={prog(t, m.de + 0.4, 0.6)} />
+      <Assinatura plano={plano} p={prog(t, m.de + 0.4, 0.6)} util={alvo.w - 20} />
     </Coluna>
   );
 };
@@ -336,7 +336,7 @@ export const Fechamento: React.FC<Props<Cta>> = ({ m, t, palavras, area, alvo, o
           style={{ marginTop: -6 }}
         />
       ) : null}
-      <Assinatura plano={plano} p={prog(t, fimDaFala + 0.25, 0.6)} />
+      <Assinatura plano={plano} p={prog(t, fimDaFala + 0.25, 0.6)} util={alvo.w - 20} />
     </Coluna>
   );
 };

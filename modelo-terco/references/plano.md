@@ -131,6 +131,12 @@ Sem nada no plano, a câmera troca o zoom em cada corte (`cortesEm`), alternando
 - `aproximar: true`: aproximação lenta de 5% no trecho (nunca mais de 6% em 2 s).
 - Zooms permitidos: 1 a 1,22. O rosto fica na mesma altura em qualquer zoom.
 
+## Topo da cabeça (`ateTopo`)
+
+O template põe o topo da cabeça na linha do modelo supondo o cabelo a 0,84 largura de rosto acima do centro do rosto, que é a média. Com cabelo bem mais baixo a cabeça fica abaixo da linha (uns 60 px no 0,70); com cabelo alto, acima. Para acertar, leia também o **topo do cabelo** na grade do passo 4 e, depois do `cortar.mjs`, grave no plano o número `ateTopo` = 0,66 × (rosto-y menos topo do cabelo) ÷ (queixo-y menos rosto-y).
+
+Exemplo: `--rosto-y 0.31`, `--queixo-y 0.42` e o topo do cabelo em 0,18 dão 0,66 × 0,13 ÷ 0,11 = 0,78, e o plano ganha `"ateTopo": 0.78`. A conta usa só as proporções do rosto, então vale em qualquer recorte (9:16 ou 3:4). Sem o campo vale 0,84; o template aceita de 0,6 a 1,2. O `cortar.mjs --manter-plano` mantém o campo; um corte sem `--manter-plano` começa o plano do zero, então grave de novo.
+
 ## Regras de tempo
 
 - Um momento por vez (sem sobreposição); o palco segura o último até o próximo entrar, então não passe `ate` do `de` seguinte.

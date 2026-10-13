@@ -26,6 +26,7 @@ import {
 } from "./layout";
 import { VideoNaCaixa } from "./motor/caixa";
 import { corrigirPalavras, montarFrases } from "./motor/frases";
+import { planoDaLegenda } from "./legenda-padrao";
 import type { Placa as PlacaT, Plano, Poster } from "./plano";
 import { cor, LIMITE_APP, QUADRO } from "./tema";
 
@@ -90,11 +91,7 @@ export const Edicao: React.FC<{ plano: Plano; guias?: boolean }> = ({ plano, gui
       ),
     [plano, momentos, palavras],
   );
-  // a legenda some nos pôsteres e nas placas novas (o selo fica com legenda, como no demo)
-  const frases = useMemo(
-    () => montarFrases({ ...plano, momentos: [...momentos, ...placas.filter((p) => p.tipo !== "selo")] }),
-    [plano, momentos, placas],
-  );
+  const frases = useMemo(() => montarFrases(planoDaLegenda(plano)), [plano]);
   const estados = useMemo(
     () => estadosDoVideo(plano, momentos, desenhos, frases.map((f) => f.de), palavras),
     [plano, momentos, desenhos, frases, palavras],
