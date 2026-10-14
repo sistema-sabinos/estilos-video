@@ -119,6 +119,13 @@ export const pontoNoVideo = (caixa: Caixa, plano: Plano, t: number, x: number, y
 
 // ——— legenda: toda branca, contorno preto e leve sombra; até 3 palavras por vez, cada uma sobe na fala ———
 type Pedaco = { de: number; fim: number; palavras: Palavra[] };
+// T08 (5.14): palavra curta (artigo, preposicao, conjuncao, numero solto: a lista do motor) gruda na
+// seguinte. O bloco nunca fecha nela por contagem (as curtas do fim abrem o bloco seguinte) e a
+// palavra depois dela sobe junto, no tempo da primeira curta da sequencia ("a um mercado" sobe no "a");
+// pausa de mais de 0,35 s corta a sequencia.
+const CURTAS = new Set("a o as os e é um uma uns umas de do da dos das em no na nos nas ao aos à às que se eu te me lhe com por pra pro pras pros para sem sua seu mas ou nem já".split(" "));
+const curta = (w: string) => !/[.?!…,;:]$/.test(w) && (CURTAS.has(w.toLowerCase()) || /^(r\$)?\d+([.,]\d+)?%?$/i.test(w));
+const subida = (ps: Palavra[], k: number): number => (k > 0 && curta(ps[k - 1].w) && ps[k].em - ps[k - 1].ate <= 0.35 ? subida(ps, k - 1) : ps[k].em);
 const fatiar = (frases: FraseMotor[]): Pedaco[] => {
   const out: Pedaco[] = [];
   for (const f of frases) {
@@ -130,7 +137,14 @@ const fatiar = (frases: FraseMotor[]): Pedaco[] => {
     };
     f.palavras.forEach((w, i) => {
       const len = atual.reduce((s, x) => s + x.w.length + 1, 0) + w.w.length;
-      if (atual.length && (atual.length >= 3 || len > 18)) fechar();
+      if (atual.length && (atual.length >= 3 || (len > 18 && !atual.every((x) => curta(x.w))))) {
+        let n = atual.length;
+        while (n > 1 && curta(atual[n - 1].w)) n--;
+        const soltas = atual.slice(n);
+        atual = atual.slice(0, n);
+        fechar();
+        atual = soltas;
+      }
       atual.push(w);
       const prox = f.palavras[i + 1];
       if (/[.,?!:;…]$/.test(w.w) || (prox && prox.em - w.ate > 0.35)) fechar();
@@ -154,7 +168,8 @@ export const Legenda: React.FC<{ plano: Plano; t: number; y: number }> = ({ plan
   return (
     <div style={{ position: "absolute", left: 70, width: 940, top: y, transform: "translateY(-50%)", textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: fit.tamanho, lineHeight: 1.12, color: "#FFF8F2", WebkitTextStroke: "10px #000", paintOrder: "stroke fill", filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.45))", whiteSpace: "nowrap" }}>
       {c.palavras.map((w, k) => {
-        const p = prog(t, w.em - 0.06, w.em + 0.12, EASE_OUT);
+        const em = subida(c.palavras, k);
+        const p = prog(t, em - 0.06, em + 0.12, EASE_OUT);
         const ativa = t >= w.em - 0.04 && t < w.ate + 0.02;
         return (
           <span key={k} style={{ display: "inline-block", clipPath: "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: k < c.palavras.length - 1 ? "0.36em" : 0 }}>

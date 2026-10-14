@@ -8,6 +8,13 @@ import type { Palavra } from "./plano";
 import { COR, EASE_OUT, SORA, prog } from "./tema";
 
 type Bloco = { de: number; ate: number; palavras: Palavra[] };
+// T08 (5.14): palavra curta (artigo, preposicao, conjuncao, numero solto: a lista do motor) gruda na
+// seguinte. O bloco nunca fecha nela por contagem (as curtas do fim abrem o bloco seguinte) e a
+// palavra depois dela sobe junto, no tempo da primeira curta da sequencia ("a um mercado" sobe no "a");
+// pausa de mais de 0,35 s corta a sequencia.
+const CURTAS = new Set("a o as os e é um uma uns umas de do da dos das em no na nos nas ao aos à às que se eu te me lhe com por pra pro pras pros para sem sua seu mas ou nem já".split(" "));
+const curta = (w: string) => !/[.?!…,;:]$/.test(w) && (CURTAS.has(w.toLowerCase()) || /^(r\$)?\d+([.,]\d+)?%?$/i.test(w));
+const subida = (ps: Palavra[], k: number): number => (k > 0 && curta(ps[k - 1].w) && ps[k].em - ps[k - 1].ate <= 0.35 ? subida(ps, k - 1) : ps[k].em);
 
 // Re-agrupa as palavras visíveis (as linhas do motor) em blocos curtos, como no Reel original:
 // até 3 palavras / ~18 letras; quebra na pontuação, na pausa (> 0,35 s) e onde a legenda some.
@@ -27,7 +34,14 @@ const todosOsBlocos = (frases: Frase[]) => {
     // a legenda sumiu entre as duas linhas (um momento sem legenda no meio): bloco novo
     if (ant && ant.fi !== w.fi && frases[ant.fi].ate < w.p.em - 0.1) fechar();
     const len = cur.reduce((n, x) => n + x.p.w.length + 1, 0) + w.p.w.length;
-    if (cur.length && (cur.length >= 3 || len > 18)) fechar();
+    if (cur.length && (cur.length >= 3 || (len > 18 && !cur.every((x) => curta(x.p.w))))) {
+      let n = cur.length;
+      while (n > 1 && curta(cur[n - 1].p.w)) n--;
+      const soltas = cur.slice(n);
+      cur = cur.slice(0, n);
+      fechar();
+      cur = soltas;
+    }
     cur.push(w);
     const nx = ws[i + 1];
     if (/[.,?!:;…]$/.test(w.p.w) || (nx && nx.p.em - w.p.ate > 0.35)) fechar();
@@ -62,7 +76,8 @@ export const Legenda: React.FC<{ frases: Frase[]; t: number; y: number }> = ({ f
       }}
     >
       {atual.palavras.map((p, k) => {
-        const q = prog(t, p.em - 0.06, p.em + 0.12, EASE_OUT);
+        const em = subida(atual.palavras, k);
+        const q = prog(t, em - 0.06, em + 0.12, EASE_OUT);
         const ativa = t >= p.em - 0.04 && t < p.ate + 0.02;
         return (
           <span key={k} style={{ display: "inline-block", clipPath: "inset(-0.6em -0.35em 0 -0.35em)", verticalAlign: "bottom", padding: "0.04em 0.02em 0.1em", marginRight: "0.36em" }}>

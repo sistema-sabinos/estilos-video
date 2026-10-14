@@ -8,6 +8,13 @@ import { EASE_OUT, P, SORA, prog, useTempo } from "../tema";
    cada linha, a tela mostra blocos de até 3 palavras / ~18 caracteres, como no exemplo. */
 
 type Bloco = { de: number; ate: number; palavras: Palavra[] };
+// T08 (5.14): palavra curta (artigo, preposicao, conjuncao, numero solto: a lista do motor) gruda na
+// seguinte. O bloco nunca fecha nela por contagem (as curtas do fim abrem o bloco seguinte) e a
+// palavra depois dela sobe junto, no tempo da primeira curta da sequencia ("a um mercado" sobe no "a");
+// pausa de mais de 0,35 s corta a sequencia.
+const CURTAS = new Set("a o as os e é um uma uns umas de do da dos das em no na nos nas ao aos à às que se eu te me lhe com por pra pro pras pros para sem sua seu mas ou nem já".split(" "));
+const curta = (w: string) => !/[.?!…,;:]$/.test(w) && (CURTAS.has(w.toLowerCase()) || /^(r\$)?\d+([.,]\d+)?%?$/i.test(w));
+const subida = (ps: Palavra[], k: number): number => (k > 0 && curta(ps[k - 1].w) && ps[k].em - ps[k - 1].ate <= 0.35 ? subida(ps, k - 1) : ps[k].em);
 const cache = new WeakMap<Frase[], Bloco[]>();
 
 const blocosDe = (frases: Frase[], quebras: number[]): Bloco[] => {
@@ -23,7 +30,14 @@ const blocosDe = (frases: Frase[], quebras: number[]): Bloco[] => {
     f.palavras.forEach((w, i) => {
       const len = atual.reduce((s, x) => s + x.w.length + 1, 0) + w.w.length;
       if (atual.length && quebras.some((q) => Math.abs(q - w.em) < 0.06)) fechar();
-      if (atual.length && (atual.length >= 3 || len > 18)) fechar();
+      if (atual.length && (atual.length >= 3 || (len > 18 && !atual.every((x) => curta(x.w))))) {
+        let n = atual.length;
+        while (n > 1 && curta(atual[n - 1].w)) n--;
+        const soltas = atual.slice(n);
+        atual = atual.slice(0, n);
+        fechar();
+        atual = soltas;
+      }
       atual.push(w);
       const nx = f.palavras[i + 1];
       if (/[.,?!:]$/.test(w.w) || (nx && nx.em - w.ate > 0.35)) fechar();
@@ -65,7 +79,8 @@ export const Legenda: React.FC<{ frases: Frase[]; y: number; quebras?: number[] 
       }}
     >
       {b.palavras.map((w, k) => {
-        const p = prog(t, w.em - 0.06, w.em + 0.12, EASE_OUT);
+        const em = subida(b.palavras, k);
+        const p = prog(t, em - 0.06, em + 0.12, EASE_OUT);
         const ativa = t >= w.em - 0.04 && t < w.ate + 0.02;
         const pronta = p >= 1 && !ativa;
         return (

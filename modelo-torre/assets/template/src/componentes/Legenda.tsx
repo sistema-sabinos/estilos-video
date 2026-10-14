@@ -11,6 +11,13 @@ import { rostoNaTela, type Caixa } from "../motor/caixa";
 import { FONTE, LEG_COSTURA } from "../tema";
 
 type Bloco = { de: number; ate: number; palavras: Palavra[] };
+// T08 (5.14): palavra curta (artigo, preposicao, conjuncao, numero solto: a lista do motor) gruda na
+// seguinte. O bloco nunca fecha nela por contagem (as curtas do fim abrem o bloco seguinte) e a
+// palavra depois dela sobe junto, no tempo da primeira curta da sequencia ("a um mercado" sobe no "a");
+// pausa de mais de 0,35 s corta a sequencia.
+const CURTAS = new Set("a o as os e é um uma uns umas de do da dos das em no na nos nas ao aos à às que se eu te me lhe com por pra pro pras pros para sem sua seu mas ou nem já".split(" "));
+const curta = (w: string) => !/[.?!…,;:]$/.test(w) && (CURTAS.has(w.toLowerCase()) || /^(r\$)?\d+([.,]\d+)?%?$/i.test(w));
+const subida = (ps: Palavra[], k: number): number => (k > 0 && curta(ps[k - 1].w) && ps[k].em - ps[k - 1].ate <= 0.35 ? subida(ps, k - 1) : ps[k].em);
 
 export const blocosDaLegenda = (frases: Frase[]): Bloco[] => {
   const out: Bloco[] = [];
@@ -23,7 +30,14 @@ export const blocosDaLegenda = (frases: Frase[]): Bloco[] => {
     };
     f.palavras.forEach((w, i) => {
       const len = cur.reduce((s, x) => s + x.w.length + 1, 0) + w.w.length;
-      if (cur.length && (cur.length >= 3 || len > 18)) flush();
+      if (cur.length && (cur.length >= 3 || (len > 18 && !cur.every((x) => curta(x.w))))) {
+        let n = cur.length;
+        while (n > 1 && curta(cur[n - 1].w)) n--;
+        const soltas = cur.slice(n);
+        cur = cur.slice(0, n);
+        flush();
+        cur = soltas;
+      }
       cur.push(w);
       const nx = f.palavras[i + 1];
       if (/[.,?!:;…]$/.test(w.w) || (nx && nx.em - w.ate > 0.35)) flush();
@@ -74,7 +88,8 @@ export const Legenda: React.FC<{ t: number; frases: Frase[]; y: number }> = ({ t
       }}
     >
       {b.palavras.map((tk, k) => {
-        const p = prog(t, tk.em - 0.06, tk.em + 0.12, EASE_OUT);
+        const em = subida(b.palavras, k);
+        const p = prog(t, em - 0.06, em + 0.12, EASE_OUT);
         const ativa = t >= tk.em - 0.04 && t < tk.ate + 0.02;
         // depois que a palavra assentou, sai a máscara e o deslocamento da entrada (texto simples)
         const assentou = p >= 1;
