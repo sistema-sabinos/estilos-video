@@ -12,6 +12,12 @@ import { legendaNoMomento, planoDaLegenda } from "../legenda-padrao";
 export { legendaNoMomento };
 
 type Pedaco = { de: number; ate: number; texto: string };
+// item 8 (5.15): palavra curta (artigo, preposicao, conjuncao, numero solto: a lista do motor) gruda na
+// seguinte. A tela nunca fecha nela por contagem: as curtas do fim abrem a tela seguinte ("fui a um
+// mercado" vira "fui" e "a um mercado"), e tela que so tem curta ganha a 4a palavra ("o que e bom")
+// em vez de deixar uma curta sozinha. Curta antes de palavra comprida vai junto com ela.
+const CURTAS = new Set("a o as os e é um uma uns umas de do da dos das em no na nos nas ao aos à às que se eu te me lhe com por pra pro pras pros para sem sua seu mas ou nem já".split(" "));
+const curta = (w: string) => !/[.?!…,;:]$/.test(w) && (CURTAS.has(w.toLowerCase()) || /^(r\$)?\d+([.,]\d+)?%?$/i.test(w));
 const guardadas = new WeakMap<object, Pedaco[]>();
 
 // quebra cada frase do motor em pedaços de até 3 palavras e ~24 letras
@@ -30,7 +36,15 @@ const pedacosDo = (plano: Plano): Pedaco[] => {
     };
     ws.forEach((w, i) => {
       const tentativa = [...atual, w].map((x) => x.w).join(" ");
-      if (atual.length >= 3 || (atual.length >= 2 && tentativa.length > 24)) fechar();
+      if ((atual.length >= 3 || (atual.length >= 2 && tentativa.length > 24)) && !(atual.every((x) => curta(x.w)) && !curta(w.w))) {
+        let n = atual.length;
+        while (n > 1 && curta(atual[n - 1].w)) n--;
+        if (n === 1 && curta(atual[0].w)) n = 2;
+        const soltas = atual.slice(n);
+        atual = atual.slice(0, n);
+        fechar();
+        atual = soltas;
+      }
       atual.push(w);
       const quebra = /[.?!,;:…]$/.test(w.w) && atual.length >= 2;
       if (quebra || i === ws.length - 1) fechar();

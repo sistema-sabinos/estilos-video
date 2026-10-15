@@ -13,6 +13,12 @@ const LARGURA = 900;
 const F = { peso: 800 as const };
 
 type Grupo = { de: number; ate: number; palavras: Palavra[] };
+// item 8 (5.15): palavra curta (artigo, preposicao, conjuncao, numero solto: a lista do motor) gruda na
+// seguinte. A tela nunca fecha nela por contagem: as curtas do fim abrem a tela seguinte ("fui a um
+// mercado" vira "fui" e "a um mercado"), e tela que so tem curta ganha a 4a palavra ("o que e bom")
+// em vez de deixar uma curta sozinha. Curta antes de palavra comprida vai junto com ela.
+const CURTAS = new Set("a o as os e é um uma uns umas de do da dos das em no na nos nas ao aos à às que se eu te me lhe com por pra pro pras pros para sem sua seu mas ou nem já".split(" "));
+const curta = (w: string) => !/[.?!…,;:]$/.test(w) && (CURTAS.has(w.toLowerCase()) || /^(r\$)?\d+([.,]\d+)?%?$/i.test(w));
 
 export const gruposDaLegenda = (frases: Frase[]): Grupo[] => {
   const grupos: Grupo[] = [];
@@ -25,7 +31,15 @@ export const gruposDaLegenda = (frases: Frase[]): Grupo[] => {
     };
     f.palavras.forEach((p) => {
       const tentativa = [...atual, p].map((x) => x.w).join(" ");
-      if (atual.length && (atual.length >= 3 || larguraTexto(tentativa, S_MAX, F) > LARGURA - 90)) fechar();
+      if (atual.length && (atual.length >= 3 || larguraTexto(tentativa, S_MAX, F) > LARGURA - 90) && !(atual.every((x) => curta(x.w)) && !curta(p.w))) {
+        let n = atual.length;
+        while (n > 1 && curta(atual[n - 1].w)) n--;
+        if (n === 1 && curta(atual[0].w)) n = 2;
+        const soltas = atual.slice(n);
+        atual = atual.slice(0, n);
+        fechar();
+        atual = soltas;
+      }
       atual.push(p);
       if (/[.?!…,;:]$/.test(p.w) && atual.length >= 2) fechar();
     });

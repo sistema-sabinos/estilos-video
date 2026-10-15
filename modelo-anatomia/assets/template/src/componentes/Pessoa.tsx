@@ -137,9 +137,10 @@ const fatiar = (frases: FraseMotor[]): Pedaco[] => {
     };
     f.palavras.forEach((w, i) => {
       const len = atual.reduce((s, x) => s + x.w.length + 1, 0) + w.w.length;
-      if (atual.length && (atual.length >= 3 || (len > 18 && !atual.every((x) => curta(x.w))))) {
+      if (atual.length && (atual.length >= 3 || len > 18) && !(atual.every((x) => curta(x.w)) && !curta(w.w))) {
         let n = atual.length;
         while (n > 1 && curta(atual[n - 1].w)) n--;
+        if (n === 1 && curta(atual[0].w)) n = 2;
         const soltas = atual.slice(n);
         atual = atual.slice(0, n);
         fechar();

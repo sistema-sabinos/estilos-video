@@ -34,9 +34,10 @@ const todosOsBlocos = (frases: Frase[]) => {
     // a legenda sumiu entre as duas linhas (um momento sem legenda no meio): bloco novo
     if (ant && ant.fi !== w.fi && frases[ant.fi].ate < w.p.em - 0.1) fechar();
     const len = cur.reduce((n, x) => n + x.p.w.length + 1, 0) + w.p.w.length;
-    if (cur.length && (cur.length >= 3 || (len > 18 && !cur.every((x) => curta(x.p.w))))) {
+    if (cur.length && (cur.length >= 3 || len > 18) && !(cur.every((x) => curta(x.p.w)) && !curta(w.p.w))) {
       let n = cur.length;
       while (n > 1 && curta(cur[n - 1].p.w)) n--;
+      if (n === 1 && curta(cur[0].p.w)) n = 2;
       const soltas = cur.slice(n);
       cur = cur.slice(0, n);
       fechar();

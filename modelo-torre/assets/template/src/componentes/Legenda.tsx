@@ -30,9 +30,10 @@ export const blocosDaLegenda = (frases: Frase[]): Bloco[] => {
     };
     f.palavras.forEach((w, i) => {
       const len = cur.reduce((s, x) => s + x.w.length + 1, 0) + w.w.length;
-      if (cur.length && (cur.length >= 3 || (len > 18 && !cur.every((x) => curta(x.w))))) {
+      if (cur.length && (cur.length >= 3 || len > 18) && !(cur.every((x) => curta(x.w)) && !curta(w.w))) {
         let n = cur.length;
         while (n > 1 && curta(cur[n - 1].w)) n--;
+        if (n === 1 && curta(cur[0].w)) n = 2;
         const soltas = cur.slice(n);
         cur = cur.slice(0, n);
         flush();
